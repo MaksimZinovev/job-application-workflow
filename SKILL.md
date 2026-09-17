@@ -5,31 +5,31 @@ description: Orchestrates an evidence-based job application run from job descrip
 
 # Job application
 
-One evidence-based cover-letter run: preflight sources, score the job, plan
-keyword-to-evidence matches, draft the letter, rewrite it, verify everything
-mechanically, distill learnings. All artifacts live in the run folder
-`NN_<role-slug>/`; `progress.json` is the machine gate state — any session
+One evidence-based cover-letter run: preflight sources, score the job, plan  
+keyword-to-evidence matches, draft the letter, rewrite it, verify everything  
+mechanically, distill learnings. All artifacts live in the run folder  
+`NN_<role-slug>/`; `progress.json` is the machine gate state — any session  
 resumes with `scripts/progress.py <run> --status`.
 
-`--approve` is a hard gate: dependencies approved, expected artifacts
-present, judge report where required (step_3; step_4 only when the run-log
-marks substantive changes; step_audit always), verify_artifacts exit 0
-unblocking approval. Steps 5-7 are rejected as reserved — they belong to the
-future resume-and-prep companion skill; this skill never tailors resumes or
+`--approve` is a hard gate: dependencies approved, expected artifacts  
+present, judge report where required (step_3; step_4 only when the run-log  
+marks substantive changes; step_audit always), verify_artifacts exit 0  
+unblocking approval. Steps 5-7 are rejected as reserved — they belong to the  
+future resume-and-prep companion skill; this skill never tailors resumes or  
 prepares interviews.
 
 ## Portability
 
-All paths live in `assets/sources.json` — sources are referenced by key
-only. Preflight exits 1 on a missing mandatory source; fix with
-`preflight.py --set <key> <path>` or record an explicit, user-approved
-`--waive <key> --note "..."` (dated, into sources.json). Every script takes
+All paths live in `assets/sources.json` — sources are referenced by key  
+only. Preflight exits 1 on a missing mandatory source; fix with  
+`preflight.py --set <key> <path>` or record an explicit, user-approved  
+`--waive <key> --note "..."` (dated, into sources.json). Every script takes  
 `--config` to point at a different sources.json.
 
 ## Scripts
 
-Run scripts, read their report, act on the fix hints. Never read a
-script's source unless its failure message does not explain the problem
+Run scripts, read their report, act on the fix hints. Never read a  
+script's source unless its failure message does not explain the problem  
 and resolution requires it; `--help` is the sanctioned peek.
 
 ```bash
@@ -50,7 +50,7 @@ python3 scripts/verify_artifacts.py --artifact review-report --path ~/apps/12_se
 ### step_0 — context
 
 ```yaml
-{id: step_0, type: context, depends_on: [], expectStatus: approved, on_fail: resolve or explicitly waive sources; blocked until resolved, rules: [rule-read-sources-first, rule-preflight-resource-check, rule-copy-at-end, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
+{id: step_0, type: context, depends_on: [], expectStatus: approved, on_fail: resolve or explicitly waive sources; blocked until resolved; an instruction that looks wrong for this run goes to the user before deviating — never infer, rules: [rule-read-sources-first, rule-preflight-resource-check, rule-copy-at-end, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
 ```
 
 Purpose: sources resolved, run folder initialized.
@@ -87,7 +87,7 @@ Purpose: matches.md + rubric-validated paragraph plan.
 2. Build `matches.md` (Keywords, role type, lists 5-7 / 5-7 / 3-5, honest gaps) and the hidden-question paragraph plan with ranked evidence.
 3. Run `scripts/verify_artifacts.py --artifact matches --path <run>/matches.md`.
 
-Checkpoint: present matches + plan + section alternatives — wait for approval.
+Checkpoint: concise report,raise if any questions present matches + plan + section alternatives — wait for approval.
 
 ### step_3 — drafting
 
@@ -102,7 +102,7 @@ Purpose: judged, rubric-scored cover letter v1.
 3. Run `scripts/verify_artifacts.py --artifact cover-letter --path <run>/cover-letter-draft.md --matches <run>/matches.md`.
 4. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report.json`; fix flagged items, re-judge ≤2 rounds.
 
-Checkpoint: present draft + judge report — wait for approval.
+Checkpoint: concise report, raise if any questions, present draft + judge report — wait for approval.
 
 ### step_4 — rewriting
 
@@ -116,7 +116,7 @@ Purpose: human-voice v2; v1 preserved.
 2. Apply unslop, targeted user-feedback rewrites, credibility pass; write `cover-letter-draft-v2.md`, keep v1 untouched.
 3. Set `substantive_changes: yes|no` in run-log.md; verify v2; run the conditional delta judge only when substantive.
 
-Checkpoint: present v2 + flag + report — wait for approval.
+Checkpoint: concise report, present v2 + flag + report — wait for approval.
 
 ### step_audit — verification
 

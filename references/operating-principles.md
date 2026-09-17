@@ -8,6 +8,13 @@ by key from `assets/sources.json`; the preflight script resolves the paths.
 
 - Work milestone by milestone. Never advance past a step until its checkpoint
   closes: present the artifact, ask for feedback, wait for explicit approval.
+- Follow every step in full, in order. If an instruction looks wrong for
+  this run, ask the user before deviating — never infer a deviation, never
+  skip silently. Deviation by inference is a defect; a user-approved change
+  is a decision.
+- A checkpoint is done only when every listed condition is met. Answer a
+  status question by naming any unmet condition in the same breath — a bare
+  "yes" that buries one is a false report.
 - `progress.py` is the machine gate. A step is approved only when its
   dependencies are approved, its expected artifacts exist, and — where the judge
   gate applies — `review-report.json` carries verdict `approved` at the required

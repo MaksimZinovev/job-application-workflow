@@ -28,6 +28,9 @@ procedure calls for it. The rubrics and the ideal-role profile ship bundled
 in `assets/` as working defaults; override with
 `preflight.py --set <key> <path>` to score with your own.
 
+The scoring template from init carries the exact format. If a look at a
+past scoring file still helps, read one precedent, tail only.
+
 ## Pick the rubric by job class
 
 - Full-time roles → the rubric configured at `rubric_full_time`.
@@ -48,7 +51,7 @@ If the job class is unclear, ask the user before scoring.
 4. Use web search to enrich and ground the scoring: verify the company is
    real and what it actually does, the product's scale and claims, anything
    the rubric asks about employer context. Ground claims in what the search
-   returns, not in assumptions.
+   returns, not in assumptions. Five results per search is enough.
 5. Run `verify_artifacts.py --artifact scoring --path <run>/scoring.md`.
    Exit 0 is required before the checkpoint.
 

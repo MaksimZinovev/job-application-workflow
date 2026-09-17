@@ -62,7 +62,7 @@ Purpose: sources resolved, run folder initialized.
 Allowed reads in step_0: `references/operating-principles.md`, the JD, preflight output;
 later-step references wait for their step. Every scored JD gets a run folder, promote or not.
 
-Checkpoint: sources resolved, run folder created — wait for approval.
+Checkpoint: sources resolved, run folder created — restate the run rules briefly, in your own words (name unmet conditions with any status answer; ask before deviating; later-step references wait for their step), then wait for approval.
 
 ### step_1 — analysis
 

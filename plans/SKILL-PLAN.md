@@ -309,6 +309,14 @@ reads and bans read-ahead; Context economy repeats the ban. Structural
 call, user option (a): every scored JD gets its run folder at init, even
 when the job never promotes.
 
+**Round 8 (user order):** read caps sanctioned — jd-analysis allows one
+precedent scoring file, tail only, and caps web search at five results.
+The step_0 checkpoint now requires the agent to restate the run rules in
+its own words (naming the run-18 violations) before approval. Wiki scoring
+notes stay the raw feed; init copies the JD into the run folder (user
+confirmed). SKILL.md back at the 150-line cap after the restate line was
+fused into the existing checkpoint line.
+
 ## 5. Canonical step map
 
 | id | type | focus | rules remap |

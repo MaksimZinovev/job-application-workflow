@@ -289,6 +289,15 @@ referential dead end found in the round-4 discussion. Privacy ledger: the
 bundled files carry personal bands (salary targets, NSW location, part-time
 hour caps) — publication explicitly ordered by the user.
 
+**Round 6 (user order):** source keys may now hold a list of files;
+`experience_records` became an array (jobkit pieces + the prepared STAR
+stories file). preflight.py flattens lists into indexed entries
+(`experience_records[1]`), gates each file individually, and --set/--waive
+accept indexed addressing (`--set experience_records[1] <path>`); bare --set
+or --waive on a list key dies with the index hint. matches-and-plan.md and
+jd-analysis.md state the multi-file semantics; README documents the array
+convention.
+
 ## 5. Canonical step map
 
 | id | type | focus | rules remap |

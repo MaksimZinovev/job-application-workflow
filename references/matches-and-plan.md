@@ -9,8 +9,9 @@ step.
 Create `matches.md` from the matches template (stubbed at init). Resolve
 every source key (`experience_records`, `cv_master`) via the preflight table
 (`python3 scripts/preflight.py`) or `assets/sources.json`, and open the
-resolved file only when the procedure below calls for it. Extract from the
-job description:
+resolved file only when the procedure below calls for it. A key may hold
+several files (a list); List 1 draws on every `experience_records` file.
+Extract from the job description:
 
 - **Target roles** — what roles the ad is really hiring for
 - **Keywords Skills** and **Keywords Tools** — the ad's own vocabulary,
@@ -21,8 +22,9 @@ Hard cap: `word_budgets.matches_max_chars` in `assets/sources.json` (default
 10000 characters). Three lists follow, each capped in items:
 
 1. **Mapping List 1 — recent role.** Match keywords to the most relevant
-   records from `experience_records`: responsibilities, tools, soft skills,
-   achievements, role context. 5-7 items.
+   records from the `experience_records` files (recent-role pieces first,
+   STAR stories as extra achievement evidence): responsibilities, tools,
+   soft skills, achievements, role context. 5-7 items.
 2. **Mapping List 2 — previous roles.** Match keywords to records from the
    CV source of truth (`cv_master`). 5-7 items.
 3. **Remaining gaps.** 3-5 items. Distinguish gaps coverable by previous

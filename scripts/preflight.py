@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -63,9 +64,14 @@ def resolve_path(raw: str) -> Path:
 
 
 def iter_sources(cfg: dict):
-    for req, group in (("mandatory", "mandatory"), ("optional", "optional")):
-        for key, entry in cfg.get("sources", {}).get(group, {}).items():
-            yield req, key, entry
+    """Flatten config entries; a key may hold one source or a list of them."""
+    for req in ("mandatory", "optional"):
+        for key, entry in cfg.get("sources", {}).get(req, {}).items():
+            if isinstance(entry, list):
+                for i, item in enumerate(entry):
+                    yield req, f"{key}[{i}]", item
+            else:
+                yield req, key, entry
 
 
 def check(cfg: dict) -> tuple[list[dict], list[dict]]:
@@ -113,22 +119,51 @@ def main() -> None:
 
     if a.set:
         key, path = a.set
+        m = re.fullmatch(r"([^\[\]]+?)(?:\[(\d+)\])?", key)
+        base, idx = m.group(1), m.group(2)
         hit = False
         for group in ("mandatory", "optional"):
-            if key in cfg.get("sources", {}).get(group, {}):
-                cfg["sources"][group][key]["path"] = path
-                hit = True
+            bucket = cfg.get("sources", {}).get(group, {})
+            if base not in bucket:
+                continue
+            hit = True
+            entry = bucket[base]
+            if isinstance(entry, list):
+                if idx is None:
+                    die(f"'{base}' holds a list of sources",
+                        f"use --set {base}[<index>] <path>, or edit assets/sources.json to add/remove entries")
+                if not 0 <= int(idx) < len(entry):
+                    die(f"index {idx} out of range for '{base}' ({len(entry)} entries)",
+                        "see assets/sources.json")
+                entry[int(idx)]["path"] = path
+                cfg.setdefault("waived", {}).pop(f"{base}[{idx}]", None)
+            else:
+                if idx is not None:
+                    die(f"'{base}' is a single source, not a list", f"use --set {base} <path>")
+                entry["path"] = path
+                cfg.setdefault("waived", {}).pop(base, None)
         if not hit:
-            die(f"unknown source key: {key}", "see keys in assets/sources.json")
-        cfg.setdefault("waived", {}).pop(key, None)
+            die(f"unknown source key: {base}", "see keys in assets/sources.json")
         cfg_path.write_text(json.dumps(cfg, indent=2) + "\n")
         print(f"set {key} -> {path}")
 
     if a.waive:
         key = a.waive
-        known = any(key in cfg.get("sources", {}).get(g, {}) for g in ("mandatory", "optional"))
-        if not known:
-            die(f"unknown source key: {key}", "see keys in assets/sources.json")
+        m = re.fullmatch(r"([^\[\]]+?)(?:\[(\d+)\])?", key)
+        base, idx = m.group(1), m.group(2)
+        hit = False
+        for group in ("mandatory", "optional"):
+            bucket = cfg.get("sources", {}).get(group, {})
+            if base not in bucket:
+                continue
+            hit = True
+            if isinstance(bucket[base], list) and idx is None:
+                die(f"'{base}' holds a list of sources",
+                    f"waive a specific entry: --waive {base}[<index>] --note \"<why>\"")
+            if not isinstance(bucket[base], list) and idx is not None:
+                die(f"'{base}' is a single source, not a list", f"waive with --waive {base} --note \"<why>\"")
+        if not hit:
+            die(f"unknown source key: {base}", "see keys in assets/sources.json")
         if not a.note.strip():
             die(f"waiver for {key} needs an explicit --note", "approval is never silent")
         cfg.setdefault("waived", {})[key] = {"note": a.note.strip(), "date": date.today().isoformat()}

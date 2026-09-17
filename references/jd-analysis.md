@@ -13,8 +13,9 @@ source of truth — never rely on facts remembered from previous applications:
   questions
 - `rubric_full_time`, `rubric_part_time_gig` — the scoring rubrics
 - `cv_master` — the CV source of truth for tense, facts, achievements
-- `experience_records` — recent-role evidence pieces (responsibilities,
-  tools, soft skills, achievements, role context)
+- `experience_records` — one or more evidence files: recent-role pieces plus
+  prepared STAR stories (responsibilities, tools, soft skills, achievements,
+  role context)
 
 Each source exists to feed a specific later step; read it with its downstream
 function in mind, and peek rather than ingest when a file is long. Missing

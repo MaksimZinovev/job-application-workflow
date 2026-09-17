@@ -91,7 +91,7 @@ ln -s ~/repos/job-application-workflow ~/.pi/agent/skills/job-application
 # or project-local: ln -s ~/repos/job-application-workflow <project>/.pi/skills/job-application
 ```
 
-Paths live in `assets/sources.json`. The rubrics and the ideal-role profile ship bundled in `assets/`; point `cv_master` and `experience_records` at your files, and override any bundled default with `preflight.py --set <key> <path>`. Optional sources, like the unslop skill, drop to degraded mode with a warning when missing.
+Paths live in `assets/sources.json`. The rubrics and the ideal-role profile ship bundled in `assets/`; point `cv_master` and `experience_records` at your files, and override any bundled default with `preflight.py --set <key> <path>`. A key may hold a list of files — `experience_records` does; add entries to the list in sources.json, and address one with `--set <key>[<i>] <path>`. Optional sources, like the unslop skill, drop to degraded mode with a warning when missing.
 
 ## Design decisions
 

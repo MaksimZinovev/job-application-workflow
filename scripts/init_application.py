@@ -51,6 +51,7 @@ STUBS = [  # (template, target, label)
     ("matches-template.md", "matches.md", "stub from assets/matches-template.md"),
     ("progress-template.md", "progress.md", "stub from assets/progress-template.md"),
     ("run-log-template.md", "run-log.md", "stub from assets/run-log-template.md"),
+    ("cover-letter-template.md", "cover-letter-draft.md", "stub from assets/cover-letter-template.md"),
 ]
 
 

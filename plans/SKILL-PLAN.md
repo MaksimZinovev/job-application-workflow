@@ -353,6 +353,16 @@ so at the checkpoint. Closes the gap where judges approved letters the
 skill's own patterns would have flagged (run 12's subheads survived two
 Tier 1 rounds).
 
+**Round 12 (user order):** cover-letter-template.md added to assets/ as
+the sixth stub — the skeleton mirrors the mechanically enforced
+structure (title, contact block, salutation, intro, evidence table with
+the bolded-keyword convention, three subhead slots, the pre-labeled gap
+paragraph, conditional projects list, outro with sign-off) and carries
+zero em dashes. init_application.py stubs cover-letter-draft.md like
+the other artifacts; cover-letter-writing.md now says fill the stub;
+README's output tree notes it. The letter stops being the one artifact
+drafted from a blank page.
+
 ## 5. Canonical step map
 
 | id | type | focus | rules remap |

@@ -1,8 +1,9 @@
 # Cover letter writing
 
-Read when starting step_3. Draft into `cover-letter-draft.md` in the run
-folder. The paragraph rubric (loaded at planning) is reused here as the
-assessment rubric for every body paragraph, alongside the don'ts below.
+Read when starting step_3. Fill the `cover-letter-draft.md` stub created
+at init in the run folder. The paragraph rubric (loaded at planning) is
+reused here as the assessment rubric for every body paragraph, alongside
+the don'ts below.
 
 ## Required structure
 

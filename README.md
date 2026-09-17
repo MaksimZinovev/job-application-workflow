@@ -74,7 +74,7 @@ Each run produces one folder under your `applications_root`, auto-numbered:
 ├── job-description.md         # the ad, copied at init
 ├── scoring.md                 # rubric id, Scoring Results, verdict
 ├── matches.md                 # keyword evidence lists + honest gaps
-├── cover-letter-draft.md      # v1, preserved forever
+├── cover-letter-draft.md      # stubbed at init; v1, preserved forever
 ├── cover-letter-draft-v2.md  # after the passes
 ├── review-report.json        # judge verdict, tier, flagged items
 ├── progress.json              # machine gate state

@@ -57,7 +57,8 @@ Sources read by key from sources.json: `experience_records` (most recent role) a
 <!-- The 8 hidden questions table. Columns: No | Question | Mapped to |
      Plan. Primary, secondary and tertiary hidden questions map to the
      bold run-in subhead paragraphs; honest reflection maps to the gap
-     paragraph; employer questions map to the logistics paragraph. -->
+     paragraph; employer questions map to the logistics paragraph. 
+     Examples: "Has this person actually DONE agentic AI in quality work — or just used ChatGPT?", "Can they carry the hands-on QE side — suites, coverage, test data — while the AI story shines?", "What will this person actually *own* in a fast-moving product-heavy team?", "Will they genuinely uplift junior QEs (workshops, training, pairing)?"  -->
 
 ## Writing plan (wireframe + alternatives)
 

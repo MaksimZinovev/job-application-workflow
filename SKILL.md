@@ -33,6 +33,7 @@ script's source unless its failure message does not explain the problem
 and resolution requires it; `--help` is the sanctioned peek.
 
 ```bash
+# Example
 python3 scripts/preflight.py                                          # step 0: resolve every source, print the table
 python3 scripts/preflight.py --set cv_master ~/docs/cv-master.md       # step 0: fix a wrong source path
 python3 scripts/preflight.py --waive ideal_job --note "user-approved at preflight: not needed"

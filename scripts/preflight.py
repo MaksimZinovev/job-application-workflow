@@ -34,6 +34,9 @@ BUNDLED_ASSETS = [
     "review-report-template.json",
     "progress-template.md",
     "run-log-template.md",
+    "scoring-rubric-full-time.md",
+    "scoring-rubric-part-time-gig.md",
+    "ideal-job-2026.md",
 ]
 
 

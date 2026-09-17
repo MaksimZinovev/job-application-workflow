@@ -51,6 +51,9 @@ job-application-workflow/
 │   └── retro-and-run-log.md     # run log convention, rule format, caps
 ├── assets/
 │   ├── sources.json              # every path lives here; edit for your setup
+│   ├── scoring-rubric-full-time.md    # bundled default, override via --set
+│   ├── scoring-rubric-part-time-gig.md # bundled default, override via --set
+│   ├── ideal-job-2026.md          # bundled ideal-role profile
 │   ├── banned-terms.json         # cliche catalog, fail + review severities
 │   ├── scoring-template.md       # scoring.md skeleton
 │   ├── matches-template.md       # matches.md skeleton
@@ -88,7 +91,7 @@ ln -s ~/repos/job-application-workflow ~/.pi/agent/skills/job-application
 # or project-local: ln -s ~/repos/job-application-workflow <project>/.pi/skills/job-application
 ```
 
-Paths live in `assets/sources.json`. Point `cv_master`, `experience_records`, and the rubrics at your files. Optional sources, like the unslop skill, drop to degraded mode with a warning when missing.
+Paths live in `assets/sources.json`. The rubrics and the ideal-role profile ship bundled in `assets/`; point `cv_master` and `experience_records` at your files, and override any bundled default with `preflight.py --set <key> <path>`. Optional sources, like the unslop skill, drop to degraded mode with a warning when missing.
 
 ## Design decisions
 

@@ -278,6 +278,17 @@ source and consume the limited context window. SKILL.md's Scripts section now
 states the rule verbatim and carries ten sample commands; operating-principles
 Context economy carries the full rule with the run-log defect hook.
 
+**Round 5 (user order):** bundled `rubric_full_time`, `rubric_part_time_gig`,
+and `ideal_job` into `assets/` (flat) — the skill ships working defaults for
+cloners instead of pointing at absent personal files; sources.json defaults
+are now repo-relative; preflight.py verifies the three as bundled assets
+(install-integrity check); wiki originals preserved untouched as history.
+Reference fix: jd-analysis.md and matches-and-plan.md now state that every
+source key resolves via the preflight table or sources.json, closing the
+referential dead end found in the round-4 discussion. Privacy ledger: the
+bundled files carry personal bands (salary targets, NSW location, part-time
+hour caps) — publication explicitly ordered by the user.
+
 ## 5. Canonical step map
 
 | id | type | focus | rules remap |

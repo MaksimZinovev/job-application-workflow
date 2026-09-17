@@ -6,8 +6,11 @@ step.
 
 ## Build matches.md
 
-Create `matches.md` from the matches template (stubbed at init). Extract
-from the job description:
+Create `matches.md` from the matches template (stubbed at init). Resolve
+every source key (`experience_records`, `cv_master`) via the preflight table
+(`python3 scripts/preflight.py`) or `assets/sources.json`, and open the
+resolved file only when the procedure below calls for it. Extract from the
+job description:
 
 - **Target roles** — what roles the ad is really hiring for
 - **Keywords Skills** and **Keywords Tools** — the ad's own vocabulary,

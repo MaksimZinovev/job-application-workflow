@@ -21,6 +21,12 @@ function in mind, and peek rather than ingest when a file is long. Missing
 optional sources are flagged at preflight — the affected step adapts; missing
 mandatory sources block everything until fixed or explicitly waived.
 
+Resolve every key via the preflight table (`python3 scripts/preflight.py`)
+or `assets/sources.json`; open the resolved file itself only when the step's
+procedure calls for it. The rubrics and the ideal-role profile ship bundled
+in `assets/` as working defaults; override with
+`preflight.py --set <key> <path>` to score with your own.
+
 ## Pick the rubric by job class
 
 - Full-time roles → the rubric configured at `rubric_full_time`.

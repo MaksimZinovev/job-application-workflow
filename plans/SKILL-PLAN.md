@@ -236,6 +236,48 @@ Protocol per run:
 Cost shape: 3 full judge runs → 1 full (step_3) + 1 conditional delta (step_4) +
 1 delta (audit) ≈ half the token cost, most of the value intact.
 
+## 4c. Scope enforcement model + script black-box contract (post-publish review, round 3)
+
+Per-step scope (the "Scope" column of §10) is enforced in three layers:
+
+1. **Mechanical** — script write surfaces are physically confined:
+   `init_application.py` writes only inside the run folder it just created and
+   refuses overwrite; `preflight.py` reads existence and records config only;
+   `progress.py` dep gates refuse any out-of-order `--start/--approve`, so
+   out-of-scope work cannot advance the gate; `verify_artifacts.py` validates
+   only the step's expected artifacts — stray work earns nothing at the gate.
+2. **Procedural** — each SKILL.md step defines its action list and a single
+   output surface (step_0: preflight + init only; step_1: append Scoring
+   Results to scoring.md, then the promotion gate: "record the decision and
+   stop"). References repeat the boundary ("Only a promoted job reaches this
+   step").
+3. **Instructional** — references/operating-principles.md Scope limits: the run
+   folder is the working scope; nothing outside the run folder, the configured
+   sources, and `rules/` (retro only) is modified.
+
+Residual gap (documented): raw tool calls are not physically sandboxed — stray
+writes inside the run folder are possible but never gate artifacts; reads
+outside scope are bounded only by layers 2-3. **Pending patch (round 3):**
+add one line to operating-principles.md Scope limits — "All file writes go
+through the skill's scripts; no raw writes outside the run folder." — to be
+applied and committed with the next skill change.
+
+**Script black-box contract:** agents consume script output, never script
+source. Invocation comes from SKILL.md's scripts block, the per-step
+procedures, and `progress.py --status` (which prints the current step's verify
+command); `--help` is the only sanctioned peek. **Error-completeness invariant:**
+every failure path in every script carries a `fix:` hint (verified true at
+code review of all four scripts); a future script edit that adds a failure
+path without a hint is a retro-level defect. Rationale: reading a ~200-line
+script costs 2-3K tokens for zero decision value — the report and fix hints
+carry everything needed to self-correct.
+
+**Made explicit (round 4, user order):** the contract was inference-only until
+round 4 — without an explicit instruction, agents will likely read script
+source and consume the limited context window. SKILL.md's Scripts section now
+states the rule verbatim and carries ten sample commands; operating-principles
+Context economy carries the full rule with the run-log defect hook.
+
 ## 5. Canonical step map
 
 | id | type | focus | rules remap |
@@ -355,3 +397,7 @@ Anti-drift enforcement so a reference cannot be skipped:
 - `session-handoff.md` lives in `.local/`; SKILL.md + references contain no mention
   of workflow.md or session-handoff.
 - `wc -l SKILL.md` ≤ 150 is itself a checklist gate at final audit.
+- Round-3 patch gate (post-publish): operating-principles.md contains the
+  filesystem-scope line ("all file writes go through the skill's scripts"); the
+  error-completeness invariant holds — every `bail()`/`die()` path in all four
+  scripts carries a `fix:` hint, re-checked on any script edit (§4c).

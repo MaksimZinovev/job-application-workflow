@@ -28,11 +28,20 @@ only. Preflight exits 1 on a missing mandatory source; fix with
 
 ## Scripts
 
-```
-scripts/preflight.py        [--config sources.json] [--set <key> <path>] [--waive <key> --note "..."]
-scripts/init_application.py --name "<slug>" --jd <job-description-file>
-scripts/progress.py         <run-folder> [--status | --start <id> | --approve <id>]
-scripts/verify_artifacts.py --artifact {scoring|matches|cover-letter|review-report} --path <file> [--matches <m.md>] [--max-words N]
+Run scripts, read their report, act on the fix hints. Never read a
+script's source unless its failure message does not explain the problem
+and resolution requires it; `--help` is the sanctioned peek.
+
+```bash
+python3 scripts/preflight.py                                          # resolve sources, print the table
+python3 scripts/preflight.py --set cv_master <path>                   # fix a source path
+python3 scripts/preflight.py --waive ideal_job --note "<user-approved reason>"
+python3 scripts/init_application.py --name "qa-engineer-acme" --jd <jd-file>
+python3 scripts/progress.py <run> --status                            # position + what to read next
+python3 scripts/progress.py <run> --approve step_1                     # the gate, after verify exits 0
+python3 scripts/verify_artifacts.py --artifact scoring --path <run>/scoring.md
+python3 scripts/verify_artifacts.py --artifact cover-letter --path <run>/cover-letter-draft.md --matches <run>/matches.md
+python3 scripts/verify_artifacts.py --artifact review-report --path <run>/review-report.json
 ```
 
 ## Steps

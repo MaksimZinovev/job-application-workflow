@@ -44,6 +44,11 @@ by key from `assets/sources.json`; the preflight script resolves the paths.
   in doubt about scope.
 - Read reference files just in time: `progress.py --status` prints the
   reference for the next step. Do not preload every reference at once.
+- Scripts are black-box tools. Invoke them with the sample commands in
+  SKILL.md (or `--help`), read the stdout report and stderr fix hints, and
+  act on those. Never read a script's source unless its failure message
+  does not explain the problem and resolution requires it; if it does,
+  treat it as a skill defect and record it in the run log for the retro.
 - The run folder is the working scope for a step. Do not wander into other
   application folders except to consult an approved precedent the user names.
 

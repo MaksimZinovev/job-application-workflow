@@ -59,9 +59,8 @@ Purpose: sources resolved, run folder initialized.
 2. Run `scripts/preflight.py`; every missing mandatory source goes to the user (fix via `--set`, or explicit dated `--waive`).
 3. Run `scripts/init_application.py --name "<slug>" --jd <file>`; note the manifest's next action.
 
-Allowed reads in step_0: `references/operating-principles.md`, the JD,
-preflight output. Later-step references stay unread until their step opens.
-Every scored JD gets its run folder at init, even if the job never promotes.
+Allowed reads in step_0: `references/operating-principles.md`, the JD, preflight output;
+later-step references wait for their step. Every scored JD gets a run folder, promote or not.
 
 Checkpoint: sources resolved, run folder created — wait for approval.
 

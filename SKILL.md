@@ -33,15 +33,15 @@ script's source unless its failure message does not explain the problem
 and resolution requires it; `--help` is the sanctioned peek.
 
 ```bash
-python3 scripts/preflight.py                                          # resolve sources, print the table
-python3 scripts/preflight.py --set cv_master <path>                   # fix a source path
-python3 scripts/preflight.py --waive ideal_job --note "<user-approved reason>"
-python3 scripts/init_application.py --name "qa-engineer-acme" --jd <jd-file>
-python3 scripts/progress.py <run> --status                            # position + what to read next
-python3 scripts/progress.py <run> --approve step_1                     # the gate, after verify exits 0
-python3 scripts/verify_artifacts.py --artifact scoring --path <run>/scoring.md
-python3 scripts/verify_artifacts.py --artifact cover-letter --path <run>/cover-letter-draft.md --matches <run>/matches.md
-python3 scripts/verify_artifacts.py --artifact review-report --path <run>/review-report.json
+python3 scripts/preflight.py                                          # step 0: resolve every source, print the table
+python3 scripts/preflight.py --set cv_master ~/docs/cv-master.md       # step 0: fix a wrong source path
+python3 scripts/preflight.py --waive ideal_job --note "user-approved at preflight: not needed"
+python3 scripts/init_application.py --name "senior-qa-engineer-acme" --jd ~/Downloads/jd-acme.txt
+python3 scripts/progress.py ~/apps/12_senior-qa-engineer-acme --status   # init printed this folder; status prints position + next reference
+python3 scripts/progress.py ~/apps/12_senior-qa-engineer-acme --approve step_1   # the gate: verify exits 0 first
+python3 scripts/verify_artifacts.py --artifact scoring --path ~/apps/12_senior-qa-engineer-acme/scoring.md
+python3 scripts/verify_artifacts.py --artifact cover-letter --path ~/apps/12_senior-qa-engineer-acme/cover-letter-draft.md --matches ~/apps/12_senior-qa-engineer-acme/matches.md
+python3 scripts/verify_artifacts.py --artifact review-report --path ~/apps/12_senior-qa-engineer-acme/review-report.json
 ```
 
 ## Steps

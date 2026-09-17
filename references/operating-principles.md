@@ -106,6 +106,14 @@ judgment. The judge runs in tiers so token cost stays proportional to risk.
   draft, and matches.md — no run context. Fresh context is most of the
   independence value: a fresh-context self-judge or a different cheap model
   both qualify; a different model is a bonus, not a requirement. Scope: full.
+- **Letter-review criteria source.** Any judge reviewing cover-letter text
+  also gets the skill configured at `better_cover_letters`, in full, as
+  review criteria: its patterns, evidence rule, ownership rule, and final
+  self-check. The invoking agent hands the resolved skill file in with the
+  review inputs. Once the grounded pattern-audit table exists (step_4
+  onward), it is part of the input too: every row populated, verdicts
+  quoting the letter. When the source does not resolve, the judge reviews
+  against the locked criteria only and says so at the checkpoint.
 - **step_4 — conditional delta judge.** Writing passes are mostly mechanically
   checkable. The judge runs only when the run-log marks
   `substantive_changes: yes` (a paragraph rewritten, evidence swapped,

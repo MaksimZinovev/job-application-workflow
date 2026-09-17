@@ -343,6 +343,16 @@ from ~120 to ~58 lines. Candidate for the same treatment, flagged not
 ordered: cover-letter-writing.md's intro-paragraph section restates
 better-cover-letter pattern 16.
 
+**Round 11 (user order):** the tiered judge protocol gained a
+letter-review criteria source: every judge reviewing cover-letter text
+receives the better_cover_letters skill in full with its review inputs
+(patterns, evidence rule, ownership rule, self-check), and the grounded
+pattern-audit table once it exists — checked for full population,
+verdicts quoting the letter. Source missing: locked criteria only, said
+so at the checkpoint. Closes the gap where judges approved letters the
+skill's own patterns would have flagged (run 12's subheads survived two
+Tier 1 rounds).
+
 ## 5. Canonical step map
 
 | id | type | focus | rules remap |

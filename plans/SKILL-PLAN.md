@@ -298,6 +298,17 @@ or --waive on a list key dies with the index hint. matches-and-plan.md and
 jd-analysis.md state the multi-file semantics; README documents the array
 convention.
 
+**Round 7 (user order, live-run findings):** run 18, the first live run
+under the skill, skipped init by inference, read step_1 material during
+step_0 (jd-analysis, rubric, CV master, precedent files, web searches), and
+answered "Yes - step_0 done" with the run folder missing. Fixes: the
+checkpoint protocol forbids inferred deviations and requires unmet
+conditions named in the same breath as any status answer; step_0's on_fail
+routes apparent-wrong instructions to the user. step_0 now lists its allowed
+reads and bans read-ahead; Context economy repeats the ban. Structural
+call, user option (a): every scored JD gets its run folder at init, even
+when the job never promotes.
+
 ## 5. Canonical step map
 
 | id | type | focus | rules remap |

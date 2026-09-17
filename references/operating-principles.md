@@ -51,6 +51,8 @@ by key from `assets/sources.json`; the preflight script resolves the paths.
   in doubt about scope.
 - Read reference files just in time: `progress.py --status` prints the
   reference for the next step. Do not preload every reference at once.
+- Do not read a later step's references early. That is drift, not
+  preparation. If more context feels needed, ask the user first.
 - Scripts are black-box tools. Invoke them with the sample commands in
   SKILL.md (or `--help`), read the stdout report and stderr fix hints, and
   act on those. Never read a script's source unless its failure message

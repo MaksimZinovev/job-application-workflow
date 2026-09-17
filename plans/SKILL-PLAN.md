@@ -331,6 +331,18 @@ precedents — bolded keywords in both table columns and a conditional
 GitHub-projects list grounded in cv_master's portfolio row. Wiki repo
 left uncommitted (user's call).
 
+**Round 10 (user order):** writing-passes.md de-duplicated. Both pattern
+digests cut — pass 1 duplicated the unslop skill line for line, pass 2
+duplicated the better-cover-letter skill (all 16 patterns, ownership
+ladder, evidence rule, rewrite process, final self-check). The skills are
+now the only pattern sources, each read end to end during its pass;
+writing-passes.md keeps pure orchestration: two-pass structure, version
+preservation, degraded mode, targeted rewrites, the grounded-audit
+pointer, the substantive-changes flag, verify, checkpoint. File shrank
+from ~120 to ~58 lines. Candidate for the same treatment, flagged not
+ordered: cover-letter-writing.md's intro-paragraph section restates
+better-cover-letter pattern 16.
+
 ## 5. Canonical step map
 
 | id | type | focus | rules remap |

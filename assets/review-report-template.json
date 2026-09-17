@@ -1,0 +1,34 @@
+{
+  "schema": "job-application/review-report@1",
+  "run": "<NN_slug>",
+  "step": "<step_3 | step_4 | step_audit>",
+  "artifact": "<file judged, e.g. cover-letter-draft.md>",
+  "tier": 1,
+  "scope": "full",
+  "judge": {
+    "identity": "<model or agent name>",
+    "kind": "<fresh-context-self | different-model | peer-agent>",
+    "date": "YYYY-MM-DD"
+  },
+  "verdict": "needs-fixes",
+  "dimensions": [
+    { "name": "question coverage", "score": "pass", "note": "" },
+    { "name": "source fidelity", "score": "pass", "note": "" },
+    { "name": "demonstration", "score": "pass", "note": "" },
+    { "name": "story continuity", "score": "pass", "note": "" },
+    { "name": "evidence economy", "score": "pass", "note": "" },
+    { "name": "reader ease", "score": "pass", "note": "" }
+  ],
+  "flagged_items": [
+    {
+      "id": "F1",
+      "location": "<paragraph or quoted sentence>",
+      "dimension": "<rubric dimension or craft rule>",
+      "issue": "<what is wrong>",
+      "fix": "<what a fix looks like>",
+      "resolved": false
+    }
+  ],
+  "rejudge_rounds": 0,
+  "notes": "Tier guide: tier 1 = fresh-context judge after step_3 (scope: full) or the conditional delta judge at step_4 (scope: delta, only when run-log marks substantive changes); tier 2 = peer judge at step_audit (scope: delta). verdict: approved | needs-fixes. One exhaustive structured pass per run; re-judge rounds capped at 2, then escalate to the user. Every flagged item must be resolved before progress.py --approve accepts this report."
+}

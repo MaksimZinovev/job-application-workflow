@@ -1,0 +1,19 @@
+{
+  "applications_root": "~/repos/wiki/notes/2026-applications",
+  "word_budgets": { "cover_letter_default": 1000, "scoring_results_max_chars": 5000, "matches_max_chars": 10000 },
+  "sources": {
+    "mandatory": {
+      "cv_master":            { "path": "~/repos/wiki/notes/2026-applications/master-templates/2026-09-Maksim-Zinovev-Automation-Tester-CV-master.md", "function": "CV source of truth: tense, facts, achievements; List 2 evidence" },
+      "experience_records":   { "path": "~/repos/jobkit/experience-pieces.json", "function": "recent-role evidence pieces for matches List 1" },
+      "rubric_full_time":     { "path": "~/repos/wiki/notes/2026-applications/scoring-rubric-full-time.md", "function": "scoring rubric for full-time roles" },
+      "rubric_part_time_gig": { "path": "~/repos/wiki/notes/2026-applications/scoring-rubric-part-time-gig.md", "function": "scoring rubric for gig/part-time roles" }
+    },
+    "optional": {
+      "job_search_context":  { "path": "~/repos/wiki/notes/job-search/job-search-2026.md", "function": "search context and constraints" },
+      "ideal_job":            { "path": "~/repos/wiki/notes/job-search/ideal-job-2026.md", "function": "ideal-role profile" },
+      "unslop_skill":         { "path": "~/repos/unslop/SKILL.md", "function": "human-voice rewriting pass; degraded mode = banned-terms scan only" },
+      "better_cover_letters": { "path": "~/repos/wiki/.pi/skills/better-cover-letter-writing/SKILL.md", "function": "credibility rewrite pass; degraded mode = banned-terms scan only" }
+    }
+  },
+  "waived": {}
+}

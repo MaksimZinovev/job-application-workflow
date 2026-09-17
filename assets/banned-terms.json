@@ -1,0 +1,220 @@
+{
+  "schema": "job-application/banned-terms@1",
+  "attribution": "Pattern catalog adapted from simonw/tools llm-cliche-highlighter (https://github.com/simonw/tools/blob/main/llm-cliche-highlighter.html); patterns in its Wikipedia group derive from Wikipedia's 'Signs of AI writing' guide. Merged with the unslop skill vocabulary and the job-application workflow don'ts, then distilled for cover-letter prose. Severity split per SKILL-PLAN section 2: fail = hard tells that block delivery; review = noisy patterns reported for judgment (legitimate prose can trip them).",
+  "severities": {
+    "fail": "hard tell: count must be 0 before delivery (verify_artifacts.py blocks)",
+    "review": "noisy pattern: reported as a warning, never blocking on its own"
+  },
+  "keyword_coverage": {
+    "skip_markers": "\\b(skip|none|not used|not carried)\\b",
+    "stop_tokens": [
+      "the",
+      "and",
+      "for",
+      "with",
+      "not",
+      "are",
+      "was",
+      "were",
+      "have",
+      "has",
+      "had",
+      "will",
+      "would",
+      "can",
+      "could",
+      "should",
+      "may",
+      "might",
+      "your",
+      "you",
+      "our",
+      "their",
+      "this",
+      "that",
+      "these",
+      "those",
+      "from",
+      "into",
+      "jd",
+      "ideally",
+      "also",
+      "considered",
+      "alternative",
+      "only",
+      "skip",
+      "skipped",
+      "none",
+      "plus",
+      "via",
+      "per"
+    ],
+    "note": "Coverage = every non-skipped keyword from Keywords Skills/Tools carries at least one core token into the letter. A smoke check only; substance is judged by the paragraph rubric and the LLM judge."
+  },
+  "letter_structure": [
+    {
+      "id": "em-dash",
+      "max": 0,
+      "pattern": "\\u2014",
+      "message": "em-dash count {n}, expected 0 — use periods or commas only (unslop #13)"
+    },
+    {
+      "id": "salutation",
+      "require": true,
+      "pattern": "(?im)^dear\\b",
+      "message": "no salutation ('Dear ...') — letter structure"
+    },
+    {
+      "id": "evidence-table",
+      "pattern": "(?im)^\\|.*\\bevidence\\b.*\\|",
+      "message": "no evidence table (header row must name 'evidence')",
+      "require": true
+    },
+    {
+      "id": "run-in-subheads",
+      "count_pattern": "(?m)^\\*\\*[^*\\n]{3,80}\\*\\*",
+      "min": 3,
+      "message": "bold run-in subhead paragraphs: {n}, expected >= 3"
+    },
+    {
+      "id": "gap-paragraph",
+      "pattern": "(?im)^\\*\\*[^*\\n]*(gap|grow|still|honest|not yet|willing|have ?n[o']t)[^*\\n]*\\*\\*|honest gap|still growing",
+      "message": "no gap paragraph (bold run-in naming honest scope / what is still growing)",
+      "require": true
+    },
+    {
+      "id": "outro",
+      "pattern": "(?i)\\b(thank you|sincerely|kind regards)\\b",
+      "message": "no outro (closing/thanks) — letter structure incomplete",
+      "require": true
+    }
+  ],
+  "terms": [
+    {
+      "id": "ai-vocab",
+      "severity": "fail",
+      "name": "AI vocabulary words",
+      "hint": "Replace with the plain word (unslop #7)",
+      "pattern": "\\b(delv(?:e|es|ed|ing)|tapestr(?:y|ies)|meticulous(?:ly)?|pivotal|intricate(?:ly)?|intricacies|interplay|underscor(?:e|es|ed|ing)|garner(?:s|ed|ing)?|bolster(?:s|ed|ing)?|vibrant|bustling|multifaceted|seamless(?:ly)?|commendable|ever-evolving|additionally|crucial(?:ly)?|enduring|enhanc(?:e|es|ed|ing)|foster(?:s|ed|ing)?|showcas(?:e|es|ed|ing))\\b"
+    },
+    {
+      "id": "not-just",
+      "severity": "fail",
+      "name": "Not just X, but Y",
+      "hint": "State the point directly (unslop #9)",
+      "pattern": "\\bnot\\s+(?:just|only|merely|simply)\\s+[^.!?\\n;]*?\\bbut(?:\\s+also)?\\b|\\b(?:it|this|that)(?:'s|\\s+(?:is|was))\\s+not\\s+[^.!?\\n,;\\u2014\\u2013]{1,60}[,;\\u2014\\u2013]\\s*(?:it|this|that)(?:'s|\\s+(?:is|was))\\b"
+    },
+    {
+      "id": "not-but",
+      "severity": "fail",
+      "name": "Not X, but Y",
+      "hint": "State the point directly (unslop #10)",
+      "pattern": "\\bnot\\s+(?!(?:just|only|merely|simply)\\b)[^.!?\\n;]{1,100}?\\bbut\\b|\\b(?:isn't|is not)\\s+[^.!?\\n]{1,80}[.!?]\\s*(?:it's|it is|this is|that is)\\b"
+    },
+    {
+      "id": "note-that",
+      "severity": "fail",
+      "name": "It is important to note",
+      "hint": "Delete the hedge; state the fact (unslop #23)",
+      "pattern": "\\bit(?:'s|\\s+(?:is|was))\\s+(?:also\\s+)?(?:important|worth|crucial|essential|vital)\\s+(?:to\\s+(?:note|remember|understand|recognize|mention|pause|consider|ask)|noting|mentioning|remembering|pausing|considering|asking)\\b(?:\\s+that\\b)?|\\bit\\s+should\\s+be\\s+noted\\b"
+    },
+    {
+      "id": "testament",
+      "severity": "fail",
+      "name": "Stands as a testament",
+      "hint": "Say what happened instead of inflating significance",
+      "pattern": "\\b(?:stand|stands|stood|serve|serves|served|standing|serving)\\s+as\\s+(?:a|an)\\s+(?:\\w+\\s+)?(?:testament|reminder)\\b|\\b(?:is|was|are|were|remain|remains)\\s+a\\s+(?:\\w+\\s+)?testament\\s+to\\b"
+    },
+    {
+      "id": "crucial-role",
+      "severity": "fail",
+      "name": "Plays a crucial role",
+      "hint": "Name the action and its outcome instead",
+      "pattern": "\\bplay(?:s|ed|ing)?\\s+(?:a|an)\\s+(?:\\w+\\s+)?(?:crucial|pivotal|vital|key|significant|central|critical|important)\\s+role\\b"
+    },
+    {
+      "id": "landscape",
+      "severity": "fail",
+      "name": "Ever-evolving landscape",
+      "hint": "Cut the scene-setting boilerplate",
+      "pattern": "\\b(?:ever-)?(?:evolving|changing|shifting)\\s+landscape\\b|\\bin\\s+today's\\s+(?:fast-paced|ever-changing|ever-evolving|digital|modern|competitive)\\s+\\w+"
+    },
+    {
+      "id": "participle-tail",
+      "severity": "fail",
+      "name": "Participle sentence tails",
+      "hint": "Delete or expand with real sources (unslop #3)",
+      "pattern": ",\\s+(?:highlighting|underscoring|emphasizing|showcasing|reflecting|demonstrating|illustrating|signaling|solidifying|cementing|reinforcing|underlining)\\s+(?:its|his|her|their|our|the|a|an|how|that|what|both)\\b[^.!?\\n]*"
+    },
+    {
+      "id": "vague-experts",
+      "severity": "fail",
+      "name": "Experts argue",
+      "hint": "Name the source or delete (unslop #5)",
+      "pattern": "\\b(?:many|some|several|most|numerous)?\\s*(?:experts|critics|observers|scholars|analysts|commentators)\\s+(?:have\\s+|often\\s+|widely\\s+)?(?:argu(?:e|es|ed)|not(?:e|es|ed)|suggest(?:s|ed)?|believ(?:e|es|ed)|agree[ds]?|contend(?:s|ed)?|observ(?:e|es|ed)|caution(?:s|ed)?|claim(?:s|ed)?|cit(?:e|es|ed)|point(?:s|ed)?\\s+out)\\b|\\bindustry\\s+reports?\\s+(?:suggest|indicate|show)\\w*\\b"
+    },
+    {
+      "id": "despite-challenges",
+      "severity": "fail",
+      "name": "Despite these challenges",
+      "hint": "Replace with specific facts (unslop #6)",
+      "pattern": "\\bdespite\\s+(?:these|those|such|its|their|the|numerous|significant|ongoing)\\s+(?:\\w+\\s+)?challenges\\b|\\bfac(?:e|es|ed|ing)\\s+(?:several|numerous|many|significant|various|a\\s+number\\s+of)\\s+challenges\\b|\\bchallenges\\s+remain\\b|\\bremains\\s+to\\s+be\\s+seen\\b|\\b(?:only\\s+)?time\\s+will\\s+tell\\b"
+    },
+    {
+      "id": "performative-honesty",
+      "severity": "fail",
+      "name": "Performative honesty",
+      "hint": "Demonstrate sincerity with facts, do not announce it",
+      "pattern": "\\bI\\s+(?:will\\s+not|won't)\\s+pretend\\b|\\b(?:I'll|let's|to)\\s+be\\s+(?:honest|clear|blunt|real)\\b|(?:^|[.!?\\u2014\\u2013]\\s+|\\n)(?:Honestly|Look|Truthfully|Frankly)\\s*,"
+    },
+    {
+      "id": "turns-out",
+      "severity": "fail",
+      "name": "Turns out",
+      "hint": "Cut the casual-revelation opener",
+      "pattern": "(?:^|[.!?\\u2014\\u2013]\\s+|\\n)Turns\\s+out\\b|\\bit\\s+turns\\s+out\\s+that\\b"
+    },
+    {
+      "id": "ai-leftovers",
+      "severity": "fail",
+      "name": "Chatbot leftovers",
+      "hint": "Paste debris from an LLM; remove it",
+      "pattern": "\\bas\\s+an\\s+ai(?:\\s+language)?\\s+model\\b|\\bas\\s+of\\s+my\\s+last\\s+(?:update|training)\\b|\\bknowledge\\s+cutoff\\b|contentReference|oaicite|turn0(?:search|news|image)\\d*|attributableIndex|utm_source="
+    },
+    {
+      "id": "generic-fit-claims",
+      "severity": "fail",
+      "name": "Generic fit claims",
+      "hint": "Workflow don't: explain relevance through evidence, never assert fit",
+      "pattern": "\\b(?:a\\s+strong\\s+fit|passionate\\s+about|results-driven|results\\s+driven|team\\s+player|self-starter|proven\\s+track\\s+record|hit\\s+the\\s+ground\\s+running)\\b"
+    },
+    {
+      "id": "fancy-is",
+      "severity": "fail",
+      "name": "Fancy ways to say is",
+      "hint": "Just say is or has (unslop #8)",
+      "pattern": "\\b(?:serves?|stands?)\\s+as\\s+(?:a|an|the)\\b|\\bboasts?\\b"
+    },
+    {
+      "id": "marketing-superlatives",
+      "severity": "fail",
+      "name": "Marketing superlatives",
+      "hint": "Replace with the plain description unless the evidence is precise",
+      "pattern": "\\b(?:transformative|groundbreaking|cutting-edge|state-of-the-art|world-class|best-in-class|revolutionar(?:y|ize|ised|ized))\\b"
+    },
+    {
+      "id": "colon-triple",
+      "severity": "review",
+      "name": "Colon into a triple",
+      "hint": "Rewrite the list as first-person process or plain prose (rule_no_enumeration_colons)",
+      "pattern": ":\\s+[^.!?;:\\n]{2,40},\\s+[^.!?;:\\n]{2,40},\\s+(?:and\\s+|or\\s+)?[^.!?;:\\n]{2,40}(?=[.!?\\n])"
+    },
+    {
+      "id": "stacked-questions",
+      "severity": "review",
+      "name": "Stacked rhetorical questions",
+      "hint": "Ask one real question or answer in prose",
+      "pattern": "[^.!?\\n]+\\?(?:\\s*[^.!?\\n]+\\?)+"
+    }
+  ]
+}

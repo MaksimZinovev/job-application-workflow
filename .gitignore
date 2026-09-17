@@ -1,0 +1,4 @@
+.local/
+.pi/
+.ruff_cache/
+__pycache__/

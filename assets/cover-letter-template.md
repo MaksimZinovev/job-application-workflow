@@ -5,7 +5,8 @@
 
 Dear <hiring team or name>,
 
-<Intro paragraph: the executive summary. What kind of environments you
+<Intro paragraph: 
+"I am applying for the {role} role. The core of the fit: {explained in 1-2 sentences}." The executive summary that supports the fit and highlights relevant parts of experience, stack, what kind of environments you
 have worked in, the scale and nature of the systems, your level of
 ownership. No metrics here; they live in the table and body sections.>
 
@@ -27,8 +28,7 @@ relevant exists; an empty slot is information.>
 
 **<Plain functional label.>** <prose>
 
-<Outro: call to action, working rights, availability.>
-Thank you for your time and consideration.
+<Outro: I look forward to meeting with you so we can discuss my background and your needs in detail. Please contact me at your earliest convenience to schedule an interview; until then, thank you for your time and consideration.>
 
 Kind regards,
 <Name>

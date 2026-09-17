@@ -59,7 +59,7 @@ Purpose: sources resolved, run folder initialized.
 2. Run `scripts/preflight.py`; every missing mandatory source goes to the user (fix via `--set`, or explicit dated `--waive`).
 3. Run `scripts/init_application.py --name "<slug>" --jd <file>`; note the manifest's next action.
 
-Allowed reads in step_0: `references/operating-principles.md`, the JD, preflight output;
+Allowed reads in step_0: `references/operating-principles.md`, the JD, preflight output;  
 later-step references wait for their step. Every scored JD gets a run folder, promote or not.
 
 Checkpoint: sources resolved, run folder created — restate the run rules briefly, in your own words (name unmet conditions with any status answer; ask before deviating; later-step references wait for their step), then wait for approval.
@@ -103,7 +103,9 @@ Purpose: judged, rubric-scored cover letter v1.
 1. Read `references/cover-letter-writing.md`; keep `references/paragraph-rubric.md` loaded for assessment.
 2. Draft `cover-letter-draft.md`: required structure, body word budget, evidence only from matches.md and configured sources.
 3. Run `scripts/verify_artifacts.py --artifact cover-letter --path <run>/cover-letter-draft.md --matches <run>/matches.md`.
-4. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report.json`; fix flagged items, re-judge ≤2 rounds.
+4. Review our own work using
+  `references/cover-letter-writing.md`;  `references/paragraph-rubric.md` 
+5. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report.json`; fix flagged items, re-judge ≤2 rounds.
 
 Checkpoint: concise report, raise if any questions, present draft + judge report — wait for approval.
 

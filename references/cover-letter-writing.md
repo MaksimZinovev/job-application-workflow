@@ -12,7 +12,9 @@ The verification script enforces these mechanically — keep them in:
 2. An intro paragraph (see below).
 3. An evidence table — the recruiter's skim layer, one row per key
    requirement, with a header row naming the evidence column
-   (`| # | Your requirement | My evidence |` works).
+   (`| # | Your requirement | My evidence |` works). Bold the load-bearing
+   keywords in both columns: the ad's key phrases on the left, the evidence
+   highlights on the right (the 06 mitti letter is the format precedent).
 4. At least three bold run-in subhead paragraphs after the table
    (`**Label.**` followed by prose). Labels are plain functional noun or
    first-person phrases ("The AI work.", "How I would start.", "What I have
@@ -20,7 +22,12 @@ The verification script enforces these mechanically — keep them in:
 5. A gap paragraph among them: admit the gaps between the ideal candidate
    and this profile, then find the reasons and evidence that explain why the
    gap closes rather than blocks.
-6. An outro: call to action + sign-off, working rights and availability,
+6. A projects list when the record carries public work: 1-3 relevant
+   GitHub projects or portfolio links, each with a one-line description,
+   grounded in `cv_master`'s portfolio row or the experience records (the
+   06 mitti letter lists groundcrew, docfence, clickworks.me). Skip it
+   when nothing relevant exists; an empty slot is information.
+7. An outro: call to action + sign-off, working rights and availability,
    thanks for the reader's time.
 
 ## The intro paragraph

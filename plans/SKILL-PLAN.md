@@ -317,6 +317,20 @@ notes stay the raw feed; init copies the JD into the run folder (user
 confirmed). SKILL.md back at the 150-line cap after the restate line was
 fused into the existing checkpoint line.
 
+**Round 9 (user order, second live run findings):** the ebet run's step_4
+pass claimed pattern coverage after reading 60 of 281 lines of the
+better-cover-letter-writing skill; forced full reads surfaced four more
+violations. Fixes: the wiki skill itself gained scripts/init.py (stubs a
+grounded 16-pattern audit table next to the letter, refuses overwrites,
+error paths carry fix hints) plus assets/patterns.md template and a
+Grounded audit section in its SKILL.md (run init, read the skill end to
+end, populate every row before claiming done). Workflow side: writing-
+passes.md pass 2 now requires the grounded audit and names the digest
+explicitly; cover-letter-writing.md adopts two 06-mitti format
+precedents — bolded keywords in both table columns and a conditional
+GitHub-projects list grounded in cv_master's portfolio row. Wiki repo
+left uncommitted (user's call).
+
 ## 5. Canonical step map
 
 | id | type | focus | rules remap |

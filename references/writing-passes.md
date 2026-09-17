@@ -51,6 +51,14 @@ says "only address what I mentioned", that is the whole instruction.
 
 ## Pass 2 — credibility rewrite
 
+Run the grounded pattern audit first: the skill configured at
+`better_cover_letters` ships `scripts/init.py`; run
+`python3 <that skill's dir>/scripts/init.py --letter <draft>` to stub a
+table (No, pattern, verdict, notes), read the full skill end to end, and
+fill every row with a verdict quoting the letter. The pattern list below
+is a digest; the skill itself is the source. An empty row means the pass
+is not done.
+
 Scan for the remaining patterns and fix:
 
 - Grand claims → observable actions ("played a key role" → "helped move...").

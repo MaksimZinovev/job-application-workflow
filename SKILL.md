@@ -103,7 +103,7 @@ Purpose: judged, rubric-scored cover letter v1.
 1. Read `references/cover-letter-writing.md`; keep `references/paragraph-rubric.md` loaded for assessment.
 2. Draft `cover-letter-draft.md`: required structure, body word budget, evidence only from matches.md and configured sources.
 3. Run `scripts/verify_artifacts.py --artifact cover-letter --path <run>/cover-letter-draft.md --matches <run>/matches.md`.
-4. Review our own work using
+4. Review our own work using 
   `references/cover-letter-writing.md`;  `references/paragraph-rubric.md` 
 5. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report.json`; fix flagged items, re-judge ≤2 rounds.
 
@@ -135,7 +135,7 @@ Purpose: full verify matrix green + independent final judgment.
 2. Run verify_artifacts on every artifact (scoring, matches, letter v2, review-report).
 3. Run the Tier 2 peer judge; delta-based + evidence-to-matches traceability into `review-report.json` (tier 2, scope delta).
 
-Checkpoint: present the audit result — wait for approval.
+Checkpoint: present the audit result — wait for approval. No edits unless approved by user.
 
 ### step_retro — learning loop
 

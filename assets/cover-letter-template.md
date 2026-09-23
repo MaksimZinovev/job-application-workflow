@@ -3,12 +3,21 @@
 <Name>
 <Location> • <phone> • <email> • <links>
 
+<br/>
+<br/>
+Re: <Role>
+<Company> • <Location>
+
+
 Dear <hiring team or name>,
 
 <Intro paragraph: 
-"I am applying for the {role} role. The core of the fit: {explained in 1-2 sentences}." The executive summary that supports the fit and highlights relevant parts of experience, stack, what kind of environments you
+"I am applying for the {role} role. The core of the fit: {explained in 1-2 sentences}." Adapted to job description, insights from `matches.md`. The executive summary that supports the fit and highlights relevant parts of experience, stack, what kind of environments you
 have worked in, the scale and nature of the systems, your level of
-ownership. No metrics here; they live in the table and body sections.>
+ownership. No metrics here; they live in the table and body sections.
+Example: "5 years in QA and test automation, the recent years spent owning frameworks rather than primarily executing manual test plans. I come from two environments that match the shape of this role .."
+Example: "more than five years in QA and test automation,  ISTQB Foundation and AZ-900 certifications, the recent years inside regulated enterprise systems, with API testing as my strongest area and automation wired into CI so it runs every day. The role mixes automation with hands-on manual and functional testing, test management and reporting - that mix describes my ... "
+>
 
 | # | Your requirement | My evidence |
 |---|------------------|-------------|

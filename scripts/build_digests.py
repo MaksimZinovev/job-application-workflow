@@ -47,6 +47,13 @@ def main() -> None:
     a = ap.parse_args()
 
     rules, steps = rm.load_rules(), rm.load_steps()
+    # proposed rules exist in rules/ but are not wired anywhere until the
+    # retro activates them (user approval): keep them out of the digest,
+    # the drift checks and the orphan warnings; report their existence.
+    proposed = {k: m for k, m in rules.items()
+                if m.get("status", "active") != "active"}
+    rules = {k: m for k, m in rules.items()
+             if m.get("status", "active") == "active"}
     problems, warnings = [], []
 
     listed = set()
@@ -134,6 +141,10 @@ def main() -> None:
         if warnings:
             print(f"note: {len(warnings)} warning(s) above do not block the "
                   f"build; clear them when convenient")
+        if proposed:
+            print(f"note: {len(proposed)} proposed rule(s) not shown "
+                  f"(awaiting retro approval): "
+                  + ", ".join(rm.display(k) for k in sorted(proposed)))
 
 
 if __name__ == "__main__":

@@ -76,6 +76,7 @@ def load_rules() -> dict[str, dict]:
             "id": rid,
             "file": f,
             "type": _scalar(fm, "type"),
+            "status": _scalar(fm, "status") or "active",
             "expect": _scalar(fm, "expect") or _prose_expect(text),
             "on_fail": om.group(1) if om else "",
             "applies_to": [

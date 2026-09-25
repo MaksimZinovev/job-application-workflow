@@ -45,6 +45,7 @@ python3 scripts/verify_artifacts.py --artifact cover-letter --path ~/apps/12_sen
 python3 scripts/verify_artifacts.py --artifact review-report --path ~/apps/12_senior-qa-engineer-acme/review-report.json
 python3 scripts/check_rules.py ~/apps/12_senior-qa-engineer-acme --step step_3 --next   # one loop rule at a time; --gate closes the step
 python3 scripts/build_digests.py                             # maintainer: regenerate references/rule-digests.md; step_retro runs it after activating a batch
+python3 scripts/verify_artifacts.py --artifact rule-check --path ~/apps/12_senior-qa-engineer-acme --step step_3   # step_audit: re-validate a step's rule checks
 ```
 
 ## Steps
@@ -100,7 +101,7 @@ Checkpoint: concise report,raise if any questions present matches + plan + secti
 ### step_3 — drafting
 
 ```yaml
-{id: step_3, type: drafting, depends_on: [step_2], expectStatus: approved, on_fail: fix draft until verify passes; gate blocks without an approved judge report, rules: [rule-structure-parity, rule-word-budget, rule-tense-from-cv, rule-ownership-calibration, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-name-projects-attribute-companies, rule-defer-to-team-knowledge, rule-no-enumeration-colons, rule-lint-classify-once, rule-richness-for-cuts, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
+{id: step_3, type: drafting, depends_on: [step_2], expectStatus: approved, on_fail: fix draft until verify passes; gate blocks without an approved judge report, rules: [rule-structure-parity, rule-word-budget, rule-tense-from-cv, rule-ownership-calibration, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-name-projects-attribute-companies, rule-defer-to-team-knowledge, rule-no-enumeration-colons, rule-lint-classify-once, rule-richness-for-cuts, rule-context-per-evidence, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
 ```
 
 Purpose: judged, rubric-scored cover letter v1.
@@ -118,7 +119,7 @@ Checkpoint: concise report, raise if any questions, present draft + judge report
 ### step_4 — rewriting
 
 ```yaml
-{id: step_4, type: rewriting, depends_on: [step_3], expectStatus: approved, on_fail: gate blocks unless substantive changes carry a delta judge report, rules: [rule-ownership-calibration, rule-no-enumeration-colons, rule-pattern-sibling-scan, rule-label-vs-enumeration-colon, rule-lint-classify-once, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
+{id: step_4, type: rewriting, depends_on: [step_3], expectStatus: approved, on_fail: gate blocks unless substantive changes carry a delta judge report, rules: [rule-ownership-calibration, rule-no-enumeration-colons, rule-pattern-sibling-scan, rule-label-vs-enumeration-colon, rule-lint-classify-once, rule-context-per-evidence, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
 ```
 
 Purpose: human-voice v2; v1 preserved.
@@ -140,7 +141,7 @@ Checkpoint: concise report, present v2 + flag + report — wait for approval.
 Purpose: full verify matrix green + independent final judgment.
 
 1. Read `references/operating-principles.md` (audit + judge sections).
-2. Run verify_artifacts on every artifact (scoring, matches, letter v2, review-report with `--artifact-path <run>/cover-letter-draft-v2.md` so rules_audit quotes are verified).
+2. Run verify_artifacts on every artifact (scoring, matches, letter v2, review-report with `--artifact-path <run>/cover-letter-draft-v2.md` so rules_audit quotes are verified) and re-verify every step's rule checks: `verify_artifacts.py --artifact rule-check --path <run> --step step_1` (repeat for steps 1-4).
 3. Run the per-rule loop: `scripts/check_rules.py <run> --step step_audit --next` presents one rule at a time; check only that rule and confirm it in writing, repeat until `--gate` exits 0.
 4. Run the Tier 2 peer judge; delta-based + evidence-to-matches traceability into `review-report.json` (tier 2, scope delta).
 
@@ -149,13 +150,13 @@ Checkpoint: present the audit result — wait for approval. No edits unless appr
 ### step_retro — learning loop
 
 ```yaml
-{id: step_retro, type: learning-loop, depends_on: [step_audit], expectStatus: approved, on_fail: no rule activation without explicit user approval; caps hold, rules: [rule-artifacts-on-disk, rule-checkpoint-interview-tool]}
+{id: step_retro, type: learning-loop, depends_on: [step_audit], expectStatus: approved, on_fail: no rule activation without explicit user approval; caps hold, rules: [rule-artifacts-on-disk, rule-checkpoint-interview-tool, rule-example-maintenance]}
 ```
 
 Purpose: run-log distilled into approved rules.
 
 1. Read `references/retro-and-run-log.md`.
-2. Distill run-log signals into ≤10 proposed rule files in `rules/`.
+2. Distill run-log and rule-checks.json signals into ≤10 proposed rule files in `rules/`; check whether an approved artifact is gold-example material (diversity check first).
 3. Run the per-rule loop: `scripts/check_rules.py <run> --step step_retro --next` presents one rule at a time; check only that rule and confirm it in writing, repeat until `--gate` exits 0.
 4. On user approval: activate the batch (status, last_validated, CHANGELOG.md entry), then run `scripts/build_digests.py` so `references/rule-digests.md` carries the new rules.
 

@@ -4,6 +4,31 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-24 — retro #2: skill-review batch (2 rules)
+
+- **Provenance:** the 2026-09-24 skill-review project (chunks (iii)-(iv)):
+  the mitti-letter review rounds and the teaching-layer build, plus the
+  user's approval. Activated in batch after user review.
+- **Action:** both proposed rule files flipped `status: proposed →
+  active`; `last_validated: 2026-09-24` set on each.
+  `rule-context-per-evidence` wired into the step_3 and step_4 rule
+  lists (check rule, quote-guarded in the loop);
+  `rule-example-maintenance` wired into the step_retro list (protocol
+  rule, confirmation-guarded). Digest regenerated (21 active rules).
+  Affected examples checked in the same batch, per the new rule itself:
+  both judge exemplars gained their rule-context-per-evidence audit
+  entries (quotes verified against the real letters); the paragraph
+  rubric's failure gallery now cites the rule by name.
+- **rule-context-per-evidence** — every evidence sentence names who did
+  the work, where, and what changed; facts from different roles never
+  share a sentence. Learning: the 06 letter shipped a claim with no
+  context, then a fix with context but no author; the third version
+  passed because it named all three.
+- **rule-example-maintenance** — when a rule batch changes a rule, the
+  examples that teach it are checked and updated in the same batch.
+  Learning: the teaching layer was built to encode the rules; silent
+  drift would make it teach the wrong thing.
+
 ## 2026-09-17 — retro #1: initial batch activation (19 rules)
 
 - **Provenance:** 07 Reo Group + 08 Peoplebank application runs, plus the

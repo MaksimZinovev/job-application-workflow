@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import NoReturn
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import check_rules as cr
 import rules_meta as rm
 
 SKILL_ROOT = Path(__file__).resolve().parent.parent
@@ -304,6 +305,24 @@ def check_report(p: Path, art: Path | None = None) -> None:
         )
 
 
+def check_rulecheck(run: Path, step: str, cfg: Path) -> None:
+    """Re-validate a step's per-rule check files at step_audit: the same
+    guards check_rules.py --gate applies (single source of truth:
+    check_rules.validate), so a step whose gate was green at draft time
+    is proven green again at the audit."""
+    v = cr.validate(run, step, cfg)
+    if v["problems"]:
+        bail([f"rule-check {step}: {p}" for p in v["problems"]], run,
+             hints=f"scripts/check_rules.py {run} --step {step} --next "
+                   "for each failed rule; --gate to close the step")
+    n_quote = sum(1 for m in v["loop"] if rm.needs_quote(m, step))
+    print(
+        f"ok: rule-check {step} — {len(v['rows'])}/{len(v['loop'])} rules "
+        f"valid ({n_quote} quotes verbatim, "
+        f"{len(v['loop']) - n_quote} confirmations), scores ≥ {v['min_score']}"
+    )
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(
         description="Tier 0 mechanical checks for run artifacts."
@@ -311,7 +330,8 @@ def main() -> None:
     ap.add_argument(
         "--artifact",
         required=True,
-        choices=["scoring", "matches", "cover-letter", "review-report"],
+        choices=["scoring", "matches", "cover-letter", "review-report",
+                 "rule-check"],
     )
     ap.add_argument("--path", required=True, help="artifact file to check")
     ap.add_argument("--matches", help="matches.md, for cover-letter keyword coverage")
@@ -323,8 +343,24 @@ def main() -> None:
         "--artifact-path",
         help="file the report judged (enables the rules_audit quote guard)",
     )
+    ap.add_argument(
+        "--step",
+        help="step id, with --artifact rule-check (re-validates that "
+        "step's check files the same way check_rules.py --gate does)",
+    )
     a = ap.parse_args()
     p = Path(a.path).expanduser()
+    if a.artifact == "rule-check":
+        if not a.step:
+            bail("--step <step_id> is required with --artifact rule-check")
+        if not p.is_dir():
+            bail(f"run folder not found: {p}",
+                 hints="rule-check takes the run folder as --path")
+        check_rulecheck(p, a.step,
+                        Path(a.config).expanduser() if a.config
+                        else SKILL_ROOT / "assets" / "sources.json")
+        print("verify: PASS")
+        return
     if not p.is_file():
         bail(f"artifact not found: {p}", hints="check --path")
     budgets = {

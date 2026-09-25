@@ -23,8 +23,13 @@ Raw signals, not conclusions — the retro distills them.
 ## Retro procedure
 
 1. Wait until step_audit is approved.
-2. Read the run-log and distill recurring signals into candidate rules:
-   what fired, what the user corrected, what a judge kept flagging.
+2. Read the run-log and the run's `rule-checks.json`, and distill
+   recurring signals into candidate rules: what fired, what the user
+   corrected, what a judge kept flagging. The rule-check scores are the
+   worst-rules signal: a rule that keeps scoring 2 across runs is noisy —
+   reinforce its explanation or example, or propose rewording or
+   retirement; any 0 or 1 marks a rule the run violated, and the retro
+   asks why the check missed it at writing time.
 3. Cap the sweep: consult at most 3 previous application runs' signals per
    sweep, and propose at most 10 rules per sweep. Pick the highest-signal
    learnings; leave the rest in the log.
@@ -32,9 +37,21 @@ Raw signals, not conclusions — the retro distills them.
    `proposed`.
 5. Present the batch to the user for approval. On approval, batch-activate:
    flip `status: proposed → active`, set `last_validated` to the approval
-   date, and open/append `CHANGELOG.md` with a batch entry (date, run, rule
-   list, one-line learning each).
-6. Never activate a rule without explicit user approval.
+   date, open/append `CHANGELOG.md` with a batch entry (date, run, rule
+   list, one-line learning each), and check the gold examples and
+   teaching pairs that demonstrate any rule in the batch — update them in
+   the same batch so they teach the rule as it now stands.
+6. Wins become examples. When this run's artifacts are user-approved, ask
+   whether any of them is gold-example material: strong on the rubric,
+   real, with lessons worth preserving. Run the diversity check first —
+   look at what `examples/` already covers and prefer a nomination that
+   fills a gap (a different job class, a different failure type, a
+   different scenario) over another example of what the set already
+   shows. A nomination copies the artifact with a provenance header and
+   known-seam annotations, following the bundled gold set's curation,
+   and is presented at the checkpoint for approval.
+7. Never activate a rule or add an example without explicit user
+   approval.
 
 ## Rule-file format
 
@@ -62,8 +79,9 @@ outranks stored records.
 
 ## Scope limits
 
-- The retro touches only the `rules/` directory, `CHANGELOG.md`, and the
-  run-log itself. Nothing else changes at this step.
+- The retro touches only the `rules/` directory, `CHANGELOG.md`, the
+  run-log itself and — for approved example nominations — `examples/` and
+  the README tree. Nothing else changes at this step.
 - Proposed rules must be atomic (one rule per file), traceable to a
   run-log signal or user directive, and state their on_fail behavior.
 - A run ends with step_retro approved; `progress.py --status` reports the

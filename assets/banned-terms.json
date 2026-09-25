@@ -78,7 +78,7 @@
     },
     {
       "id": "gap-paragraph",
-      "pattern": "(?im)^\\*\\*[^*\\n]*(gap|grow|still|honest|not yet|willing|have ?n[o']t)[^*\\n]*\\*\\*|honest gap|still growing",
+      "pattern": "(?im)^\\*\\*[^*\\n]*(gap|grow|still|honest|ramp|not yet|willing|have ?n[o']t)[^*\\n]*\\*\\*|honest gap|still growing",
       "message": "no gap paragraph (bold run-in naming honest scope / what is still growing)",
       "require": true
     },
@@ -108,7 +108,7 @@
       "id": "not-but",
       "severity": "fail",
       "name": "Not X, but Y",
-      "hint": "State the point directly (unslop #10)",
+      "hint": "State the point directly (same contrast family as unslop #9)",
       "pattern": "\\bnot\\s+(?!(?:just|only|merely|simply)\\b)[^.!?\\n;]{1,100}?\\bbut\\b|\\b(?:isn't|is not)\\s+[^.!?\\n]{1,80}[.!?]\\s*(?:it's|it is|this is|that is)\\b"
     },
     {

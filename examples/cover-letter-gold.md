@@ -83,11 +83,12 @@ Maksim Zinovev
    Smart metering is regulated and data-integrity-critical, so
    regulated data is familiar ground."
 3. **The gap paragraph label.** The letter has a gap paragraph:
-   "**Where I would be ramping up.**" The checking script cannot see it.
-   The script looks for words like gap, grow, still, honest or willing
-   inside the bold label. "Ramping" is missing from that word list. Two
-   fixes are planned: teach the script the word, or use a recognized
-   word in new letters. This copy keeps the original text.
+   "**Where I would be ramping up.**" The checking script used to miss
+   it: the script looks for words like gap, grow, still, honest or
+   willing inside the bold label, and "ramping" was not on that list.
+   This letter was the reason the gate learned the word (2026-09-24,
+   chunk v): the label now passes. New letters may use "ramping" or
+   any recognized word. This copy keeps the original text.
 4. **The bold labels.** Two notes. First: "The AI work" has no
    period at the end. The skill format is "**Label.**" followed by
    prose, and the other three labels do carry the period. Second, the

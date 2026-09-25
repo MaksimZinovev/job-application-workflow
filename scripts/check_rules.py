@@ -89,6 +89,103 @@ def parse_check(path: Path) -> dict:
     return fields
 
 
+def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
+    """Gate validation with no side effects and no exit. Single source of
+    truth for the check-file guards: used by --gate here and by
+    verify_artifacts.py --artifact rule-check (step_audit re-checks a
+    closed step). Returns: rows (id/verdict/score per rule with a check
+    file), problems (empty list = the gate passes), loop (the step's
+    rules), artifact (the step's artifact or None), min_score."""
+    config = read_config(config_path
+                         or rm.SKILL_ROOT / "assets" / "sources.json")
+    min_score = int(config.get("min_score", 2))
+    rules, steps = rm.load_rules(), rm.load_steps()
+    empty = {"rows": [], "problems": [], "loop": [], "artifact": None,
+             "min_score": min_score}
+    if step not in {s["id"] for s in steps}:
+        empty["problems"] = [f"unknown step {step!r} (steps: "
+                             + ", ".join(s["id"] for s in steps) + ")"]
+        return empty
+    artifact = (run / rm.STEP_ARTIFACTS[step]
+                if step in rm.STEP_ARTIFACTS else None)
+    loop = rm.loop_rules(step, rules, steps)
+    cdir = run / "checks" / step
+    empty["loop"] = loop
+    if artifact is not None and not artifact.is_file():
+        empty["problems"] = [f"artifact not found: {artifact} — run the "
+                             "loop after verify_artifacts passes on the "
+                             "artifact"]
+        return empty
+    if not cdir.is_dir():
+        empty["problems"] = [f"no check files for {step} ({cdir} missing) — "
+                             "run --next and check each rule first"]
+        return empty
+    art_text = collapse(artifact.read_text()) if artifact is not None else ""
+    problems, rows = [], []
+    for meta in loop:
+        rid = rm.display(meta["id"])
+        cpath = cdir / f"{rid}.md"
+        if not cpath.is_file():
+            problems.append(f"{rid}: no check file ({cpath.name})")
+            continue
+        f = parse_check(cpath)
+        tag = f"{rid}: "
+        if f.get("rule", "") != rid:
+            problems.append(tag + f"rule field {f.get('rule')!r} does not "
+                          f"match the filename")
+        if "verdict" not in f or f.get("verdict") not in ("pass", "fail"):
+            problems.append(tag + f"verdict {f.get('verdict')!r} not in "
+                          "['pass', 'fail']")
+        try:
+            score = int(f.get("score", ""))
+            assert 0 <= score <= 3
+        except (ValueError, AssertionError):
+            problems.append(tag + f"score {f.get('score')!r} not in 0-3")
+            score = None
+        if score is not None and f.get("verdict") in ("pass", "fail"):
+            want = {2, 3} if f["verdict"] == "pass" else {0, 1}
+            if score not in want:
+                problems.append(tag + f"score {score} contradicts verdict "
+                              f"{f['verdict']!r} (pass→2-3, fail→0-1)")
+        if rm.needs_quote(meta, step):
+            q = f.get("quote", "")
+            if not q:
+                problems.append(tag + "quote missing — a content-rule check "
+                              "without a verbatim span proves nothing")
+            elif collapse(q) not in art_text:
+                problems.append(tag + f"quote not found in "
+                              f"{rm.STEP_ARTIFACTS[step]}: {q[:60]!r}… "
+                              "(quotes must be verbatim from the artifact)")
+        else:
+            c = f.get("confirmation", "")
+            if not c:
+                problems.append(tag + "confirmation missing — state how "
+                              "this rule is honored (what you did or will do)")
+        if f.get("verdict") == "fail" and not f.get("fix", "").strip():
+            problems.append(tag + "verdict fail but no fix field")
+        if f.get("siblings-checked", "") != "yes":
+            problems.append(tag + "siblings-checked must be 'yes' — scan the "
+                          "artifact for siblings of any issue found")
+        for fld in ("quote", "confirmation", "note", "fix"):
+            if f.get(fld) and any(x in f[fld].lower() for x in FILLER):
+                problems.append(tag + f"banned filler in {fld}")
+        if f.get("_duplicates"):
+            problems.append(tag + f"duplicate fields:{f['_duplicates']}")
+        rows.append({"id": rid, "verdict": f.get("verdict"),
+                     "score": score if score is not None else -1})
+    for stray in sorted(p.name for p in cdir.glob("*.md")):
+        if stray[:-3] not in {rm.display(m["id"]) for m in loop}:
+            problems.append(f"stray check file {stray} — not a rule of "
+                            f"{step}")
+    for r in rows:
+        if r["score"] >= 0 and r["score"] < min_score:
+            problems.append(f"{r['id']}: score {r['score']} below threshold "
+                            f"{min_score} — apply the fix and re-check "
+                            f"with --rule {r['id']}")
+    return {"rows": rows, "problems": problems, "loop": loop,
+            "artifact": artifact, "min_score": min_score}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(
         description="Per-rule check loop: one rule per attention window."
@@ -119,9 +216,6 @@ def main() -> None:
 
     loop = rm.loop_rules(a.step, rules, steps)
     cdir = run / "checks" / a.step
-    config = read_config(Path(a.config).expanduser()
-                         if a.config else rm.SKILL_ROOT / "assets" / "sources.json")
-    min_score = int(config.get("min_score", 2))
 
     if a.next:
         cdir.mkdir(parents=True, exist_ok=True)
@@ -180,72 +274,12 @@ def main() -> None:
               "unchecked, scores below the threshold. Then run --next again.")
         return
 
-    # --gate
-    if not cdir.is_dir():
-        bail(f"no check files for {a.step} ({cdir} missing)",
-             hints="run --next and check each rule first")
-    art_text = collapse(artifact.read_text()) if artifact is not None else ""
-    problems, rows = [], []
-    for meta in loop:
-        rid = rm.display(meta["id"])
-        cpath = cdir / f"{rid}.md"
-        if not cpath.is_file():
-            problems.append(f"{rid}: no check file ({cpath.name})")
-            continue
-        f = parse_check(cpath)
-        tag = f"{rid}: "
-        if f.get("rule", "") != rid:
-            problems.append(tag + f"rule field {f.get('rule')!r} does not "
-                          f"match the filename")
-        if "verdict" not in f or f.get("verdict") not in ("pass", "fail"):
-            problems.append(tag + f"verdict {f.get('verdict')!r} not in "
-                          "['pass', 'fail']")
-        try:
-            score = int(f.get("score", ""))
-            assert 0 <= score <= 3
-        except (ValueError, AssertionError):
-            problems.append(tag + f"score {f.get('score')!r} not in 0-3")
-            score = None
-        if score is not None and f.get("verdict") in ("pass", "fail"):
-            want = {2, 3} if f["verdict"] == "pass" else {0, 1}
-            if score not in want:
-                problems.append(tag + f"score {score} contradicts verdict "
-                              f"{f['verdict']!r} (pass→2-3, fail→0-1)")
-        if rm.needs_quote(meta, a.step):
-            q = f.get("quote", "")
-            if not q:
-                problems.append(tag + "quote missing — a content-rule check "
-                              "without a verbatim span proves nothing")
-            elif collapse(q) not in art_text:
-                problems.append(tag + f"quote not found in "
-                              f"{rm.STEP_ARTIFACTS[a.step]}: {q[:60]!r}… "
-                              "(quotes must be verbatim from the artifact)")
-        else:
-            c = f.get("confirmation", "")
-            if not c:
-                problems.append(tag + "confirmation missing — state how "
-                              "this rule is honored (what you did or will do)")
-        if f.get("verdict") == "fail" and not f.get("fix", "").strip():
-            problems.append(tag + "verdict fail but no fix field")
-        if f.get("siblings-checked", "") != "yes":
-            problems.append(tag + "siblings-checked must be 'yes' — scan the "
-                          "artifact for siblings of any issue found")
-        for fld in ("quote", "confirmation", "note", "fix"):
-            if f.get(fld) and any(x in f[fld].lower() for x in FILLER):
-                problems.append(tag + f"banned filler in {fld}")
-        if f.get("_duplicates"):
-            problems.append(tag + f"duplicate fields:{f['_duplicates']}")
-        rows.append({"id": rid, "verdict": f.get("verdict"),
-                     "score": score if score is not None else -1})
-    for stray in sorted(p.name for p in cdir.glob("*.md")):
-        if stray[:-3] not in {rm.display(m["id"]) for m in loop}:
-            problems.append(f"stray check file {stray} — not a rule of "
-                            f"{a.step}")
-    for r in rows:
-        if r["score"] >= 0 and r["score"] < min_score:
-            problems.append(f"{r['id']}: score {r['score']} below threshold "
-                            f"{min_score} — apply the fix and re-check "
-                            f"with --rule {r['id']}")
+    # --gate (guards live in validate(), shared with
+    # verify_artifacts.py --artifact rule-check)
+    v = validate(run, a.step,
+                 Path(a.config).expanduser() if a.config else None)
+    rows, loop, min_score, problems = (v["rows"], v["loop"],
+                                       v["min_score"], v["problems"])
     if problems:
         for p in problems:
             print(f"FAIL: {p}", file=sys.stderr)

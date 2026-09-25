@@ -68,6 +68,12 @@
       "verdict": "pass",
       "evidence": "unslop findings classified once against house style; no reclassification loops",
       "quote": "hardcoded waits that made the tests flaky and slow"
+    },
+    {
+      "id": "rule-context-per-evidence",
+      "verdict": "pass",
+      "evidence": "every evidence sentence names who, where, and what changed; no two-role sentences",
+      "quote": "On SmartCore I introduced the first BDD scenarios to run daily in CI instead of on demand, and removed the hardcoded waits that made the tests flaky and slow"
     }
   ],
   "flagged_items": [

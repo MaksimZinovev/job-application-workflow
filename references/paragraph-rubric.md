@@ -128,7 +128,9 @@ skips. (The reviewer's questions are the actual review feedback.)
 3. **What changed** — the outcome, visible without the reader supplying
    context.
 
-Facts from different roles never share a sentence. Inclusion — whether
+Facts from different roles never share a sentence. This is
+`rule-context-per-evidence`, active since 2026-09-24 and enforced by
+the per-rule loop at step_3 and step_4. Inclusion — whether
 the sentence should exist at all — is a separate decision (evidence
 economy: does it close a keyword hole for this letter?). The v2 failures
 above came from skipping the 2-minute check: read the sentence as the

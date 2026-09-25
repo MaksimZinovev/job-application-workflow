@@ -110,6 +110,12 @@
       "verdict": "pass",
       "evidence": "every kept row closes a keyword hole; no rich evidence was cut for length",
       "quote": "Playwright suite built from zero, 50+ scenarios, 4 to 6 hours saved per regression run"
+    },
+    {
+      "id": "rule-context-per-evidence",
+      "verdict": "pass",
+      "evidence": "evidence sentences audited: authored actions, employer context, visible outcomes; no two-role sentences",
+      "quote": "I designed and maintained test automation across Python and Playwright/TypeScript, and the AI toolkit I built around it, from a PR review agent to shared Copilot Skills, is in daily team use"
     }
   ],
   "flagged_items": [

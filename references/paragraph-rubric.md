@@ -69,3 +69,68 @@ ownership across testers, analysts and business.
 
 Moral: check the sub-questions against the ad before scoring the prose
 against the sub-questions.
+
+## Failure gallery — three versions; the middle step is the lesson
+
+Both sequences below are real. v1 shipped in a real application letter;
+v2 is the rewrite that failed user review; v3 is the approved fix,
+grounded in the CV record. The v2s teach more than a clean bad→good pair, because
+they show the middle step where attention failed — the step every writer
+skips. (The reviewer's questions are the actual review feedback.)
+
+### Seam 1 — claim without context → context without author → both
+
+- v1 (original): "I keep pipelines trustworthy. Daily BDD runs mean
+  feedback arrives every morning instead of whenever someone presses run."
+  Reviewer: what exactly was my achievement? no context. A claim-only
+  opener followed by a fact with no employer and no author.
+- v2 (failed fix): "At Intellihub, BDD scenarios run daily in CI, so
+  regression feedback arrives every morning instead of only when someone
+  presses run." Reviewer: still weird — what does it have to do with me?
+  The employer got attached, but the sentence describes company state,
+  not authored action. This scores Fail on Demonstration: who + action +
+  outcome is not visible — the rubric applied to its own author.
+- v3 (proper fix, record-grounded — CV: "Built the first BDD scenarios
+  running in the daily CI pipeline; before this, scenarios ran only on
+  demand"): "At Intellihub I built the first BDD scenarios to run daily
+  in CI. Until then, scenarios ran only on demand; now the team gets
+  regression feedback every morning." Who (I built), where (At
+  Intellihub), what changed (on demand → daily). Every clause traces to
+  the record.
+
+### Seam 2 — stacked facts → awkward aside → one context per sentence
+
+- v1 (original): "I removed hardcoded waits to cut flakiness, and
+  Postman monitors have run scheduled API checks against multiple
+  production instances since my previous role." Reviewer: where, what
+  company? Two facts from two employers welded into one sentence; "my
+  previous role" never named.
+- v2 (failed fix): "At Intellihub I removed hardcoded waits from the
+  SmartCore suite to cut flakiness. Postman monitors ran scheduled API
+  checks against three WYWM production instances before that." Reviewer:
+  better overall, but "before that" sounds weird and unnatural. Nothing
+  is being compared, so the temporal aside reads as filler. Separating
+  the sentences exposed a new problem instead of solving the old one.
+- v3 (proper fix, record-grounded — CV: "Introduced into test practices
+  Postman monitors... multiple production instances"): "At Intellihub I
+  removed hardcoded waits from the automation frameworks to cut flaky
+  runs. At my previous employer, WithYouWithMe, I introduced Postman
+  monitors into the team's test practice, scheduled API checks running
+  against multiple production instances to catch issues faster." Each
+  sentence carries one employer, one authored action, one outcome.
+
+### The three tests an evidence sentence must pass
+
+1. **Who** — an authored action in first person, not a company-state
+   description ("I built", not "scenarios run").
+2. **Where** — employer or project named, or inherited from an explicit
+   transition in the previous sentence.
+3. **What changed** — the outcome, visible without the reader supplying
+   context.
+
+Facts from different roles never share a sentence. Inclusion — whether
+the sentence should exist at all — is a separate decision (evidence
+economy: does it close a keyword hole for this letter?). The v2 failures
+above came from skipping the 2-minute check: read the sentence as the
+recruiter and ask "does it make sense? so what?" If the example-author
+needed that discipline, every writer does.

@@ -27,6 +27,13 @@ by key from `assets/sources.json`; the preflight script resolves the paths.
   locate rather than improvising around it.
 - Every step lands its output on disk before its checkpoint closes. Unsaved
   work is lost work.
+- Every step closes its rule loop before its checkpoint:
+  `scripts/check_rules.py <run> --step <step> --gate` exits 0 — every rule
+  of the step confirmed in its own attention window, content rules with a
+  verbatim quote from the artifact, process rules with a written
+  confirmation of how they are honored, scores recorded in
+  `rule-checks.json` for the retro. A failed gate is a finding: apply the
+  named fixes, re-check those rules, close the gate.
 
 ## No fabrication
 
@@ -43,6 +50,18 @@ by key from `assets/sources.json`; the preflight script resolves the paths.
   true but is not evidenced, keep the weaker version.
 - Do not remove content silently during any rewriting pass. Do not invent
   evidence, metrics, outcomes, or responsibilities. Ask when unsure.
+
+## Sibling scans
+
+When you fix a flagged instance of any pattern or rule — yours, the user's,
+or the judge's — scan the whole artifact for siblings of the same class
+before touching anything else. Fix the flagged instance; list every sibling
+found with a proposed rewrite; never silently edit prose the user has
+already approved. The scan is judgment; the claim is guarded: every
+per-rule check file carries `siblings-checked: yes`, and `check_rules.py
+--gate` rejects a check without the attestation. Classify before fixing:
+label colons and other normal usage are named as normal, not "fixed" —
+the sibling list is where the discrimination shows.
 
 ## Context economy
 
@@ -131,13 +150,22 @@ Protocol per run:
 
 1. Tier 0 passes, then the judge runs at the tier above and writes
    `review-report.json` from the review-report template: verdict,
-   per-dimension scores, every flagged sentence, judge identity, tier, scope.
+   per-dimension scores, every flagged sentence, judge identity, tier,
+   scope, and a rules_audit — one entry per content rule of the step
+   (the `quote` rows of that step in `references/rule-digests.md`), each
+   with a verdict and a quote copied verbatim from the judged artifact. An
+   approved report requires every rules_audit verdict pass. Format
+   exemplars: `examples/review-report-gold-approved.json` (gate-clearing)
+   and `examples/review-report-gold-needs-fixes.json` (flag-time state;
+   fails the gate by design).
 2. Fix every flagged item; re-judge; re-judge rounds are capped at 2 per gate.
    Anything still contested escalates to the human checkpoint.
 3. The gate is mechanical: `verify_artifacts.py --artifact review-report`
-   fails a missing or unapproved report, and `progress.py --approve` blocks
-   step_3, step_4 (substantive changes only), and step_audit without it.
-   Enforcement lives in scripts, not memory.
+   fails a missing or unapproved report, an incomplete rules_audit, or an
+   audit whose quotes are not verbatim in the judged artifact (pass
+   `--artifact-path` to enable that guard), and `progress.py --approve`
+   blocks step_3, step_4 (substantive changes only), and step_audit
+   without it. Enforcement lives in scripts, not memory.
 
 Every judge run is one exhaustive structured pass (all dimensions scored,
 every flagged sentence listed) so re-runs stay minimal.

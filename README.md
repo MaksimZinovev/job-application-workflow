@@ -40,9 +40,13 @@ job-application-workflow/
 │   ├── preflight.py            # resolve sources; block on missing mandatory
 │   ├── init_application.py     # create the run folder, stubs, gate state
 │   ├── progress.py             # the machine gate; --status resumes any session
-│   └── verify_artifacts.py    # tier 0 checks; exit 0 unblocks approval
+│   ├── verify_artifacts.py    # tier 0 checks; exit 0 unblocks approval
+│   ├── check_rules.py          # per-rule loop: --next one rule, --gate closes the step
+│   ├── build_digests.py       # regenerate references/rule-digests.md after a retro batch
+│   └── rules_meta.py          # shared: rule frontmatter + SKILL.md step lists
 ├── references/                 # read just in time, one per step
 │   ├── operating-principles.md  # checkpoints, no-fabrication, judge protocol
+│   ├── rule-digests.md          # generated rule facts per step (read at step_0)
 │   ├── jd-analysis.md           # rubric choice, scoring, promotion gate
 │   ├── matches-and-plan.md     # keyword lists, hidden questions, evidence ranking
 │   ├── paragraph-rubric.md      # 6 dimensions, decomposition, 2-minute check
@@ -61,9 +65,22 @@ job-application-workflow/
 │   ├── progress-template.md      # human checklist
 │   └── run-log-template.md       # raw-signal log skeleton
 ├── rules/                      # 19 active rules + README, learned from real runs
+├── examples/                   # curated gold artifacts from real runs (provenance in each file header)
+│   ├── cover-letter-gold.md    # approved v2 letter, verbatim + known-seam annotations
+│   ├── matches-gold.md         # curated to budget; record-id citations, honest gaps
+│   ├── scoring-gold.md         # rubric-keyed scoring with research grounding
+│   ├── review-report-gold-approved.json     # judge exemplar: gate-clearing report
+│   ├── review-report-gold-needs-fixes.json  # judge exemplar: flag-time state (fails gate by design)
+│   └── run-log-gold.md         # raw-signal format, reconstructed from session records
 ├── CHANGELOG.md                # rule governance log, one entry per retro batch
 └── plans/                      # build-plan archive, not skill payload
 ```
+
+The `examples/` directory is the skill's bundled format precedent set:
+artifacts from real, user-approved runs, curated with provenance headers
+and known-seam annotations. They are one user's records (names, links,
+metrics); the structure and discipline transfer to any candidate — a new
+user's own runs + retro nominate their own gold examples over time.
 
 ## Output
 
@@ -76,7 +93,9 @@ Each run produces one folder under your `applications_root`, auto-numbered:
 ├── matches.md                 # keyword evidence lists + honest gaps
 ├── cover-letter-draft.md      # stubbed at init; v1, preserved forever
 ├── cover-letter-draft-v2.md  # after the passes
-├── review-report.json        # judge verdict, tier, flagged items
+├── review-report.json        # judge verdict, tier, flagged items, rules_audit
+├── checks/                    # per-rule check files (checks/step_N/<rule>.md)
+├── rule-checks.json           # rule-check scores aggregated by the gate (retro signal)
 ├── progress.json              # machine gate state
 ├── progress.md                # human checklist
 └── run-log.md                 # raw signals for the retro

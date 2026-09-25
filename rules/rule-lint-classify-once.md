@@ -17,9 +17,9 @@ last_validated: 2026-09-17
 
 ## Learned from
 The 08 letter lints at 13 warnings: MD041 (first-line title), MD033
-(inline HTML letter format), MD060 (table pipe alignment). The
-approved 07 Reo letter lints at the same classes. Re-litigating
-identical warnings every run burns attention.
+(inline HTML letter format), MD060 (table pipe alignment). The bundled
+gold letter (examples/cover-letter-gold.md) lints at the same classes.
+Re-litigating identical warnings every run burns attention.
 
 ## Rule
 Classify lint findings once, against precedent files. Warnings that
@@ -31,5 +31,6 @@ retro.
 ## Rubric
 - [ ] Lint run on the delivered artifact
 - [ ] Findings diffed against the precedent classification
+      (examples/cover-letter-gold.md carries the house-style classes)
 - [ ] House-style classes named, not fixed
 - [ ] Novel findings fixed or surfaced at the checkpoint

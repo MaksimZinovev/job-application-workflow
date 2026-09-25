@@ -1,0 +1,85 @@
+{
+  "_exemplar": "GOLD EXAMPLE, review-report (approved verdict). Constructed teaching exemplar: the run predates the tiered judge protocol, so no real review-report.json exists. Quotes are verbatim from examples/cover-letter-gold.md (the approved Tyro v2). F1 records the real v1 defects the user caught across seven review rounds (see the run's step1-checkpoint.md); the exemplar compresses that loop into one resolved flag for schema teaching. rules_audit added 2026-09-24 (chunk ii): verdicts re-derived from the real v2 letter, quotes verbatim. Remove this _exemplar key when copying the schema for a real run.",
+  "schema": "job-application/review-report@1",
+  "run": "10_quality-engineer-ai-12-months-contract-tyro",
+  "step": "step_4",
+  "artifact": "cover-letter-draft-v2.md",
+  "tier": 1,
+  "scope": "full",
+  "judge": {
+    "identity": "<model or agent name>",
+    "kind": "fresh-context-self",
+    "date": "2026-09-10"
+  },
+  "verdict": "approved",
+  "dimensions": [
+    {
+      "name": "question coverage",
+      "score": "pass",
+      "note": "the intro answers the ideal-candidate question in the user's own frame: \"I work to help testing teams implement the AI systems they envision\"; all seven ad requirements map to table rows"
+    },
+    {
+      "name": "source fidelity",
+      "score": "pass",
+      "note": "the ramp-up paragraph quotes the ad's own tooling before narrowing honestly: \"Rovo I have not used at work, though I have run the Rovo Dev CLI on personal projects\""
+    },
+    {
+      "name": "demonstration",
+      "score": "pass",
+      "note": "authored action with measured, hedged outcome: \"I built an AI PR-review agent that returned a structured verdict, summary and suggestions for pull requests, saving around 5 to 10 percent of review time\""
+    },
+    {
+      "name": "story continuity",
+      "score": "pass",
+      "note": "each paragraph grows from the previous with explicit transitions: \"Before Intellihub I built a Playwright UI suite from zero for an insurance and claims SaaS\""
+    },
+    {
+      "name": "evidence economy",
+      "score": "pass",
+      "note": "new evidence earns its spot rather than repeating the table: \"I compared the RAG, embeddings and vector-store options, ChromaDB, Pinecone and Postgres with pgvector among them, before choosing this setup\""
+    },
+    {
+      "name": "reader ease",
+      "score": "pass",
+      "note": "the gap paragraph answers the skim in four words: \"Two gaps, named plainly.\""
+    }
+  ],
+  "rules_audit": [
+    {
+      "id": "rule-ownership-calibration",
+      "verdict": "pass",
+      "evidence": "ownership verbs match the org-context records; no claim upgraded beyond them",
+      "quote": "On IWS I owned the Jenkins pipelines and automated environment monitoring"
+    },
+    {
+      "id": "rule-no-enumeration-colons",
+      "verdict": "pass",
+      "evidence": "colons audited across table and prose: label colons and clause intros only; the v1 'Formal AI credentials:' intro is now plain prose",
+      "quote": "On formal credentials, my Agentic AI course and the ISTQB-GenAI certification are in progress"
+    },
+    {
+      "id": "rule-label-vs-enumeration-colon",
+      "verdict": "pass",
+      "evidence": "label colons discriminated from enumeration colons: run-in labels are normal usage; none introduce lists",
+      "quote": "**Where I would be ramping up.**"
+    },
+    {
+      "id": "rule-lint-classify-once",
+      "verdict": "pass",
+      "evidence": "unslop findings classified once against house style; no reclassification loops",
+      "quote": "hardcoded waits that made the tests flaky and slow"
+    }
+  ],
+  "flagged_items": [
+    {
+      "id": "F1",
+      "location": "AI-work paragraph + projects list + automation paragraph + intro",
+      "dimension": "craft (claim-only sentences, grand claims, internal validation detail, abstract framing)",
+      "issue": "v1 opened its AI paragraph with a claim-only subhead and carried several claim-style phrasings; all were rewritten or deleted across the review rounds",
+      "fix": "paragraph opens on the work itself: \"The AI work I've done has been part of my day-to-day testing workflow rather than separate experimentation\"; docfence line reads \"finds AI-introduced TODOs, broken links and missing sections in documents\"; \"manager-validated\" deleted",
+      "resolved": true
+    }
+  ],
+  "rejudge_rounds": 1,
+  "notes": "Constructed exemplar (verdict: approved). Every quote is verbatim from the approved Tyro v2. One exhaustive pass; F1 shows the resolved-flag format; the gate requires resolved: true on every flag before the verdict flips to approved. The real loop behind this report was seven user review rounds recorded in the run's step1-checkpoint.md; the per-round flags live in examples/review-report-gold-needs-fixes.json. Tier guide: tier 1 = fresh-context judge after step_3 (scope full) or the conditional delta judge at step_4 (scope delta, only when the run-log marks substantive changes); tier 2 = peer judge at step_audit. Re-judge rounds capped at 2, then escalate to the user."
+}

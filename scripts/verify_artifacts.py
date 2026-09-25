@@ -11,6 +11,9 @@ import sys
 from pathlib import Path
 from typing import NoReturn
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import rules_meta as rm
+
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 BANNED = SKILL_ROOT / "assets" / "banned-terms.json"
 DIMENSIONS = [
@@ -201,7 +204,7 @@ def check_letter(p: Path, matches: Path | None, max_words: int) -> None:
     )
 
 
-def check_report(p: Path) -> None:
+def check_report(p: Path, art: Path | None = None) -> None:
     try:
         rep = json.loads(p.read_text())
     except json.JSONDecodeError as e:
@@ -225,6 +228,61 @@ def check_report(p: Path) -> None:
         for f in flags
         if "resolved" not in f
     ]
+    # rules_audit (schema @2): one entry per loop rule of the report's step
+    step = rep.get("step", "")
+    loop = rm.quote_rules(step) if step else []
+    audit = rep.get("rules_audit")
+    if not step:
+        problems.append("step field missing — rules_audit is scoped by step")
+    if not isinstance(audit, list):
+        problems.append(
+            "rules_audit missing or not a list — schema @2 requires one "
+            "entry per content rule of the step (see review-report-template.json)"
+        )
+    else:
+        want = [rm.display(m["id"]) for m in loop]
+        got = [e.get("id", "?") for e in audit]
+        for rid in want:
+            if rid not in got:
+                problems.append(f"rules_audit missing entry for {rid}")
+        for rid in got:
+            if rid not in want:
+                problems.append(
+                    f"rules_audit entry {rid!r} is not a content rule of {step}"
+                )
+        art_text = None
+        if art is not None:
+            if art.is_file():
+                art_text = re.sub(r"\s+", " ", art.read_text())
+            else:
+                problems.append(f"artifact-path not found: {art}")
+        for e in audit:
+            rid = e.get("id", "?")
+            if e.get("verdict") not in ("pass", "fail"):
+                problems.append(
+                    f"rules_audit {rid}: verdict {e.get('verdict')!r} "
+                    "not in ['pass', 'fail']"
+                )
+            if not (e.get("evidence") or "").strip():
+                problems.append(
+                    f"rules_audit {rid}: evidence empty — say what you checked"
+                )
+            q = (e.get("quote") or "").strip()
+            if not q:
+                problems.append(
+                    f"rules_audit {rid}: quote empty — cite a span from the artifact"
+                )
+            elif art_text is not None and re.sub(r"\s+", " ", q) not in art_text:
+                problems.append(
+                    f"rules_audit {rid}: quote not found verbatim in "
+                    f"{art.name}: {q[:60]!r}…"
+                )
+        if rep.get("verdict") == "approved":
+            bad = [e.get("id", "?") for e in audit if e.get("verdict") != "pass"]
+            if bad:
+                problems.append(
+                    f"verdict approved but rules_audit fails: {', '.join(bad)}"
+                )
     unres = [f.get("id", "?") for f in flags if not f.get("resolved")]
     if rep.get("verdict") != "approved":
         problems.append(
@@ -236,8 +294,14 @@ def check_report(p: Path) -> None:
         bail(problems, p)
     print(
         f"ok: review-report — verdict={rep['verdict']}, tier={rep['tier']}, "
-        f"scope={rep['scope']}, judge={rep['judge']['identity']}, {len(flags)} flagged"
+        f"scope={rep['scope']}, judge={rep['judge']['identity']}, "
+        f"{len(flags)} flagged, rules_audit {len(audit)}/{len(loop)}"
     )
+    if art is None:
+        print(
+            "note: rules_audit quotes NOT verbatim-checked — pass "
+            "--artifact-path <judged file> to enable the guard"
+        )
 
 
 def main() -> None:
@@ -255,6 +319,10 @@ def main() -> None:
         "--max-words", type=int, help="override the cover-letter word budget"
     )
     ap.add_argument("--config", help="alternative sources.json for budgets")
+    ap.add_argument(
+        "--artifact-path",
+        help="file the report judged (enables the rules_audit quote guard)",
+    )
     a = ap.parse_args()
     p = Path(a.path).expanduser()
     if not p.is_file():
@@ -287,7 +355,9 @@ def main() -> None:
         "cover-letter": lambda: check_letter(
             p, m, a.max_words or budgets["cover_letter_default"]
         ),
-        "review-report": lambda: check_report(p),
+        "review-report": lambda: check_report(
+            p, Path(a.artifact_path).expanduser() if a.artifact_path else None
+        ),
     }
     runs[a.artifact]()
     print("verify: PASS")

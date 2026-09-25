@@ -28,8 +28,9 @@ procedure calls for it. The rubrics and the ideal-role profile ship bundled
 in `assets/` as working defaults; override with
 `preflight.py --set <key> <path>` to score with your own.
 
-The scoring template from init carries the exact format. If a look at a
-past scoring file still helps, read one precedent, tail only.
+The scoring template from init carries the exact format. If a filled-in
+precedent helps, read `examples/scoring-gold.md` — the bundled, curated
+scoring run (real scores, real research grounding).
 
 ## Pick the rubric by job class
 
@@ -54,6 +55,18 @@ If the job class is unclear, ask the user before scoring.
    returns, not in assumptions. Five results per search is enough.
 5. Run `verify_artifacts.py --artifact scoring --path <run>/scoring.md`.
    Exit 0 is required before the checkpoint.
+
+## Known failure mode — the blind trim cycle (07 Reo run, real)
+
+The 07 run wrote first and measured later: the Scoring Results section
+landed at 5,309 characters against its 5,000 cap, and matches.md at
+14.2K against 10K. Both came down only through repeated measure-and-trim
+cycles, because the budgets were never a constraint at writing time. The
+fix, now rule-word-budget: name the budget before drafting (it is in
+procedure step 3 above and in `assets/sources.json`), write to it,
+verify once after writing, and if over, trim once to a stated target and
+re-verify. Blind trim-and-hope cycles are the failure mode; one
+deliberate trim is the cure.
 
 ## Promotion gate (checkpoint)
 

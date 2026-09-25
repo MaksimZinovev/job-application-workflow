@@ -2,7 +2,7 @@
 id: rule_copy_at_end
 inventory: 3
 type: protocol
-applies_to: [step_0, step_1, step_2, step_6]
+applies_to: [step_0, step_1, step_2]
 on_fail:
   action: "re-copy from the current source and diff to confirm parity"
 provenance:

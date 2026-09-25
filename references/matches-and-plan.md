@@ -1,8 +1,9 @@
 # Matches and paragraph planning
 
 Read when starting step_2, together with `paragraph-rubric.md` (which
-validates the plan before any drafting). Only a promoted job reaches this
-step.
+validates the plan before any drafting) and `cover-letter-writing.md`
+(so the plan is drafted against the writing rules it must satisfy).
+Only a promoted job reaches this step.
 
 ## Build matches.md
 
@@ -11,7 +12,8 @@ every source key (`experience_records`, `cv_master`) via the preflight table
 (`python3 scripts/preflight.py`) or `assets/sources.json`, and open the
 resolved file only when the procedure below calls for it. A key may hold
 several files (a list); List 1 draws on every `experience_records` file.
-Extract from the job description:
+The bundled filled-in precedent is `examples/matches-gold.md` — read it
+when the template comments are not enough. Extract from the job description:
 
 - **Target roles** — what roles the ad is really hiring for
 - **Keywords Skills** and **Keywords Tools** — the ad's own vocabulary,
@@ -44,7 +46,7 @@ sections:
 
 | # | Question | Maps to |
 |---|----------|---------|
-| 1 | Who is the ideal candidate? (years, role in team, fit with company maturity, established practices, expected outcomes) | Intro paragraph |
+| 1 | Who is the ideal candidate? (years; role in team — QA, test automation, AI, mixed; fit with company maturity, nature of the business, established practices and tools, expected outcomes such as build from scratch vs support existing frameworks) | Intro paragraph |
 | 2 | What are the key requirements, with evidence backing each claim? | Evidence table |
 | 3 | Primary hidden question, derived from the ideal-candidate profile's most important attribute(s) | 1st bold run-in subhead paragraph after the table |
 | 4 | Secondary hidden question (2nd most important attributes) | 2nd run-in paragraph |
@@ -55,6 +57,15 @@ sections:
 
 The hidden questions derive from the ad's own wording. A question with no
 wording behind it is an invention.
+
+Deriving a hidden question is a method, not a template. Ask what the
+employer who posted this ad most wants to know up front about this
+attribute: how the candidate would work toward their goals, which past
+experience proves it. The answer names the paragraph and its question.
+Do not read the pattern as "always write a 'How I would start' paragraph"
+— that paragraph fit one ad because the employer's primary concern was
+how a first dedicated QA hire would approach the role; a different ad
+ranks a different attribute first.
 
 ## Evidence ranking
 

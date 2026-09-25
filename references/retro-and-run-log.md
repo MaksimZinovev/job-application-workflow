@@ -5,7 +5,8 @@ Read when starting step_retro, the final step of a run.
 ## run-log.md convention
 
 `run-log.md` is created from the run-log template at init and kept during
-the run as a raw-signal log — not prose. Record as you go:
+the run as a raw-signal log — not prose. Format precedent:
+`examples/run-log-gold.md`. Record as you go:
 
 - which sources were read (by key) and anything odd about them;
 - which checks fired and what fixed them;

@@ -43,6 +43,8 @@ python3 scripts/progress.py ~/apps/12_senior-qa-engineer-acme --approve step_1  
 python3 scripts/verify_artifacts.py --artifact scoring --path ~/apps/12_senior-qa-engineer-acme/scoring.md
 python3 scripts/verify_artifacts.py --artifact cover-letter --path ~/apps/12_senior-qa-engineer-acme/cover-letter-draft.md --matches ~/apps/12_senior-qa-engineer-acme/matches.md
 python3 scripts/verify_artifacts.py --artifact review-report --path ~/apps/12_senior-qa-engineer-acme/review-report.json
+python3 scripts/check_rules.py ~/apps/12_senior-qa-engineer-acme --step step_3 --next   # one loop rule at a time; --gate closes the step
+python3 scripts/build_digests.py                             # maintainer: regenerate references/rule-digests.md; step_retro runs it after activating a batch
 ```
 
 ## Steps
@@ -55,11 +57,12 @@ python3 scripts/verify_artifacts.py --artifact review-report --path ~/apps/12_se
 
 Purpose: sources resolved, run folder initialized.
 
-1. Read `references/operating-principles.md`.
+1. Read `references/operating-principles.md` and `references/rule-digests.md` (the step-rule facts; steps never read rule files directly).
 2. Run `scripts/preflight.py`; every missing mandatory source goes to the user (fix via `--set`, or explicit dated `--waive`).
 3. Run `scripts/init_application.py --name "<slug>" --jd <file>`; note the manifest's next action.
+4. Run the per-rule loop: `scripts/check_rules.py <run> --step step_0 --next` presents one rule at a time; check only that rule and confirm it in writing, repeat until `--gate` exits 0.
 
-Allowed reads in step_0: `references/operating-principles.md`, the JD, preflight output;  
+Allowed reads in step_0: `references/operating-principles.md`, `references/rule-digests.md`, the JD, preflight output;  
 later-step references wait for their step. Every scored JD gets a run folder, promote or not.
 
 Checkpoint: sources resolved, run folder created — restate the run rules briefly, in your own words (name unmet conditions with any status answer; ask before deviating; later-step references wait for their step), then wait for approval.
@@ -75,6 +78,7 @@ Purpose: scored JD with a promotion decision.
 1. Read `references/jd-analysis.md`.
 2. Score the JD into `scoring.md` with the class-selected rubric; ground claims with web search.
 3. Run `scripts/verify_artifacts.py --artifact scoring --path <run>/scoring.md`.
+4. Run the per-rule loop against scoring.md: `scripts/check_rules.py <run> --step step_1 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
 
 Checkpoint: promotion gate — user feedback + explicit promote decision.
 
@@ -86,9 +90,10 @@ Checkpoint: promotion gate — user feedback + explicit promote decision.
 
 Purpose: matches.md + rubric-validated paragraph plan.
 
-1. Read `references/matches-and-plan.md` and `references/paragraph-rubric.md`.
+1. Read `references/matches-and-plan.md` and `references/paragraph-rubric.md`; also read `references/cover-letter-writing.md`, so the plan is drafted against the writing rules it must satisfy.
 2. Build `matches.md` (Keywords, role type, lists 5-7 / 5-7 / 3-5, honest gaps) and the hidden-question paragraph plan with ranked evidence.
 3. Run `scripts/verify_artifacts.py --artifact matches --path <run>/matches.md`.
+4. Run the per-rule loop against matches.md: `scripts/check_rules.py <run> --step step_2 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
 
 Checkpoint: concise report,raise if any questions present matches + plan + section alternatives — wait for approval.
 
@@ -105,7 +110,8 @@ Purpose: judged, rubric-scored cover letter v1.
 3. Run `scripts/verify_artifacts.py --artifact cover-letter --path <run>/cover-letter-draft.md --matches <run>/matches.md`.
 4. Review our own work using 
   `references/cover-letter-writing.md`;  `references/paragraph-rubric.md` 
-5. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report.json`; fix flagged items, re-judge ≤2 rounds.
+5. Run the per-rule loop against cover-letter-draft.md: `scripts/check_rules.py <run> --step step_3 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
+6. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report.json` with a full rules_audit; fix flagged items, re-judge ≤2 rounds.
 
 Checkpoint: concise report, raise if any questions, present draft + judge report — wait for approval.
 
@@ -119,7 +125,9 @@ Purpose: human-voice v2; v1 preserved.
 
 1. Read `references/writing-passes.md`.
 2. Apply unslop, targeted user-feedback rewrites, credibility pass; write `cover-letter-draft-v2.md`, keep v1 untouched.
-3. Set `substantive_changes: yes|no` in run-log.md; verify v2; run the conditional delta judge only when substantive.
+3. Set `substantive_changes: yes|no` in run-log.md; verify v2.
+4. Run the per-rule loop against cover-letter-draft-v2.md: `scripts/check_rules.py <run> --step step_4 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
+5. Run the conditional delta judge only when substantive (judge protocol in operating-principles.md; its rules_audit covers the step_4 loop rules).
 
 Checkpoint: concise report, present v2 + flag + report — wait for approval.
 
@@ -132,8 +140,9 @@ Checkpoint: concise report, present v2 + flag + report — wait for approval.
 Purpose: full verify matrix green + independent final judgment.
 
 1. Read `references/operating-principles.md` (audit + judge sections).
-2. Run verify_artifacts on every artifact (scoring, matches, letter v2, review-report).
-3. Run the Tier 2 peer judge; delta-based + evidence-to-matches traceability into `review-report.json` (tier 2, scope delta).
+2. Run verify_artifacts on every artifact (scoring, matches, letter v2, review-report with `--artifact-path <run>/cover-letter-draft-v2.md` so rules_audit quotes are verified).
+3. Run the per-rule loop: `scripts/check_rules.py <run> --step step_audit --next` presents one rule at a time; check only that rule and confirm it in writing, repeat until `--gate` exits 0.
+4. Run the Tier 2 peer judge; delta-based + evidence-to-matches traceability into `review-report.json` (tier 2, scope delta).
 
 Checkpoint: present the audit result — wait for approval. No edits unless approved by user.
 
@@ -147,6 +156,7 @@ Purpose: run-log distilled into approved rules.
 
 1. Read `references/retro-and-run-log.md`.
 2. Distill run-log signals into ≤10 proposed rule files in `rules/`.
-3. On user approval: activate the batch (status, last_validated, CHANGELOG.md entry).
+3. Run the per-rule loop: `scripts/check_rules.py <run> --step step_retro --next` presents one rule at a time; check only that rule and confirm it in writing, repeat until `--gate` exits 0.
+4. On user approval: activate the batch (status, last_validated, CHANGELOG.md entry), then run `scripts/build_digests.py` so `references/rule-digests.md` carries the new rules.
 
 Checkpoint: present the batch — wait for approval; the run is complete.

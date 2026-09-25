@@ -1,0 +1,159 @@
+{
+  "_exemplar": "GOLD EXAMPLE, review-report (needs-fixes verdict). Constructed teaching exemplar: flags reconstruct the REAL v1 defects the user caught across the Tyro run's seven review rounds (all quotes verbatim from cover-letter-draft.md v1; fixes are the actual v2 rewrites). F1 is the exact sentence the writing guide now quotes in its per-paragraph rules (claim-only sentences get cut). This file teaches what needs-fixes looks like: it FAILS verify_artifacts --artifact review-report by design; the gate only accepts verdict approved with all flags resolved. Fix every flag, re-judge (scope: delta, changed paragraphs), then flip to approved like examples/review-report-gold-approved.json. Remove this _exemplar key when copying the schema.",
+  "schema": "job-application/review-report@1",
+  "run": "10_quality-engineer-ai-12-months-contract-tyro",
+  "step": "step_3",
+  "artifact": "cover-letter-draft.md",
+  "tier": 1,
+  "scope": "full",
+  "judge": {
+    "identity": "<model or agent name>",
+    "kind": "fresh-context-self",
+    "date": "2026-09-10"
+  },
+  "verdict": "needs-fixes",
+  "dimensions": [
+    {
+      "name": "question coverage",
+      "score": "pass",
+      "note": "all hidden questions addressed; coverage is not the problem"
+    },
+    {
+      "name": "source fidelity",
+      "score": "pass",
+      "note": "evidence traces to matches.md throughout"
+    },
+    {
+      "name": "demonstration",
+      "score": "fail",
+      "note": "the AI-work paragraph asserts the fit instead of demonstrating it; the claim-only subhead speaks for the missing evidence"
+    },
+    {
+      "name": "story continuity",
+      "score": "pass",
+      "note": "one arc per paragraph, seams clean"
+    },
+    {
+      "name": "evidence economy",
+      "score": "partial",
+      "note": "internal validation detail (manager-validated) is evidence the recruiter does not need"
+    },
+    {
+      "name": "reader ease",
+      "score": "partial",
+      "note": "abstract framing in the intro and a bold-marked typo force the reader to re-read"
+    }
+  ],
+  "rules_audit": [
+    {
+      "id": "rule-structure-parity",
+      "verdict": "pass",
+      "evidence": "salutation, intro, evidence table, labeled paragraphs, gap paragraph, why-you, close all present",
+      "quote": "Dear Tyro team,"
+    },
+    {
+      "id": "rule-word-budget",
+      "verdict": "fail",
+      "evidence": "body 1,187 words against the 1000-word default; over by 187 \u2014 trim once to a stated target or get explicit user approval",
+      "quote": "I am an Australian citizen based in Sydney and available immediately"
+    },
+    {
+      "id": "rule-tense-from-cv",
+      "verdict": "pass",
+      "evidence": "employer mentions audited against cv_master employment dates; no tense mismatch",
+      "quote": "I designed and maintained test automation across Python and Playwright/TypeScript"
+    },
+    {
+      "id": "rule-ownership-calibration",
+      "verdict": "pass",
+      "evidence": "ownership verbs match the records: built, maintained, wrote level; nothing claims team leadership",
+      "quote": "the AI toolkit I built around it, from a PR review agent to shared Copilot Skills, is in daily team use"
+    },
+    {
+      "id": "rule-user-memory-outranks-records",
+      "verdict": "pass",
+      "evidence": "no user-recorded corrections at tier-1 time; facts trace to matches.md and the configured records",
+      "quote": "meter data for 40+ electricity retailers delivered 99.5 percent reliably"
+    },
+    {
+      "id": "rule-scale-labeling",
+      "verdict": "pass",
+      "evidence": "personal project labeled (personal project) in the table row; enterprise rows carry Intellihub's real numbers",
+      "quote": "(personal project) **groundcrew** CI bot recalling past failures and human corrections so repeats get flagged"
+    },
+    {
+      "id": "rule-name-projects-attribute-companies",
+      "verdict": "pass",
+      "evidence": "projects named with links (groundcrew, docfence, starlord, compass-skills); companies attributed (Intellihub, WYWM, Figtree)",
+      "quote": "(WYWM) key role moving the team onto test automation, **300+ test regression suite**"
+    },
+    {
+      "id": "rule-defer-to-team-knowledge",
+      "verdict": "pass",
+      "evidence": "the how-I-would-start passage works with the team: arrive, build jointly, leave it running",
+      "quote": "arrive, build the loop with the team, leave it running without me"
+    },
+    {
+      "id": "rule-no-enumeration-colons",
+      "verdict": "pass",
+      "evidence": "all colons audited: clause intros and two-item intros only; no colon-led three-item enumerations",
+      "quote": "Formal AI credentials: my Agentic AI course and ISTQB-GenAI certification are in progress"
+    },
+    {
+      "id": "rule-lint-classify-once",
+      "verdict": "pass",
+      "evidence": "no lint findings to classify yet at tier 1; the unslop pass is step_4",
+      "quote": "Your AI bullets read like my weekly task list."
+    },
+    {
+      "id": "rule-richness-for-cuts",
+      "verdict": "pass",
+      "evidence": "every kept row closes a keyword hole; no rich evidence was cut for length",
+      "quote": "Playwright suite built from zero, 50+ scenarios, 4 to 6 hours saved per regression run"
+    }
+  ],
+  "flagged_items": [
+    {
+      "id": "F1",
+      "location": "AI-work paragraph, opening subhead",
+      "dimension": "craft (claim-only sentence; per-paragraph rule)",
+      "issue": "\"**The loop you are building, I already run.**\" asserts the fit instead of demonstrating it; the examples that follow speak for themselves",
+      "fix": "delete the claim sentence; open on the work itself: \"The AI work I've done has been part of my day-to-day testing workflow rather than separate experimentation.\"",
+      "resolved": false
+    },
+    {
+      "id": "F2",
+      "location": "projects list, docfence line",
+      "dimension": "craft (grand claim; don't #1/#5)",
+      "issue": "\"catches the defects AI assistants leave behind in documents\" claims impact without the observable; grand-claim phrasing",
+      "fix": "\"finds AI-introduced TODOs, broken links and missing sections in documents\"",
+      "resolved": false
+    },
+    {
+      "id": "F3",
+      "location": "automation table row 6",
+      "dimension": "craft (internal validation detail; don't #7)",
+      "issue": "\"IMDM, manager-validated\" is internal validation the recruiter does not need; it interrupts the evidence",
+      "fix": "delete \"manager-validated\"; the framework coverage stands on the record",
+      "resolved": false
+    },
+    {
+      "id": "F4",
+      "location": "failure-cause analysis table row 4",
+      "dimension": "mechanical (typo inside bold markers)",
+      "issue": "\"running **daily in against regression tests in testing environment **\" carries \"in against\", a stray space inside the bold, and a missing article",
+      "fix": "\"running **daily against regression tests in the testing environment**\"",
+      "resolved": false
+    },
+    {
+      "id": "F5",
+      "location": "intro paragraph",
+      "dimension": "craft (abstract framing)",
+      "issue": "\"It is a mandate to turn a QE team's AI ambitions into day-to-day machinery, which is what my recent work has been:\" frames the role abstractly and leans on a colon-into-clause",
+      "fix": "\"I work to help testing teams implement the AI systems they envision, and that's been the focus of my recent work.\"",
+      "resolved": false
+    }
+  ],
+  "rejudge_rounds": 0,
+  "notes": "Constructed exemplar (verdict: needs-fixes). All five flags are real v1 defects from the Tyro run's review rounds; F1 is the sentence the writing guide now quotes as its claim-only example. After fixing F1, scan for siblings before re-judging (rule-pattern-sibling-scan). Gate math: verdict must become approved AND every flag resolved:true before progress.py --approve accepts this report. The real fixes landed across seven user rounds and cleared the final pass; see the run's step1-checkpoint.md for the round-by-round history."
+}

@@ -31,7 +31,7 @@ Raw signals, not conclusions — the retro distills them.
    retirement; any 0 or 1 marks a rule the run violated, and the retro
    asks why the check missed it at writing time.
 3. Cap the sweep: consult at most 3 previous application runs' signals per
-   sweep, and propose at most 10 rules per sweep. Pick the highest-signal
+   sweep, and propose at most 5 rules per sweep. Pick the highest-signal
    learnings; leave the rest in the log.
 4. Write each candidate as a rule file in `rules/` (format below), status
    `proposed`.

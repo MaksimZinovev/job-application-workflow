@@ -156,7 +156,7 @@ Checkpoint: present the audit result — wait for approval. No edits unless appr
 Purpose: run-log distilled into approved rules.
 
 1. Read `references/retro-and-run-log.md`.
-2. Distill run-log and rule-checks.json signals into ≤10 proposed rule files in `rules/`; check whether an approved artifact is gold-example material (diversity check first).
+2. Distill run-log and rule-checks.json signals into ≤5 proposed rule files in `rules/`; check whether an approved artifact is gold-example material (diversity check first).
 3. Run the per-rule loop: `scripts/check_rules.py <run> --step step_retro --next` presents one rule at a time; check only that rule and confirm it in writing, repeat until `--gate` exits 0.
 4. On user approval: activate the batch (status, last_validated, CHANGELOG.md entry), then run `scripts/build_digests.py` so `references/rule-digests.md` carries the new rules.
 

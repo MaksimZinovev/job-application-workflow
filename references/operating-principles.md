@@ -29,9 +29,10 @@ by key from `assets/sources.json`; the preflight script resolves the paths.
   work is lost work.
 - Every step closes its rule loop before its checkpoint:
   `scripts/check_rules.py <run> --step <step> --gate` exits 0 — every rule
-  of the step confirmed in its own attention window, content rules with a
-  verbatim quote from the artifact, process rules with a written
-  confirmation of how they are honored, scores recorded in
+  of the step confirmed in its own attention window: quote rules with a
+  verbatim span from the artifact, measure rules with the measurement
+  stated in the note (its number, checked by the gate), confirm rules
+  with a written statement of how they are honored, scores recorded in
   `rule-checks.json` for the retro. A failed gate is a finding: apply the
   named fixes, re-check those rules, close the gate.
 
@@ -151,10 +152,12 @@ Protocol per run:
 1. Tier 0 passes, then the judge runs at the tier above and writes
    `review-report.json` from the review-report template: verdict,
    per-dimension scores, every flagged sentence, judge identity, tier,
-   scope, and a rules_audit — one entry per content rule of the step
-   (the `quote` rows of that step in `references/rule-digests.md`), each
-   with a verdict and a quote copied verbatim from the judged artifact. An
-   approved report requires every rules_audit verdict pass. Format
+   scope, and a rules_audit — one entry per quote or measure rule of
+   the step (the `quote` and `measure` rows of that step in
+   `references/rule-digests.md`), each with a verdict: quote entries
+   carry a span copied verbatim from the judged artifact, measure
+   entries state the measurement with its number. An approved report
+   requires every rules_audit verdict pass. Format
    exemplars: `examples/review-report-gold-approved.json` (gate-clearing)
    and `examples/review-report-gold-needs-fixes.json` (flag-time state;
    fails the gate by design).

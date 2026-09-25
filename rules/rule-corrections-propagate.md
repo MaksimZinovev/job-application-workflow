@@ -2,6 +2,7 @@
 id: rule_corrections_propagate
 inventory: 7
 type: protocol
+evidence: confirm
 applies_to: [step_1, step_2, step_3]
 on_fail:
   action: "sweep every run artifact for the stale value, update all, flag the source record"

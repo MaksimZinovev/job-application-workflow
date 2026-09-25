@@ -2,6 +2,7 @@
 id: rule_name_projects_attribute_companies
 inventory: 9
 type: style
+evidence: quote
 applies_to: [step_3]
 on_fail:
   action: "name the project, attribute the company, cite the concrete scale"

@@ -10,8 +10,9 @@ loop (scripts/check_rules.py) before the checkpoint: each rule
 gets one check file in its own attention window. The `check`
 column says what the gate demands in that file: `quote` = a span
 copied verbatim from the step's artifact; `confirm` = a written
-statement of how the rule is honored (process rules cannot be
-quoted from the artifact).
+statement of how the rule is honored; `measure` = the
+measurement stated in the note field, with its number (budget
+and size rules).
 
 ## step_0
 
@@ -28,13 +29,12 @@ quoted from the artifact).
 | rule | type | check | expect | on_fail |
 |---|---|---|---|---|
 | rule-structure-parity | check | quote | every canonical section from the example file and the workflow item list is present in the delivered artifact | add the missing sections, re-run the parity diff before delivery |
-| rule-word-budget | check | quote | artifact size within the budget the workflow states for it | trim once to a stated target, re-verify, deliver |
+| rule-word-budget | check | measure | artifact size within the budget the workflow states for it | trim once to a stated target, re-verify, deliver |
 | rule-copy-at-end | protocol | confirm | Make file copies as the last action of the step that needs them (job description into the run folder at step 0, master resume at step 5). If a source mutates after the copy, re-copy or re-verify before the copy is used or delivered. A copy is a point in time, not a live reference. | re-copy from the current source and diff to confirm parity |
 | rule-user-memory-outranks-records | judgment | quote | Fact verification terminates at a primary source. Letter to matches.md to experience-pieces.json is a circular chain, not verification. When user memory conflicts with a stored record, the user wins. Corrections propagate to every artifact carrying the fact, and the source record gets flagged for correction at origin. | downgrade the claim to the user-confirmed version, flag the source record |
 | rule-corrections-propagate | protocol | confirm | When a fact is corrected, propagate the fix to every artifact in the current run that carries it, and flag the source record for correction at origin. A correction applied in one place is not a correction. | sweep every run artifact for the stale value, update all, flag the source record |
 | rule-scale-labeling | judgment | quote | Evidence scale must match claim scale. Side projects are labeled as side projects, personal tools as personal tools, and enterprise work carries its real numbers. Never let small evidence stand behind a big-sounding claim. | add the honest scale label or drop the evidence |
 | rule-richness-for-cuts | judgment | quote | When trimming, score each piece of evidence by whether it closes a keyword hole or supports the role shape. Keep on yes; cut on no. Name the cuts at the checkpoint so the user can veto. | justify the keep with a keyword hole or role-shape argument, or cut |
-| rule-defer-to-team-knowledge | check | quote | every how-I-would-start passage defers to existing team knowledge before proposing changes | add the deferral before the proposal |
 | rule-checkpoint-interview-tool | protocol | confirm | Decision checkpoints go through the structured question tool: options enumerated as choices, each alternative labeled, one recommendation with its reasoning, a free-text path always open. Applies to every gate: the 1.3 promote decision, per-step checkpoints, and any mid-run fork. Never bury a decision in prose and hope the user notices the question mark. | re-present the decision as structured options with a recommendation |
 | rule-artifacts-on-disk | architecture | confirm | Every workflow step lands its output on disk in the run folder before its checkpoint closes. The run folder NN_<role>/ is the source of truth, not the chat. Any future change to step design must preserve interrupted-run recoverability: an interrupted run resumes from artifacts, not from conversation memory. | land the output on disk before the checkpoint closes |
 
@@ -43,7 +43,7 @@ quoted from the artifact).
 | rule | type | check | expect | on_fail |
 |---|---|---|---|---|
 | rule-structure-parity | check | quote | every canonical section from the example file and the workflow item list is present in the delivered artifact | add the missing sections, re-run the parity diff before delivery |
-| rule-word-budget | check | quote | artifact size within the budget the workflow states for it | trim once to a stated target, re-verify, deliver |
+| rule-word-budget | check | measure | artifact size within the budget the workflow states for it | trim once to a stated target, re-verify, deliver |
 | rule-copy-at-end | protocol | confirm | Make file copies as the last action of the step that needs them (job description into the run folder at step 0, master resume at step 5). If a source mutates after the copy, re-copy or re-verify before the copy is used or delivered. A copy is a point in time, not a live reference. | re-copy from the current source and diff to confirm parity |
 | rule-user-memory-outranks-records | judgment | quote | Fact verification terminates at a primary source. Letter to matches.md to experience-pieces.json is a circular chain, not verification. When user memory conflicts with a stored record, the user wins. Corrections propagate to every artifact carrying the fact, and the source record gets flagged for correction at origin. | downgrade the claim to the user-confirmed version, flag the source record |
 | rule-corrections-propagate | protocol | confirm | When a fact is corrected, propagate the fix to every artifact in the current run that carries it, and flag the source record for correction at origin. A correction applied in one place is not a correction. | sweep every run artifact for the stale value, update all, flag the source record |
@@ -58,7 +58,7 @@ quoted from the artifact).
 | rule | type | check | expect | on_fail |
 |---|---|---|---|---|
 | rule-structure-parity | check | quote | every canonical section from the example file and the workflow item list is present in the delivered artifact | add the missing sections, re-run the parity diff before delivery |
-| rule-word-budget | check | quote | artifact size within the budget the workflow states for it | trim once to a stated target, re-verify, deliver |
+| rule-word-budget | check | measure | artifact size within the budget the workflow states for it | trim once to a stated target, re-verify, deliver |
 | rule-tense-from-cv | check | quote | tense of every employer mention matches the CV's employment status | fix tense against the CV, sweep all artifacts for the same employer |
 | rule-ownership-calibration | judgment | quote | Ownership verbs (own, lead, responsible for) must match the org-context records. Where the records show reporting into a Lead, say designed, developed, maintained, extended. Calibrated verbs beat impact verbs, because the interviewer will probe exactly there. | downgrade the verb to what the org-context records support |
 | rule-user-memory-outranks-records | judgment | quote | Fact verification terminates at a primary source. Letter to matches.md to experience-pieces.json is a circular chain, not verification. When user memory conflicts with a stored record, the user wins. Corrections propagate to every artifact carrying the fact, and the source record gets flagged for correction at origin. | downgrade the claim to the user-confirmed version, flag the source record |

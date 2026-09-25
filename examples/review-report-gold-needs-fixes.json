@@ -1,6 +1,6 @@
 {
-  "_exemplar": "GOLD EXAMPLE, review-report (needs-fixes verdict). Constructed teaching exemplar: flags reconstruct the REAL v1 defects the user caught across the Tyro run's seven review rounds (all quotes verbatim from cover-letter-draft.md v1; fixes are the actual v2 rewrites). F1 is the exact sentence the writing guide now quotes in its per-paragraph rules (claim-only sentences get cut). This file teaches what needs-fixes looks like: it FAILS verify_artifacts --artifact review-report by design; the gate only accepts verdict approved with all flags resolved. Fix every flag, re-judge (scope: delta, changed paragraphs), then flip to approved like examples/review-report-gold-approved.json. Remove this _exemplar key when copying the schema.",
-  "schema": "job-application/review-report@1",
+  "_exemplar": "GOLD EXAMPLE, review-report (needs-fixes verdict). Constructed teaching exemplar: flags reconstruct the REAL v1 defects the user caught across the Tyro run's seven review rounds (all quotes verbatim from cover-letter-draft.md v1; fixes are the actual v2 rewrites). F1 is the exact sentence the writing guide now quotes in its per-paragraph rules (claim-only sentences get cut). This file teaches what needs-fixes looks like: it FAILS verify_artifacts --artifact review-report by design; the gate only accepts verdict approved with all flags resolved. Fix every flag, re-judge (scope: delta, changed paragraphs), then flip to approved like examples/review-report-gold-approved.json. rule-word-budget demonstrates the measure evidence kind: its proof is the measurement in the evidence field, with its number (the gate requires the digit); a quote is optional and, if added, must be verbatim. Remove this _exemplar key when copying the schema.",
+  "schema": "job-application/review-report@3",
   "run": "10_quality-engineer-ai-12-months-contract-tyro",
   "step": "step_3",
   "artifact": "cover-letter-draft.md",
@@ -54,8 +54,7 @@
     {
       "id": "rule-word-budget",
       "verdict": "fail",
-      "evidence": "body 1,187 words against the 1000-word default; over by 187 \u2014 trim once to a stated target or get explicit user approval",
-      "quote": "I am an Australian citizen based in Sydney and available immediately"
+      "evidence": "body 1,187 words against the 1000-word default; over by 187 \u2014 trim once to a stated target or get explicit user approval"
     },
     {
       "id": "rule-tense-from-cv",

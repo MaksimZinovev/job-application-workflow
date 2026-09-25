@@ -2,7 +2,8 @@
 id: rule_defer_to_team_knowledge
 inventory: 11
 type: check
-applies_to: [step_1, step_2, step_3]
+evidence: quote
+applies_to: [step_2, step_3]
 expect: "every how-I-would-start passage defers to existing team knowledge before proposing changes"
 on_fail:
   action: "add the deferral before the proposal"

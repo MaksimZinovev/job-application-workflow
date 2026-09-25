@@ -2,6 +2,7 @@
 id: rule_tense_from_cv
 inventory: 4
 type: check
+evidence: quote
 applies_to: [step_3]
 expect: "tense of every employer mention matches the CV's employment status"
 on_fail:

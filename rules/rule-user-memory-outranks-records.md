@@ -2,6 +2,7 @@
 id: rule_user_memory_outranks_records
 inventory: 6
 type: judgment
+evidence: quote
 applies_to: [step_1, step_2, step_3]
 on_fail:
   action: "downgrade the claim to the user-confirmed version, flag the source record"

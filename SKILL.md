@@ -71,7 +71,7 @@ Checkpoint: sources resolved, run folder created — restate the run rules brief
 ### step_1 — analysis
 
 ```yaml
-{id: step_1, type: analysis, depends_on: [step_0], expectStatus: approved, on_fail: fix scoring.md until verify passes; promotion needs explicit user approval, rules: [rule-structure-parity, rule-word-budget, rule-copy-at-end, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-richness-for-cuts, rule-defer-to-team-knowledge, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
+{id: step_1, type: analysis, depends_on: [step_0], expectStatus: approved, on_fail: fix scoring.md until verify passes; promotion needs explicit user approval, rules: [rule-structure-parity, rule-word-budget, rule-copy-at-end, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-richness-for-cuts, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
 ```
 
 Purpose: scored JD with a promotion decision.

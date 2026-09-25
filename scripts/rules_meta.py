@@ -2,7 +2,7 @@
 
 Single source of truth for: (a) frontmatter facts from rules/*.md,
 (b) step lists from SKILL.md, (c) the evidence kind each rule's check
-file demands (verbatim quote vs written confirmation), (d) which
+file demands (quote / confirm / measure), (d) which
 artifact each step's loop quotes from. Imported by build_digests.py,
 check_rules.py, and verify_artifacts.py so the three never drift
 apart. Stdlib only.
@@ -16,14 +16,18 @@ RULES_DIR = SKILL_ROOT / "rules"
 SKILL_FILE = SKILL_ROOT / "SKILL.md"
 
 # Every rule of every step gets a check file in the per-rule loop
-# (check_rules.py). Two evidence kinds, demanded by rule type:
-#   content rules (check/style/judgment) at artifact steps -> `quote`:
-#     a span copied verbatim from the step's artifact (script-verified).
-#   process rules (protocol/architecture), and content rules at steps
-#     without an artifact -> `confirmation`: a written statement of how
-#     the rule is honored (script-verified non-empty, no filler).
+# (check_rules.py). Three evidence kinds, declared per rule in its
+# frontmatter `evidence:` field:
+#   quote -> a span copied verbatim from the step's artifact
+#     (script-verified; rules that bind to artifact text).
+#   confirm -> a written statement of how the rule is honored
+#     (script-verified non-empty, no filler; process rules).
+#   measure -> the measurement stated in the note field, with its
+#     number (script-verified digit; budget and size rules, where
+#     pasting a sentence proves nothing).
 CONTENT_TYPES = {"check", "style", "judgment"}
 PROCESS_TYPES = {"protocol", "architecture"}
+EVIDENCE_KINDS = ("quote", "confirm", "measure")
 
 # Step id -> run-folder artifact its loop rules are checked against.
 # Steps without an entry run no loop (no content artifact to quote).
@@ -53,7 +57,7 @@ def _scalar(fm: str, key: str) -> str:
 
 def _prose_expect(text: str) -> str:
     """Full ## Rule prose, whitespace-collapsed — fallback when frontmatter
-    lacks `expect` (13 of 19 files keep it in prose only). Accuracy over
+    lacks `expect` (13 of 21 files keep it in prose only). Accuracy over
     brevity: the digest is agent-facing raw text, not rendered markdown."""
     m = re.search(r"^##\s+Rule\s*\n(.+?)\n##\s", text, re.M | re.S)
     if not m:
@@ -72,10 +76,15 @@ def load_rules() -> dict[str, dict]:
         fm = m.group(1)
         rid = norm(_scalar(fm, "id") or f.stem)
         om = re.search(r'^\s+action:\s*"(.*)"', fm, re.M)
+        etype = _scalar(fm, "type")
+        ev_raw = _scalar(fm, "evidence")
         rules[rid] = {
             "id": rid,
             "file": f,
-            "type": _scalar(fm, "type"),
+            "type": etype,
+            "evidence": ev_raw or ("quote" if etype in CONTENT_TYPES
+                                   else "confirm"),
+            "evidence_raw": ev_raw,
             "status": _scalar(fm, "status") or "active",
             "expect": _scalar(fm, "expect") or _prose_expect(text),
             "on_fail": om.group(1) if om else "",
@@ -125,16 +134,23 @@ def loop_rules(step_id: str, rules: dict[str, dict] | None = None,
     return [rules[r] for r in step["rules"] if r in rules]
 
 
-def quote_rules(step_id: str, rules: dict[str, dict] | None = None,
+def audit_rules(step_id: str, rules: dict[str, dict] | None = None,
                 steps: list[dict] | None = None) -> list[dict]:
-    """Content-type rules of a step — the ones whose evidence is a
-    verbatim quote from the artifact. The judge's rules_audit covers
-    exactly these (a process rule cannot be quoted from the artifact)."""
+    """Quote and measure rules of a step: the ones whose evidence the
+    judged artifact can carry. The judge's rules_audit covers exactly
+    these (a confirm rule is proven in the writer's check file; it
+    cannot be quoted or measured out of the artifact)."""
     return [m for m in loop_rules(step_id, rules, steps)
-            if m["type"] in CONTENT_TYPES]
+            if m.get("evidence") in ("quote", "measure")]
 
 
-def needs_quote(meta: dict, step_id: str) -> bool:
-    """True when the gate demands a verbatim artifact quote for this
-    rule: a content rule at a step that has an artifact."""
-    return meta["type"] in CONTENT_TYPES and step_id in STEP_ARTIFACTS
+def evidence_kind(meta: dict, step_id: str) -> str:
+    """The evidence kind the gate demands in this rule's check file:
+    quote (verbatim artifact span), confirm (written statement), or
+    measure (a stated measurement with its number). Declared per rule
+    in frontmatter; the type-derived value is a legacy fallback only,
+    and build_digests fails a rule that does not declare `evidence:`.
+    step_id is accepted for call-site symmetry; the kind is a
+    property of the rule, not the step."""
+    return meta.get("evidence") or (
+        "quote" if meta["type"] in CONTENT_TYPES else "confirm")

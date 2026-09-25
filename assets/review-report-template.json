@@ -1,5 +1,5 @@
 {
-  "schema": "job-application/review-report@2",
+  "schema": "job-application/review-report@3",
   "run": "<NN_slug>",
   "step": "<step_3 | step_4 | step_audit>",
   "artifact": "<file judged, e.g. cover-letter-draft.md>",
@@ -38,5 +38,5 @@
     }
   ],
   "rejudge_rounds": 0,
-  "notes": "Tier guide: tier 1 = fresh-context judge after step_3 (scope: full) or the conditional delta judge at step_4 (scope: delta, only when run-log marks substantive changes); tier 2 = peer judge at step_audit (scope: delta). verdict: approved | needs-fixes. rules_audit (schema @2): one entry for EVERY content rule of the report's step — the `quote` rows for that step in references/rule-digests.md (the process rules are confirmed in the writer's check files via check_rules.py --gate; they cannot be quoted from the artifact). Each entry: verdict pass|fail, evidence = what you checked, quote = a span copied verbatim from the judged artifact (verify_artifacts rejects paraphrase). An approved report requires every rules_audit verdict pass. One exhaustive structured pass per run; re-judge rounds capped at 2, then escalate to the user. Every flagged item must be resolved before progress.py --approve accepts this report."
+  "notes": "Tier guide: tier 1 = fresh-context judge after step_3 (scope: full) or the conditional delta judge at step_4 (scope: delta, only when run-log marks substantive changes); tier 2 = peer judge at step_audit (scope: delta). verdict: approved | needs-fixes. rules_audit (schema @3): one entry for EVERY quote or measure rule of the report's step — the `quote` and `measure` rows for that step in references/rule-digests.md (confirm rules are the writer's check files' job via check_rules.py --gate; they cannot be quoted or measured out of the artifact). Each entry: verdict pass|fail, evidence = what you checked; quote rules add a quote = a span copied verbatim from the judged artifact (verify_artifacts rejects paraphrase); measure rules state the measurement with its number in evidence (the gate requires the digit); a quote is optional there and, if added, must be verbatim. An approved report requires every rules_audit verdict pass. One exhaustive structured pass per run; re-judge rounds capped at 2, then escalate to the user. Every flagged item must be resolved before progress.py --approve accepts this report."
 }

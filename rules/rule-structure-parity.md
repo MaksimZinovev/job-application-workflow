@@ -2,6 +2,7 @@
 id: rule_structure_parity
 inventory: 1
 type: check
+evidence: quote
 applies_to: [step_1, step_2, step_3]
 expect: "every canonical section from the example file and the workflow item list is present in the delivered artifact"
 on_fail:

@@ -2,6 +2,7 @@
 id: rule_artifacts_on_disk
 inventory: 19
 type: architecture
+evidence: confirm
 applies_to: [all]
 on_fail:
   action: "land the output on disk before the checkpoint closes"

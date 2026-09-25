@@ -2,6 +2,7 @@
 id: rule_richness_for_cuts
 inventory: 18
 type: judgment
+evidence: quote
 applies_to: [step_1, step_2, step_3]
 on_fail:
   action: "justify the keep with a keyword hole or role-shape argument, or cut"

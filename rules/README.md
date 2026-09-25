@@ -16,10 +16,13 @@ three Markdown zones (prose). Rubric bullets can never break parsing.
 | id | snake_case, mirrors the kebab-case filename |
 | inventory | item number in the Checkpoint 1 extraction table |
 | type | check · protocol · style · judgment · architecture |
-| applies_to | step ids from the map below, or `[all]` |
+| evidence | quote · confirm · measure: the proof the gate demands in the check file |
+| applies_to | step ids from the map below, or `[all]` = wired at every SKILL.md step |
 | expect | check rules: the verifiable condition |
 | on_fail | what happens when the rule fires |
 | provenance | date, app, source, detail |
+| status | active · proposed: proposed stays out of the digest and every gate until user approval |
+| last_validated | date of the last user-approved activation |
 | related | other rule ids this one touches |
 
 `detail: reconstructed` means at least part of the Learned-from

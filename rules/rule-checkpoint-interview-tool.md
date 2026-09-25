@@ -2,6 +2,7 @@
 id: rule_checkpoint_interview_tool
 inventory: 16
 type: protocol
+evidence: confirm
 applies_to: [all]
 on_fail:
   action: "re-present the decision as structured options with a recommendation"

@@ -2,6 +2,7 @@
 id: rule_ownership_calibration
 inventory: 5
 type: judgment
+evidence: quote
 applies_to: [step_3, step_4]
 on_fail:
   action: "downgrade the verb to what the org-context records support"

@@ -2,6 +2,7 @@
 id: rule_pattern_sibling_scan
 inventory: 13
 type: protocol
+evidence: confirm
 applies_to: [step_4]
 on_fail:
   action: "present siblings with proposed rewrites, wait for approval"

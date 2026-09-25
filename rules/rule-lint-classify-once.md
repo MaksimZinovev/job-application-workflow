@@ -2,6 +2,7 @@
 id: rule_lint_classify_once
 inventory: 17
 type: check
+evidence: quote
 applies_to: [step_3, step_4]
 expect: "lint findings classified against precedent before any fix decision"
 on_fail:

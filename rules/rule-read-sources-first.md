@@ -2,6 +2,7 @@
 id: rule_read_sources_first
 inventory: 10
 type: protocol
+evidence: confirm
 applies_to: [step_0]
 on_fail:
   action: "stop drafting, read the unread source, restart the step"

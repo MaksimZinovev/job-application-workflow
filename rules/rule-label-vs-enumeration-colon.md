@@ -2,6 +2,7 @@
 id: rule_label_vs_enumeration_colon
 inventory: 14
 type: style
+evidence: quote
 applies_to: [step_4]
 on_fail:
   action: "keep the label colon; rewrite only the enumeration colon"

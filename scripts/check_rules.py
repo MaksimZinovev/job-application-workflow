@@ -9,18 +9,22 @@ WHERE IT IS INVOKED
     scripts/check_rules.py <run> --step step_N --next   # one rule at a time
     scripts/check_rules.py <run> --step step_N --gate   # closes the step
   references/rule-digests.md lists every step's rules and, per rule, what
-  the gate demands: `quote` or `confirm`.
+  the gate demands: `quote`, `confirm` or `measure`.
 
-TWO EVIDENCE KINDS (the gate checks both automatically)
-  Content rules (type check/style/judgment) at artifact steps: the check
-  file must carry a `quote` — a span copied verbatim from the step's
-  artifact. The gate re-opens the artifact and finds it; paraphrase
-  fails.
-  Process rules (type protocol/architecture), and content rules at steps
-  without an artifact: the check file must carry a `confirmation` — a
-  written statement of how the rule is honored (what you did, or what
-  you will do at the checkpoint). The gate checks it is present and
+THREE EVIDENCE KINDS (the gate checks all automatically; each rule
+declares its kind in its frontmatter `evidence:` field)
+  quote: the check file must carry a `quote`, a span copied verbatim
+  from the step's artifact. The gate re-opens the artifact and finds
+  it; paraphrase fails.
+  confirm: the check file must carry a `confirmation`, a written
+  statement of how the rule is honored (what you did, or what you
+  will do at the checkpoint). The gate checks it is present and
   substance, not truth: fabrication is a separate problem.
+  measure: the check file must state the measurement in `note`, with
+  its number (budget and size rules). A pasted sentence proves
+  nothing; the gate requires a digit in the note. A quote is
+  optional here; at steps with an artifact, the gate verifies any
+  quote it finds verbatim.
 
 --gate re-validates every check file — evidence guards, verdict/score
 consistency, fix-required-on-fail, sibling attestation, score threshold
@@ -34,9 +38,10 @@ Check file format (checks/<step>/<rule-id>.md, one line per field):
   verdict: pass | fail
   score: 0-3   (3 clean pass | 2 borderline, acceptable |
                 1 violation, fix proposed | 0 violation, not fixed)
-  quote: "<span copied verbatim from the artifact>"    (content rules)
-  confirmation: <how this rule is honored>              (process rules)
-  note: <optional: measurement or what you scanned>
+  quote: "<span copied verbatim from the artifact>"    (evidence: quote)
+  confirmation: <how this rule is honored>              (evidence: confirm)
+  note: <required for measure rules: the measurement with its number;
+         optional otherwise: what you scanned>
   fix: <required when verdict: fail — the concrete rewrite>
   siblings-checked: yes
 """
@@ -147,20 +152,42 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
             if score not in want:
                 problems.append(tag + f"score {score} contradicts verdict "
                               f"{f['verdict']!r} (pass→2-3, fail→0-1)")
-        if rm.needs_quote(meta, step):
-            q = f.get("quote", "")
+        if not meta.get("evidence_raw"):
+            problems.append(tag + "rule file declares no `evidence:` "
+                          "field — declare quote, confirm or measure "
+                          "(build_digests enforces this too)")
+        kind = rm.evidence_kind(meta, step)
+        q = f.get("quote", "")
+        if kind == "quote":
             if not q:
-                problems.append(tag + "quote missing — a content-rule check "
+                problems.append(tag + "quote missing — a quote-rule check "
                               "without a verbatim span proves nothing")
             elif collapse(q) not in art_text:
-                problems.append(tag + f"quote not found in "
-                              f"{rm.STEP_ARTIFACTS[step]}: {q[:60]!r}… "
+                where = (f"in {rm.STEP_ARTIFACTS[step]}"
+                         if step in rm.STEP_ARTIFACTS else "in the artifact")
+                problems.append(tag + f"quote not found {where}: "
+                              f"{q[:60]!r}… "
                               "(quotes must be verbatim from the artifact)")
-        else:
+        elif kind == "confirm":
             c = f.get("confirmation", "")
             if not c:
                 problems.append(tag + "confirmation missing — state how "
                               "this rule is honored (what you did or will do)")
+        else:  # measure: proof is the number, not a pasted sentence
+            n = f.get("note", "")
+            if not n:
+                problems.append(tag + "note missing — measure rules state "
+                              "the measurement (its number) in the note")
+            elif not re.search(r"\d", n):
+                problems.append(tag + "note carries no number — a "
+                              "measurement needs a digit, e.g. '4,912 chars "
+                              "against the 5,000 cap'")
+        if q and kind != "quote" and artifact is not None \
+                and collapse(q) not in art_text:
+            problems.append(tag + f"quote not found in "
+                          f"{rm.STEP_ARTIFACTS[step]}: {q[:60]!r}… "
+                          "(any quote a check file claims is verified "
+                          "verbatim)")
         if f.get("verdict") == "fail" and not f.get("fix", "").strip():
             problems.append(tag + "verdict fail but no fix field")
         if f.get("siblings-checked", "") != "yes":
@@ -240,14 +267,19 @@ def main() -> None:
             pos = [m["id"] for m in loop].index(meta["id"]) + 1
             done = "unchecked"
         cpath = cdir / f"{rm.display(meta['id'])}.md"
-        nq = rm.needs_quote(meta, a.step)
+        kind = rm.evidence_kind(meta, a.step)
         print(f"rule {pos}/{len(loop)}: {rm.display(meta['id'])}  "
               f"({meta['type']}, {done})")
         print(f"expect: {meta['expect']}")
         print(f"on_fail: {meta['on_fail'] or '—'}")
         print()
-        if nq:
+        if kind == "quote":
             print(f"Check ONLY this rule against {artifact}.")
+        elif kind == "measure":
+            print(f"Measure ONLY this rule against {artifact}: state the "
+                  "measurement and its number in the note field — the "
+                  "gate requires a digit there; a quote is optional and, "
+                  "if added, must be verbatim from the artifact.")
         else:
             print("Check ONLY this rule. It governs how you work, not the "
                   "artifact text: confirm in writing how it is honored — "
@@ -259,18 +291,23 @@ def main() -> None:
         print("  verdict: pass            # pass | fail")
         print("  score: 3                  # 3 clean pass | 2 borderline, "
               "acceptable | 1 violation, fix proposed | 0 violation, not fixed")
-        if nq:
+        if kind == "quote":
             print('  quote: "<span copied verbatim from the artifact — the '
                   'gate rejects paraphrase>"')
+        elif kind == "measure":
+            print("  note: <required: the measurement with its number "
+                  "for this step's artifact, e.g. '1,912 chars against "
+                  "the 5,000 cap'>")
         else:
             print("  confirmation: <how this rule is honored: what you did "
                   "or will do>")
-        print("  note: <optional: a measurement or what you scanned>")
+        if kind != "measure":
+            print("  note: <optional: a measurement or what you scanned>")
         print("  fix: <required when verdict: fail — the concrete rewrite>")
         print("  siblings-checked: yes")
         print()
         print("The gate rejects: missing check files, the wrong or missing "
-              "evidence for this rule type, fail without a fix, siblings "
+              "evidence for this rule, fail without a fix, siblings "
               "unchecked, scores below the threshold. Then run --next again.")
         return
 

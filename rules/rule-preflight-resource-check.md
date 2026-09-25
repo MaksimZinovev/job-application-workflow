@@ -2,6 +2,7 @@
 id: rule_preflight_resource_check
 inventory: 15
 type: check
+evidence: confirm
 applies_to: [step_0]
 expect: "every referenced skill, template, and source file exists at its expected path"
 on_fail:

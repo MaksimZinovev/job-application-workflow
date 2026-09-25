@@ -4,6 +4,33 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-25 — mechanism fix: evidence kinds made explicit (peer review, fix 1)
+
+- **Provenance:** the peer review of the 2026-09-24 session
+  (agents/peer-review-alpha-2026-09-24.md, major issue 1): the gate
+  demanded verbatim quotes from rules whose proof cannot be a pasted
+  sentence, teaching ritual compliance. Fixed after user review.
+- **Action:** three evidence kinds replace the two-kind type inference.
+  Every active rule now declares `evidence:` in frontmatter (12 quote,
+  8 confirm, 1 measure). `rule-word-budget` is the measure kind: the
+  proof is the measurement with its number, stated in the note field
+  (writer loop) or the evidence field (judge audit); the gate requires
+  a digit there. `rule-defer-to-team-knowledge` is unwired from step_1
+  (its own prose applies it from matches.md onward; scoring.md carries
+  nothing it could quote) and its `applies_to` matches the new wiring.
+  build_digests now fails on a missing or unknown `evidence:` field, on
+  a quote/measure rule wired at a step without an artifact, and on
+  `applies_to` disagreeing with the SKILL.md wiring; the writer's gate
+  bails on an evidence-less rule file too, and the rule-file format
+  tables (rules/README.md, retro-and-run-log.md) gained the `evidence`
+  row in the same batch, with the missing status and last_validated
+  rows restored. The needs-fixes exemplar's word-budget audit entry
+  dropped its ritual quote: the measurement in its evidence field was
+  already the honest proof; measure entries may carry an optional,
+  verified quote. Review-report schema stamped @3 (the rules_audit
+  shape changed: quoteless measure entries). Digest regenerated
+  (21 rules; step_1 now lists 9).
+
 ## 2026-09-24 — retro #2: skill-review batch (2 rules)
 
 - **Provenance:** the 2026-09-24 skill-review project (chunks (iii)-(iv)):

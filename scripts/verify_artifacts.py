@@ -229,16 +229,18 @@ def check_report(p: Path, art: Path | None = None) -> None:
         for f in flags
         if "resolved" not in f
     ]
-    # rules_audit (schema @2): one entry per loop rule of the report's step
+    # rules_audit (schema @3): one entry per quote-or-measure rule of the
+    # report's step (confirm rules are the writer's check files' job)
     step = rep.get("step", "")
-    loop = rm.quote_rules(step) if step else []
+    loop = rm.audit_rules(step) if step else []
     audit = rep.get("rules_audit")
     if not step:
         problems.append("step field missing — rules_audit is scoped by step")
     if not isinstance(audit, list):
         problems.append(
-            "rules_audit missing or not a list — schema @2 requires one "
-            "entry per content rule of the step (see review-report-template.json)"
+            "rules_audit missing or not a list — schema @3 requires one "
+            "entry per quote-or-measure rule of the step "
+            "(see review-report-template.json)"
         )
     else:
         want = [rm.display(m["id"]) for m in loop]
@@ -249,7 +251,9 @@ def check_report(p: Path, art: Path | None = None) -> None:
         for rid in got:
             if rid not in want:
                 problems.append(
-                    f"rules_audit entry {rid!r} is not a content rule of {step}"
+                    f"rules_audit entry {rid!r} is not audited at {step} "
+                    "(only the step's quote and measure rules carry "
+                    "rules_audit entries)"
                 )
         art_text = None
         if art is not None:
@@ -257,6 +261,7 @@ def check_report(p: Path, art: Path | None = None) -> None:
                 art_text = re.sub(r"\s+", " ", art.read_text())
             else:
                 problems.append(f"artifact-path not found: {art}")
+        kinds = {rm.display(m["id"]): rm.evidence_kind(m, step) for m in loop}
         for e in audit:
             rid = e.get("id", "?")
             if e.get("verdict") not in ("pass", "fail"):
@@ -269,15 +274,30 @@ def check_report(p: Path, art: Path | None = None) -> None:
                     f"rules_audit {rid}: evidence empty — say what you checked"
                 )
             q = (e.get("quote") or "").strip()
-            if not q:
-                problems.append(
-                    f"rules_audit {rid}: quote empty — cite a span from the artifact"
-                )
-            elif art_text is not None and re.sub(r"\s+", " ", q) not in art_text:
-                problems.append(
-                    f"rules_audit {rid}: quote not found verbatim in "
-                    f"{art.name}: {q[:60]!r}…"
-                )
+            if kinds.get(rid) == "measure":
+                # measurement rules: the proof is the number in evidence
+                if not re.search(r"\d", e.get("evidence") or ""):
+                    problems.append(
+                        f"rules_audit {rid}: evidence states no measurement "
+                        "— a measure entry needs its number, e.g. 'body "
+                        "1,187 words against the 1,000-word budget'"
+                    )
+                if q and art_text is not None \
+                        and re.sub(r"\s+", " ", q) not in art_text:
+                    problems.append(
+                        f"rules_audit {rid}: quote not found verbatim in "
+                        f"{art.name}: {q[:60]!r}…"
+                    )
+            else:
+                if not q:
+                    problems.append(
+                        f"rules_audit {rid}: quote empty — cite a span from the artifact"
+                    )
+                elif art_text is not None and re.sub(r"\s+", " ", q) not in art_text:
+                    problems.append(
+                        f"rules_audit {rid}: quote not found verbatim in "
+                        f"{art.name}: {q[:60]!r}…"
+                    )
         if rep.get("verdict") == "approved":
             bad = [e.get("id", "?") for e in audit if e.get("verdict") != "pass"]
             if bad:
@@ -315,11 +335,12 @@ def check_rulecheck(run: Path, step: str, cfg: Path) -> None:
         bail([f"rule-check {step}: {p}" for p in v["problems"]], run,
              hints=f"scripts/check_rules.py {run} --step {step} --next "
                    "for each failed rule; --gate to close the step")
-    n_quote = sum(1 for m in v["loop"] if rm.needs_quote(m, step))
+    kinds = [rm.evidence_kind(m, step) for m in v["loop"]]
+    n_q, n_m = kinds.count("quote"), kinds.count("measure")
     print(
         f"ok: rule-check {step} — {len(v['rows'])}/{len(v['loop'])} rules "
-        f"valid ({n_quote} quotes verbatim, "
-        f"{len(v['loop']) - n_quote} confirmations), scores ≥ {v['min_score']}"
+        f"valid ({n_q} quote(s) verbatim, {n_m} measurement(s), "
+        f"{len(kinds) - n_q - n_m} confirmation(s)), scores ≥ {v['min_score']}"
     )
 
 

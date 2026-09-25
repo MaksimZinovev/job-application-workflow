@@ -2,6 +2,7 @@
 id: rule_context_per_evidence
 inventory: 1
 type: check
+evidence: quote
 applies_to: [step_3, step_4]
 expect: "every evidence sentence names who did the work, where, and what changed; facts from different roles never share a sentence"
 on_fail:

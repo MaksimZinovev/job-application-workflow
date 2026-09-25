@@ -1,6 +1,6 @@
 {
   "_exemplar": "GOLD EXAMPLE, review-report (approved verdict). Constructed teaching exemplar: the run predates the tiered judge protocol, so no real review-report.json exists. Quotes are verbatim from examples/cover-letter-gold.md (the approved Tyro v2). F1 records the real v1 defects the user caught across seven review rounds (see the run's step1-checkpoint.md); the exemplar compresses that loop into one resolved flag for schema teaching. rules_audit added 2026-09-24 (chunk ii): verdicts re-derived from the real v2 letter, quotes verbatim. Remove this _exemplar key when copying the schema for a real run.",
-  "schema": "job-application/review-report@1",
+  "schema": "job-application/review-report@3",
   "run": "10_quality-engineer-ai-12-months-contract-tyro",
   "step": "step_4",
   "artifact": "cover-letter-draft-v2.md",

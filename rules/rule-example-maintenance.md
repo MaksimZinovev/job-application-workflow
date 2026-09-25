@@ -2,6 +2,7 @@
 id: rule_example_maintenance
 inventory: 2
 type: protocol
+evidence: confirm
 applies_to: [step_retro]
 expect: "when a rule batch activates, the examples that teach the affected rules are checked and updated in the same batch"
 on_fail:

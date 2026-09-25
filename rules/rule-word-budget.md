@@ -2,6 +2,7 @@
 id: rule_word_budget
 inventory: 2
 type: check
+evidence: measure
 applies_to: [step_1, step_2, step_3]
 expect: "artifact size within the budget the workflow states for it"
 on_fail:

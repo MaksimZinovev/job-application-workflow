@@ -2,6 +2,7 @@
 id: rule_no_enumeration_colons
 inventory: 12
 type: style
+evidence: quote
 applies_to: [step_3, step_4]
 on_fail:
   action: "rewrite as first-person process or plain prose"

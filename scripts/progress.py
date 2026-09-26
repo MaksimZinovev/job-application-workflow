@@ -74,34 +74,48 @@ def substantive_changes(run: Path) -> bool:
 
 
 def review_problems(run: Path, sid: str, meta: dict) -> list[str]:
-    """Gate the judge report: step_3 tier1/full, step_4 delta (only when
-    substantive), step_audit tier2/delta. Enforced mechanically, not by memory."""
-    if sid == "step_4" and not substantive_changes(run):
-        return []
+    """Gate the judge report: each gate reads its own file,
+    review-report-<step>.json (step_3 tier1/full, step_4 delta only
+    when substantive, step_audit tier2/delta), and the report must
+    name the artifact its gate judges. Reports accumulate: a later
+    gate never overwrites an earlier one. Enforced mechanically,
+    not by memory."""
     req = meta.get("review")
     if not req:
         return []  # no judge gate on step_0/step_1/step_2/step_retro
-    rr = run / "review-report.json"
+    if req.get("trigger") == "substantive-changes" and not substantive_changes(run):
+        return []  # conditional judge: the run-log says not substantive
+    rr = run / f"review-report-{sid}.json"
     if not rr.is_file():
-        return [f"{sid}: review-report.json missing — an approved judge report is required "
-                f"(references/operating-principles.md, reflection protocol)"]
+        return [f"{sid}: review-report-{sid}.json missing — an approved judge report is required "
+                f"(references/operating-principles.md, reflection protocol; a run started "
+                f"before 2026-09-26: rename review-report.json to review-report-{sid}.json)"]
     try:
         rep = json.loads(rr.read_text())
     except json.JSONDecodeError as e:
-        return [f"{sid}: review-report.json is not valid JSON ({e})"]
+        return [f"{sid}: review-report-{sid}.json is not valid JSON ({e})"]
     problems = []
     if (rep.get("judge") or {}).get("identity", "") in ("", None):
-        problems.append(f"{sid}: judge identity not recorded in review-report.json")
+        problems.append(f"{sid}: judge identity not recorded in review-report-{sid}.json")
     if rep.get("verdict") != "approved":
-        problems.append(f"{sid}: review-report.json verdict is {rep.get('verdict')!r}, expected 'approved'")
+        problems.append(f"{sid}: review-report-{sid}.json verdict is {rep.get('verdict')!r}, expected 'approved'")
     unresolved = [f.get("id", "?") for f in rep.get("flagged_items", []) if not f.get("resolved")]
     if unresolved:
-        problems.append(f"{sid}: flagged items unresolved in review-report.json: {', '.join(unresolved)}")
+        problems.append(f"{sid}: flagged items unresolved in review-report-{sid}.json: {', '.join(unresolved)}")
     want = req or {}
     if want.get("tier") is not None and rep.get("tier") != want["tier"]:
         problems.append(f"{sid}: judge tier is {rep.get('tier')!r}, expected {want['tier']}")
     if want.get("scope") and rep.get("scope") != want["scope"]:
         problems.append(f"{sid}: judge scope is {rep.get('scope')!r}, expected {want['scope']!r}")
+    if want.get("artifact") and rep.get("artifact") != want["artifact"]:
+        problems.append(f"{sid}: the report judges {rep.get('artifact')!r}, "
+                        f"expected {want['artifact']!r}")
+    if want.get("tier") is not None and not want.get("artifact"):
+        print(f"progress: note: {sid} run state predates the artifact pin "
+              f"(re-init the run, or add \"artifact\" to its review req to enable it)",
+              file=sys.stderr)
+    if rep.get("step") != sid:
+        problems.append(f"{sid}: report step is {rep.get('step')!r}, expected {sid!r}")
     return problems
 
 
@@ -162,6 +176,14 @@ def main() -> None:
             print(f"read now: {s['reference']}   (JIT pointer for {current})")
             if current in VERIFY_CMD:
                 print(f"gate: {VERIFY_CMD[current].replace('<run>', str(run))} then progress.py --approve {current}")
+            rvw = s.get("review") or {}
+            if rvw.get("artifact"):
+                if current == "step_4" and not substantive_changes(run):
+                    print("judge gate: skipped — substantive_changes: no; "
+                          "the delta judge runs only when the run-log marks `yes`")
+                else:
+                    print(f"judge gate: verify_artifacts.py --artifact review-report --path {run}/review-report-{current}.json "
+                          f"--artifact-path {run}/{rvw['artifact']} then progress.py --approve {current}")
         return
 
     sid = a.start or a.approve

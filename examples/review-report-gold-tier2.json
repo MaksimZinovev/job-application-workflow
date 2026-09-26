@@ -78,5 +78,5 @@
   ],
   "flagged_items": [],
   "rejudge_rounds": 0,
-  "notes": "Constructed exemplar (tier 2, approved). The peer judge consumed the tier-1 reports, re-audited the letter's step_4 rules independently, and confirmed the delta. Zero flagged items: a clean final pass adds no flags. Contested tier-2 findings follow the capped re-judge protocol (2 rounds), then escalate to the human checkpoint. Same artifact as the tier-1 exemplar, deliberately: the value of tier 2 is a second, independent verdict on the same mechanical claims, and the gate re-verifies this report's quotes against v2 exactly as it did for tier 1."
+  "notes": "Constructed exemplar (tier 2, approved). The peer judge consumed the accumulated tier-1 reports (review-report-step_3.json, review-report-step_4.json), re-audited the letter's step_4 rules independently, and confirmed the delta. Zero flagged items: a clean final pass adds no flags. Contested tier-2 findings follow the capped re-judge protocol (2 rounds), then escalate to the human checkpoint. Same artifact as the tier-1 exemplar, deliberately: the value of tier 2 is a second, independent verdict on the same mechanical claims, and the gate re-verifies this report's quotes against v2 exactly as it did for tier 1."
 }

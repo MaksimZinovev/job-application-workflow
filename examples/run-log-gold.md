@@ -27,7 +27,7 @@ substantive_changes: yes
 <!-- step_4 writing passes: `yes` because the review rounds rewrote the
      intro, three body paragraphs, and the projects list; a pass rewrote
      prose, not just single words. progress.py --approve step_4 requires
-     a delta review-report.json when this flag is `yes`. -->
+     a delta review-report-step_4.json when this flag is `yes`. -->
 
 ## Log
 

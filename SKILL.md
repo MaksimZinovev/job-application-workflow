@@ -42,7 +42,7 @@ python3 scripts/progress.py ~/apps/12_senior-qa-engineer-acme --status   # init 
 python3 scripts/progress.py ~/apps/12_senior-qa-engineer-acme --approve step_1   # the gate: verify exits 0 first
 python3 scripts/verify_artifacts.py --artifact scoring --path ~/apps/12_senior-qa-engineer-acme/scoring.md
 python3 scripts/verify_artifacts.py --artifact cover-letter --path ~/apps/12_senior-qa-engineer-acme/cover-letter-draft.md --matches ~/apps/12_senior-qa-engineer-acme/matches.md
-python3 scripts/verify_artifacts.py --artifact review-report --path ~/apps/12_senior-qa-engineer-acme/review-report.json
+python3 scripts/verify_artifacts.py --artifact review-report --path ~/apps/12_senior-qa-engineer-acme/review-report-step_3.json   # each gate keeps its own file: review-report-<step>.json
 python3 scripts/check_rules.py ~/apps/12_senior-qa-engineer-acme --step step_3 --next   # one loop rule at a time; --gate closes the step
 python3 scripts/build_digests.py                             # maintainer: regenerate references/rule-digests.md; step_retro runs it after activating a batch
 python3 scripts/verify_artifacts.py --artifact rule-check --path ~/apps/12_senior-qa-engineer-acme --step step_3   # step_audit: re-validate a step's rule checks
@@ -112,7 +112,7 @@ Purpose: judged, rubric-scored cover letter v1.
 4. Review our own work using 
   `references/cover-letter-writing.md`;  `references/paragraph-rubric.md` 
 5. Run the per-rule loop against cover-letter-draft.md: `scripts/check_rules.py <run> --step step_3 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
-6. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report.json` with a full rules_audit; fix flagged items, re-judge ≤2 rounds. Then verify the report: `scripts/verify_artifacts.py --artifact review-report --path <run>/review-report.json --artifact-path <run>/cover-letter-draft.md` (quotes checked against v1).
+6. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report-step_3.json` with a full rules_audit; fix flagged items, re-judge ≤2 rounds. Then verify the report: `scripts/verify_artifacts.py --artifact review-report --path <run>/review-report-step_3.json --artifact-path <run>/cover-letter-draft.md` (quotes checked against v1).
 
 Checkpoint: concise report, raise if any questions, present draft + judge report — wait for approval.
 
@@ -128,7 +128,7 @@ Purpose: human-voice v2; v1 preserved.
 2. Apply unslop, targeted user-feedback rewrites, credibility pass; write `cover-letter-draft-v2.md`, keep v1 untouched.
 3. Set `substantive_changes: yes|no` in run-log.md; verify v2.
 4. Run the per-rule loop against cover-letter-draft-v2.md: `scripts/check_rules.py <run> --step step_4 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
-5. Run the conditional delta judge only when substantive (judge protocol in operating-principles.md; its rules_audit covers the step_4 loop rules). When it ran, verify the report: `scripts/verify_artifacts.py --artifact review-report --path <run>/review-report.json --artifact-path <run>/cover-letter-draft-v2.md`.
+5. Run the conditional delta judge only when substantive (judge protocol in operating-principles.md; its rules_audit covers the step_4 loop rules) into `review-report-step_4.json`, reading `review-report-step_3.json` as the delta baseline. When it ran, verify the report: `scripts/verify_artifacts.py --artifact review-report --path <run>/review-report-step_4.json --artifact-path <run>/cover-letter-draft-v2.md`.
 
 Checkpoint: concise report, present v2 + flag + report — wait for approval.
 
@@ -141,9 +141,9 @@ Checkpoint: concise report, present v2 + flag + report — wait for approval.
 Purpose: full verify matrix green + independent final judgment.
 
 1. Read `references/operating-principles.md` (audit + judge sections).
-2. Run verify_artifacts on every artifact (scoring, matches, letter v2, review-report with `--artifact-path <run>/cover-letter-draft-v2.md` so rules_audit quotes are verified) and re-verify every step's rule checks: `verify_artifacts.py --artifact rule-check --path <run> --step step_1` (repeat for steps 1-4).
+2. Run verify_artifacts on every artifact (scoring, matches, letter v2) and on every review report that exists: `review-report-step_3.json` with `--artifact-path <run>/cover-letter-draft.md`, `review-report-step_4.json` and `review-report-step_audit.json` with `--artifact-path <run>/cover-letter-draft-v2.md`, so every accumulated report's rules_audit quotes are verified. Re-verify every step's rule checks: `verify_artifacts.py --artifact rule-check --path <run> --step step_1` (repeat for steps 1-4).
 3. Run the per-rule loop: `scripts/check_rules.py <run> --step step_audit --next` presents one rule at a time; check only that rule and confirm it in writing, repeat until `--gate` exits 0.
-4. Run the Tier 2 peer judge; delta-based + evidence-to-matches traceability into `review-report.json` (tier 2, scope delta). The report runs at step_audit, but its rules_audit is scoped to the judged artifact's step: the gate derives the scope from the `artifact` field, so the peer judge re-audits the letter's quote and measure rules with quotes verified against v2; an empty rules_audit fails the gate. Example: `examples/review-report-gold-tier2.json`.
+4. Run the Tier 2 peer judge; delta-based + evidence-to-matches traceability into `review-report-step_audit.json` (tier 2, scope delta), consuming the accumulated reports (`review-report-step_3.json`, `review-report-step_4.json` when it exists). The report runs at step_audit, but its rules_audit is scoped to the judged artifact's step: the gate derives the scope from the `artifact` field and requires it to be cover-letter-draft-v2.md, so the peer judge re-audits the letter's quote and measure rules with quotes verified against v2; an empty rules_audit fails the gate. Example: `examples/review-report-gold-tier2.json`.
 
 Checkpoint: present the audit result — wait for approval. No edits unless approved by user.
 

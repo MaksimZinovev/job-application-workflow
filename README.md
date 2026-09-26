@@ -9,7 +9,7 @@ Scripts do the grunt work. Preflight, run setup, gates, and checks are determini
 1. Preflight resolves your sources from `assets/sources.json`. A missing mandatory file blocks the run until you fix the path or waive it on record.
 2. Score the job against your rubric, grounded by web search. You decide: promote this job to application, or stop.
 3. Build matches.md: keywords against your experience records, lists capped, gaps named honestly. Plan each paragraph from a hidden question the ad implies. The rubric validates the plan before any drafting.
-4. Draft v1. Mechanical checks run first: em dashes, clichés, keyword coverage, word budget. A fresh-context judge then scores it against the six-dimension paragraph rubric and writes `review-report.json`.
+4. Draft v1. Mechanical checks run first: em dashes, clichés, keyword coverage, word budget. A fresh-context judge then scores it against the six-dimension paragraph rubric and writes `review-report-step_3.json`.
 5. Rewrite to v2: unslop pass for human voice, credibility pass for honest verbs. v1 stays on disk forever. Substantive changes trigger a delta judge; small fixes skip it.
 6. Final audit: full verify matrix plus a peer judge, delta-based. The retro distills the run log into proposed rules for the next application.
 
@@ -69,7 +69,7 @@ job-application-workflow/
 │   ├── cover-letter-gold.md    # approved v2 letter, verbatim + known-seam annotations
 │   ├── matches-gold.md         # curated to budget; record-id citations, honest gaps
 │   ├── scoring-gold.md         # rubric-keyed scoring with research grounding
-│   ├── review-report-gold-approved.json     # judge exemplar: gate-clearing report
+│   ├── review-report-gold-approved.json     # judge exemplar: the step_4 delta gate's approved shape
 │   ├── review-report-gold-needs-fixes.json  # judge exemplar: flag-time state (fails gate by design)
 │   └── run-log-gold.md         # raw-signal format, reconstructed from session records
 ├── CHANGELOG.md                # rule governance log, one entry per retro batch
@@ -93,7 +93,9 @@ Each run produces one folder under your `applications_root`, auto-numbered:
 ├── matches.md                 # keyword evidence lists + honest gaps
 ├── cover-letter-draft.md      # stubbed at init; v1, preserved forever
 ├── cover-letter-draft-v2.md  # after the passes
-├── review-report.json        # judge verdict, tier, flagged items, rules_audit
+├── review-report-step_3.json # tier-1 full judge report on v1
+├── review-report-step_4.json # tier-1 delta judge report on v2 (when substantive)
+├── review-report-step_audit.json # tier-2 peer report on v2; reports accumulate
 ├── checks/                    # per-rule check files (checks/step_N/<rule>.md)
 ├── rule-checks.json           # rule-check scores aggregated by the gate (retro signal)
 ├── progress.json              # machine gate state
@@ -101,7 +103,7 @@ Each run produces one folder under your `applications_root`, auto-numbered:
 └── run-log.md                 # raw signals for the retro
 ```
 
-The deliverable is `cover-letter-draft-v2.md` with its `review-report.json`. Everything else is traceable evidence behind it.
+The deliverable is `cover-letter-draft-v2.md` with its `review-report-step_audit.json`. Everything else is traceable evidence behind it.
 
 ## Setup
 

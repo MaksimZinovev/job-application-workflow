@@ -10,8 +10,8 @@ substantive_changes: no
 <!-- step_4 writing passes: flip to `yes` only when a pass rewrote a whole
      paragraph, swapped evidence, or moved structure. Small targeted fixes
      (de-clicheing, typo edits, single user-flagged replacements) stay `no`.
-     progress.py --approve step_4 requires a delta review-report.json when
-     this flag is `yes`. -->
+     progress.py --approve step_4 requires a delta review-report-step_4.json
+     when this flag is `yes`. -->
 
 ## Log
 

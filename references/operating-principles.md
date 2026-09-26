@@ -17,9 +17,10 @@ by key from `assets/sources.json`; the preflight script resolves the paths.
   "yes" that buries one is a false report.
 - `progress.py` is the machine gate. A step is approved only when its
   dependencies are approved, its expected artifacts exist, and — where the judge
-  gate applies — `review-report.json` carries verdict `approved` at the required
-  tier and scope. A refused gate is a finding, not an obstacle: fix the named
-  gap and re-run. Never edit gate state by hand.
+  gate applies — its own `review-report-<step>.json` carries verdict `approved`
+  at the required tier and scope, judging the artifact that gate requires. A
+  refused gate is a finding, not an obstacle: fix the named gap and re-run.
+  Never edit gate state by hand.
 - At a decision point with several viable paths, present the alternatives with
   a short pro/con each and one professional recommendation. Let the user pick.
 - Keep responses concise unless the user asks for more detail. When unsure,
@@ -139,11 +140,12 @@ judgment. The judge runs in tiers so token cost stays proportional to risk.
   `substantive_changes: yes` (a paragraph rewritten, evidence swapped,
   structure moved). Small targeted fixes — de-clichéing, typo edits,
   user-flagged single replacements — skip it. When it runs, it is
-  delta-based: the previous review-report plus changed paragraphs only,
+  delta-based: review-report-step_3.json plus changed paragraphs only,
   verifying fixes and spot-checking neighbors. Never a fresh full-letter pass.
 - **Tier 2 — peer judge at step_audit, the paid final gate.** An independent
-  peer agent or second model, delta-based: consumes the accumulated review
-  reports, judges the delta since last approval, and cross-checks
+  peer agent or second model, delta-based: consumes the accumulated reports
+  (`review-report-step_3.json`, `review-report-step_4.json` when it exists),
+  judges the delta since last approval, and cross-checks
   evidence-to-matches traceability. Its rules_audit is scoped to the judged
   artifact's step, not step_audit (the gate derives the scope from the
   report's `artifact` field), so the peer pass re-audits the letter's quote
@@ -153,8 +155,10 @@ judgment. The judge runs in tiers so token cost stays proportional to risk.
 
 Protocol per run:
 
-1. Tier 0 passes, then the judge runs at the tier above and writes
-   `review-report.json` from the review-report template: verdict,
+1. Tier 0 passes, then the judge runs at the tier above and writes its
+   gate's own file from the review-report template (`review-report-step_3.json`
+   for tier 1 full, `review-report-step_4.json` for the tier 1 delta,
+   `review-report-step_audit.json` for tier 2): verdict,
    per-dimension scores, every flagged sentence, judge identity, tier,
    scope, and a rules_audit — one entry per quote or measure rule of
    the judged artifact's step (the `quote` and `measure` rows of that
@@ -162,17 +166,30 @@ Protocol per run:
    entries carry a span copied verbatim from the judged artifact,
    measure entries state the measurement with its number. An approved
    report requires every rules_audit verdict pass. Format
-   exemplars: `examples/review-report-gold-approved.json`
-   (gate-clearing), `examples/review-report-gold-needs-fixes.json`
-   (flag-time state; fails the gate by design) and
+   exemplars: `examples/review-report-gold-approved.json` (the
+   step_4 delta gate's approved shape), `examples/review-report-gold-needs-fixes.json`
+   (the step_3 full report at flag time; fails the gate by design) and
    `examples/review-report-gold-tier2.json` (the step_audit peer pass;
-   rules scoped to the judged letter).
+   rules scoped to the judged letter). The approved step_3 shape is
+   deliberately not a separate exemplar: it is the needs-fixes file
+   flipped, verdict approved with every flag resolved.
+   Reports accumulate: every gate keeps its own file, the tier-2 peer
+   consumes the earlier ones, and each stays independently verifiable
+   against its own artifact at the audit. Each gate reads only its own
+   file, so an earlier approval stays valid after later gates run;
+   re-doing an earlier step rewrites that step's report, and the later
+   gates' approvals must then be re-earned.
 2. Fix every flagged item; re-judge; re-judge rounds are capped at 2 per gate.
    Anything still contested escalates to the human checkpoint.
 3. The gate is mechanical: `verify_artifacts.py --artifact review-report`
    fails a missing or unapproved report, an incomplete rules_audit, or an
-   audit whose quotes are not verbatim in the judged artifact (pass
-   `--artifact-path` to enable that guard), and `progress.py --approve`
+   audit whose quotes are not verbatim in the judged artifact (quotes are
+   verified against the artifact named in the report's own `artifact`
+   field when it sits next to the report; pass `--artifact-path` to
+   override), and `progress.py --approve`
+   checks the gate's run-state requirements on top of that shape:
+   tier, scope, the judged artifact, and that the report's `step`
+   names the gate it was written for.
    blocks step_3, step_4 (substantive changes only), and step_audit
    without it. Enforcement lives in scripts, not memory.
 

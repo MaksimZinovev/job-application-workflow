@@ -35,13 +35,16 @@ STEPS = [
      "references/jd-analysis.md", None),
     ("step_2", "planning", ["step_1"], ["matches.md"],
      "references/matches-and-plan.md", None),
-    ("step_3", "drafting", ["step_2"], ["cover-letter-draft.md", "review-report.json"],
-     "references/cover-letter-writing.md", {"tier": 1, "scope": "full"}),
+    ("step_3", "drafting", ["step_2"], ["cover-letter-draft.md"],
+     "references/cover-letter-writing.md", {"tier": 1, "scope": "full",
+                                            "artifact": "cover-letter-draft.md"}),
     ("step_4", "rewriting", ["step_3"], ["cover-letter-draft-v2.md"],
      "references/writing-passes.md", {"tier": 1, "scope": "delta",
-                                      "trigger": "substantive-changes"}),
-    ("step_audit", "verification", ["step_4"], ["review-report.json"],
-     "references/operating-principles.md", {"tier": 2, "scope": "delta"}),
+                                      "trigger": "substantive-changes",
+                                      "artifact": "cover-letter-draft-v2.md"}),
+    ("step_audit", "verification", ["step_4"], [],
+     "references/operating-principles.md", {"tier": 2, "scope": "delta",
+                                            "artifact": "cover-letter-draft-v2.md"}),
     ("step_retro", "learning-loop", ["step_audit"], ["run-log.md"],
      "references/retro-and-run-log.md", None),
 ]
@@ -77,6 +80,12 @@ def next_run_folder(apps_root: Path, slug: str) -> Path:
 def build_progress(folder: Path, created: str) -> dict:
     steps = {}
     for sid, stype, deps, arts, ref, review in STEPS:
+        # the report file is derived from the gate id, the same rule
+        # progress.py applies — spelled here zero times as a literal.
+        # Conditional judges (a trigger key) never expect a report
+        # artifact: the file exists only when the trigger fired.
+        if review and "trigger" not in review:
+            arts = arts + [f"review-report-{sid}.json"]
         steps[sid] = {
             "type": stype, "status": "pending", "depends_on": deps,
             "expect_artifacts": arts, "reference": ref,

@@ -1,11 +1,11 @@
 {
-  "_exemplar": "GOLD EXAMPLE, review-report (approved verdict). Constructed teaching exemplar: the run predates the tiered judge protocol, so no real review-report.json exists. Quotes are verbatim from examples/cover-letter-gold.md (the approved Tyro v2). F1 records the real v1 defects the user caught across seven review rounds (see the run's step1-checkpoint.md); the exemplar compresses that loop into one resolved flag for schema teaching. rules_audit added 2026-09-24 (chunk ii): verdicts re-derived from the real v2 letter, quotes verbatim. Remove this _exemplar key when copying the schema for a real run.",
+  "_exemplar": "GOLD EXAMPLE, review-report (approved verdict). Constructed teaching exemplar: the run predates the tiered judge protocol, so no real review-report.json exists. Quotes are verbatim from examples/cover-letter-gold.md (the approved Tyro v2). F1 records the real v1 defects the user caught across seven review rounds (see the run's step1-checkpoint.md); the exemplar compresses that loop into one resolved flag for schema teaching. This is the step_4 DELTA gate's approved shape (tier 1, scope delta, artifact cover-letter-draft-v2.md): saved as review-report-step_4.json it passes verify and progress.py --approve step_4 accepts it when the run-log marks substantive_changes: yes. rules_audit added 2026-09-24 (chunk ii): verdicts re-derived from the real v2 letter, quotes verbatim. Remove this _exemplar key when copying the schema for a real run.",
   "schema": "job-application/review-report@3",
   "run": "10_quality-engineer-ai-12-months-contract-tyro",
   "step": "step_4",
   "artifact": "cover-letter-draft-v2.md",
   "tier": 1,
-  "scope": "full",
+  "scope": "delta",
   "judge": {
     "identity": "<model or agent name>",
     "kind": "fresh-context-self",
@@ -87,5 +87,5 @@
     }
   ],
   "rejudge_rounds": 1,
-  "notes": "Constructed exemplar (verdict: approved). Every quote is verbatim from the approved Tyro v2. One exhaustive pass; F1 shows the resolved-flag format; the gate requires resolved: true on every flag before the verdict flips to approved. The real loop behind this report was seven user review rounds recorded in the run's step1-checkpoint.md; the per-round flags live in examples/review-report-gold-needs-fixes.json. Tier guide: tier 1 = fresh-context judge after step_3 (scope full) or the conditional delta judge at step_4 (scope delta, only when the run-log marks substantive changes); tier 2 = peer judge at step_audit. Re-judge rounds capped at 2, then escalate to the user."
+  "notes": "Constructed exemplar (verdict: approved). Every quote is verbatim from the approved Tyro v2. One delta pass over the changed sections (never a fresh full-letter pass); F1 shows the resolved-flag format, and the gate requires resolved: true on every flag before the verdict flips to approved. The real loop behind this report was seven user review rounds recorded in the run's step1-checkpoint.md; the per-round flags live in examples/review-report-gold-needs-fixes.json. Tier guide: tier 1 = fresh-context judge after step_3 (scope full) or the conditional delta judge at step_4 (scope delta, only when the run-log marks substantive changes); tier 2 = peer judge at step_audit. Re-judge rounds capped at 2, then escalate to the user."
 }

@@ -1,6 +1,6 @@
 ---
 id: rule_context_per_evidence
-inventory: 1
+inventory: 20
 type: check
 evidence: quote
 applies_to: [step_3, step_4]

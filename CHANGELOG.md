@@ -4,6 +4,46 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-26 — mechanism fix: rules/README describes the corpus as it stands (peer review, fix 4)
+
+- **Provenance:** major issue 4 of the peer review — rules/README.md
+  still described the active corpus as a one-time review draft: the
+  header said "draft for review", the inventory table carried the
+  pre-remap step wiring (contradicting the frontmatter, digest, and
+  SKILL.md wiring in 14 of 19 rows), the intro pointed at the
+  superseded wiki workflow.md, and "How to review" instructed the
+  user through the completed retro-#1 approval form.
+- **What changed:** header and intro reframed (the corpus is active
+  and gate-wired via the digest and the per-rule loop; origin kept
+  as history; the wiki workflow.md named as superseded by SKILL.md);
+  the inventory table rebuilt from live frontmatter with all 21
+  rules and a "frontmatter is the truth source" note; the format
+  table's inventory row describes the numbering (the retro-#1
+  extraction table is no longer in the repo) and the expect row
+  reflects reality (every check rule carries one; the protocol rule
+  example-maintenance also does); the 25-line claim replaced with
+  the measured 30-45; "How to review" replaced by "How rules change",
+  the standing retro loop (at most 5 proposed rules per sweep,
+  proposed stays out of the digest and gates, approval flips status
+  and last_validated and lands a CHANGELOG entry, examples checked
+  in the same batch per rule 21); "Not here yet, by design" became
+  "Elsewhere in this repo".
+- **Frontmatter:** rule-context-per-evidence and
+  rule-example-maintenance (both from the 2026-09 skill-review
+  session) had collided with retro-#1 numbers 1 and 2; renumbered
+  to the next free numbers 20 and 21 by session arrival order. No
+  other frontmatter touched; `inventory` is parsed by nothing, and
+  the digest is unchanged (verified).
+  After alpha's re-review (pass with notes, same day): the intro's
+  "wired into the step gates" softened to "wired into the workflow's
+  steps" (step_0 and step_retro rules have no gate, only the check
+  loop); the evidence row no longer implies a check-type-only field
+  ("the proof the check loop demands"); the inventory row's "20, 21
+  so far" reworded as the dated fact "the 2026-09 batch took 20 and
+  21" (a historical statement cannot rot); "How rules change" now
+  names its canonical definition (references/retro-and-run-log.md),
+  which "Elsewhere in this repo" also lists.
+
 ## 2026-09-26 — mechanism fix: per-gate report storage + artifact pin (peer review, fix 3)
 
 - **Provenance:** major issue 3 of the peer review, plus the fold-ins

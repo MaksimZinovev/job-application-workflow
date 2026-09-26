@@ -1,6 +1,6 @@
 ---
 id: rule_example_maintenance
-inventory: 2
+inventory: 21
 type: protocol
 evidence: confirm
 applies_to: [step_retro]

@@ -1,0 +1,82 @@
+{
+  "_exemplar": "GOLD EXAMPLE, review-report (tier 2, approved). Constructed teaching exemplar: the Tyro run predates the tiered judge protocol, so no real tier-2 report exists. This reconstructs the final peer pass a second judge would have run at step_audit after the seven review rounds, judging the same approved v2 the tier-1 exemplar covers. Quotes are verbatim from examples/cover-letter-gold.md. The teaching point: this report runs at step_audit, but its rules_audit is scoped to the judged artifact's step (step_4, which the gate derives from artifact: cover-letter-draft-v2.md), not to step_audit. That is the fix for the vacuous tier-2 audit: an empty rules_audit at step_audit fails the gate; the peer judge re-audits the letter's quote and measure rules with quotes verified against v2. Zero flagged items is the normal shape for a clean final pass. Remove this _exemplar key when copying the schema.",
+  "schema": "job-application/review-report@3",
+  "run": "10_quality-engineer-ai-12-months-contract-tyro",
+  "step": "step_audit",
+  "artifact": "cover-letter-draft-v2.md",
+  "tier": 2,
+  "scope": "delta",
+  "judge": {
+    "identity": "<model or agent name>",
+    "kind": "peer-agent",
+    "date": "2026-09-10"
+  },
+  "verdict": "approved",
+  "dimensions": [
+    {
+      "name": "question coverage",
+      "score": "pass",
+      "note": "all seven requirements still map to table rows after the rewrite rounds; the intro rewrite lost no coverage"
+    },
+    {
+      "name": "source fidelity",
+      "score": "pass",
+      "note": "delta claims trace to matches.md; the Rovo sentence matches the user-confirmed record, personal use labeled as personal"
+    },
+    {
+      "name": "demonstration",
+      "score": "pass",
+      "note": "the AI paragraph opens on the work, not a claim; the 5 to 10 percent figure stays hedged as an estimate"
+    },
+    {
+      "name": "story continuity",
+      "score": "pass",
+      "note": "one arc per paragraph survives the rewrites; transitions grow from the previous paragraph"
+    },
+    {
+      "name": "evidence economy",
+      "score": "pass",
+      "note": "internal validation detail deleted in the delta; no new redundancy between table and prose"
+    },
+    {
+      "name": "reader ease",
+      "score": "pass",
+      "note": "the gap paragraph answers the skim in four words; no re-read traps left in the changed sections"
+    }
+  ],
+  "rules_audit": [
+    {
+      "id": "rule-ownership-calibration",
+      "verdict": "pass",
+      "evidence": "re-checked every ownership verb against the org-context records: owned, introduced, built, maintained all report-level; no lead-the-team claims",
+      "quote": "On IWS I owned the Jenkins pipelines and automated environment monitoring"
+    },
+    {
+      "id": "rule-no-enumeration-colons",
+      "verdict": "pass",
+      "evidence": "independent colon sweep across table and prose: labels and clause intros only; the v1 enumeration colon is gone from the credentials sentence",
+      "quote": "On formal credentials, my Agentic AI course and the ISTQB-GenAI certification are in progress"
+    },
+    {
+      "id": "rule-label-vs-enumeration-colon",
+      "verdict": "pass",
+      "evidence": "the gap paragraph's colon is a run-in label, not an enumeration intro",
+      "quote": "**Where I would be ramping up.**"
+    },
+    {
+      "id": "rule-lint-classify-once",
+      "verdict": "pass",
+      "evidence": "unslop findings were classified once at step_4 against house style; no reclassification loop, and the flaky-waits rewrite stands",
+      "quote": "hardcoded waits that made the tests flaky and slow"
+    },
+    {
+      "id": "rule-context-per-evidence",
+      "verdict": "pass",
+      "evidence": "every evidence sentence names who did the work, where, and what changed; the SmartCore sentence carries all three",
+      "quote": "On SmartCore I introduced the first BDD scenarios to run daily in CI instead of on demand, and removed the hardcoded waits that made the tests flaky and slow"
+    }
+  ],
+  "flagged_items": [],
+  "rejudge_rounds": 0,
+  "notes": "Constructed exemplar (tier 2, approved). The peer judge consumed the tier-1 reports, re-audited the letter's step_4 rules independently, and confirmed the delta. Zero flagged items: a clean final pass adds no flags. Contested tier-2 findings follow the capped re-judge protocol (2 rounds), then escalate to the human checkpoint. Same artifact as the tier-1 exemplar, deliberately: the value of tier 2 is a second, independent verdict on the same mechanical claims, and the gate re-verifies this report's quotes against v2 exactly as it did for tier 1."
+}

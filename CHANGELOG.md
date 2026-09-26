@@ -4,6 +4,36 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-26 — mechanism fix: tier-2 audit scoped to the judged artifact (peer review, fix 2)
+
+- **Provenance:** the peer review of the 2026-09-24 session
+  (agents/peer-review-alpha-2026-09-24.md, major issue 2): step_audit
+  carries no quote or measure rules, so a tier-2 report's rules_audit
+  had to be empty — the independent final judgment was mechanically
+  verified for nothing, and a conscientious judge writing letter
+  entries failed the gate. Fixed after user review.
+- **Action:** the rules_audit scope now derives from the report's
+  `artifact` field (the inverse of STEP_ARTIFACTS in rules_meta.py),
+  falling back to `step`. A tier-2 report runs at step_audit but
+  judges cover-letter-draft-v2, so its rules_audit covers step_4's
+  five quote rules, quotes verified against v2; an empty rules_audit
+  fails the gate, and a report whose scope resolves to no quote or
+  measure rules fails with "audits nothing". New teaching exemplar
+  `examples/review-report-gold-tier2.json` (constructed like its
+  siblings; the run predates the tiered protocol). SKILL.md step_audit
+  item 4, the operating-principles judge protocol and the report
+  template's tier guide state the scope rule. Quote verification is
+  now default-on: with no --artifact-path the gate resolves the
+  report's own `artifact` field against the report's folder, degrading
+  to a note only when that file is absent (exemplars verified from
+  examples/ keep working), and an artifact that names no step artifact
+  fails by name; SKILL.md step_3 and step_4 now verify the report
+  right after each judge runs, closing the chain gap where a fabricated
+  tier-1 audit could pass progress.py and be overwritten before any
+  script ever saw it. No rule wiring changed; the digest is untouched.
+  Both tier-1 exemplars behave exactly as before (their artifact
+  fields resolve to their own steps).
+
 ## 2026-09-25 — mechanism fix: evidence kinds made explicit (peer review, fix 1)
 
 - **Provenance:** the peer review of the 2026-09-24 session

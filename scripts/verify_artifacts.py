@@ -213,6 +213,17 @@ def check_report(p: Path, art: Path | None = None) -> None:
             f"{p}: not valid JSON ({e})", hints="use assets/review-report-template.json"
         )
     flags, problems = rep.get("flagged_items", []), []
+    # quote verification is default-on: with no --artifact-path, resolve
+    # the report's own `artifact` field against the report's folder (the
+    # run folder for a real report). Degrade to the trailing note only
+    # when that file is absent, so exemplars verified from examples/
+    # keep working; --artifact-path remains the override (peer review
+    # fix 2: the strongest check must not depend on the runner's
+    # obedience to one SKILL.md instruction).
+    if art is None:
+        candidate = p.parent / str(rep.get("artifact", ""))
+        if candidate.is_file():
+            art = candidate
     if (rep.get("judge") or {}).get("identity", "") in ("", None):
         problems.append("judge identity not recorded")
     for field, allowed in (
@@ -230,17 +241,37 @@ def check_report(p: Path, art: Path | None = None) -> None:
         if "resolved" not in f
     ]
     # rules_audit (schema @3): one entry per quote-or-measure rule of the
-    # report's step (confirm rules are the writer's check files' job)
+    # judged artifact's step (confirm rules are the writer's check files'
+    # job). The scope comes from the report's `artifact` field, falling
+    # back to `step`: a tier-2 report runs at step_audit but judges a
+    # letter, and scoping it to its own step demanded an empty audit,
+    # which verified nothing (peer review fix 2).
     step = rep.get("step", "")
-    loop = rm.audit_rules(step) if step else []
+    scope = rm.step_for_artifact(rep.get("artifact", "")) or step
+    art_name = str(rep.get("artifact", ""))
+    if art_name and rm.step_for_artifact(art_name) == "":
+        problems.append(f"artifact {art_name!r} matches no step artifact — "
+                        "name the bare file: scoring.md, matches.md, "
+                        "cover-letter-draft.md or cover-letter-draft-v2.md")
+    loop = rm.audit_rules(scope) if scope else []
     audit = rep.get("rules_audit")
     if not step:
-        problems.append("step field missing — rules_audit is scoped by step")
+        problems.append("step field missing — say which step produced "
+                        "this report")
+    if not scope:
+        problems.append("rules_audit scope unresolvable — the report "
+                        "names no known step artifact and no step")
+    elif not loop:
+        problems.append(f"rules_audit scope {scope!r} carries no quote "
+                        "or measure rules — a review report must judge "
+                        "a step artifact (scoring.md, matches.md or a "
+                        "letter draft); a report judging only its own "
+                        "step audits nothing")
     if not isinstance(audit, list):
         problems.append(
             "rules_audit missing or not a list — schema @3 requires one "
-            "entry per quote-or-measure rule of the step "
-            "(see review-report-template.json)"
+            "entry per quote-or-measure rule of the judged artifact's "
+            "step (see review-report-template.json)"
         )
     else:
         want = [rm.display(m["id"]) for m in loop]
@@ -251,8 +282,8 @@ def check_report(p: Path, art: Path | None = None) -> None:
         for rid in got:
             if rid not in want:
                 problems.append(
-                    f"rules_audit entry {rid!r} is not audited at {step} "
-                    "(only the step's quote and measure rules carry "
+                    f"rules_audit entry {rid!r} is not audited at {scope} "
+                    "(only that step's quote and measure rules carry "
                     "rules_audit entries)"
                 )
         art_text = None
@@ -261,7 +292,7 @@ def check_report(p: Path, art: Path | None = None) -> None:
                 art_text = re.sub(r"\s+", " ", art.read_text())
             else:
                 problems.append(f"artifact-path not found: {art}")
-        kinds = {rm.display(m["id"]): rm.evidence_kind(m, step) for m in loop}
+        kinds = {rm.display(m["id"]): rm.evidence_kind(m, scope) for m in loop}
         for e in audit:
             rid = e.get("id", "?")
             if e.get("verdict") not in ("pass", "fail"):
@@ -316,12 +347,14 @@ def check_report(p: Path, art: Path | None = None) -> None:
     print(
         f"ok: review-report — verdict={rep['verdict']}, tier={rep['tier']}, "
         f"scope={rep['scope']}, judge={rep['judge']['identity']}, "
-        f"{len(flags)} flagged, rules_audit {len(audit)}/{len(loop)}"
+        f"{len(flags)} flagged, rules_audit {len(audit)}/{len(loop)} "
+        f"(rules of {scope})"
     )
     if art is None:
         print(
             "note: rules_audit quotes NOT verbatim-checked — pass "
-            "--artifact-path <judged file> to enable the guard"
+            "--artifact-path <judged file>, or place the report next to "
+            "the artifact it names, to enable the guard"
         )
 
 

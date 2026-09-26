@@ -38,6 +38,18 @@ STEP_ARTIFACTS = {
     "step_4": "cover-letter-draft-v2.md",
 }
 
+# Inverse: artifact name -> the step whose artifact it is. A judge
+# report's rules_audit is scoped to the judged artifact's step, not the
+# step where the report runs: a tier-2 report runs at step_audit but
+# judges a letter, and scoping it to its own step demanded an empty
+# audit, which verified nothing.
+ARTIFACT_STEPS = {v: k for k, v in STEP_ARTIFACTS.items()}
+
+
+def step_for_artifact(artifact: str) -> str:
+    """The step whose run-folder artifact this name is ('' if unknown)."""
+    return ARTIFACT_STEPS.get(artifact, "")
+
 
 def norm(rule_id: str) -> str:
     """Canonical key: underscores (frontmatter ids use them; SKILL.md

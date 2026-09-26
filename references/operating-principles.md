@@ -144,8 +144,12 @@ judgment. The judge runs in tiers so token cost stays proportional to risk.
 - **Tier 2 — peer judge at step_audit, the paid final gate.** An independent
   peer agent or second model, delta-based: consumes the accumulated review
   reports, judges the delta since last approval, and cross-checks
-  evidence-to-matches traceability. Escalate from Tier 1 early when the Tier 1
-  judge flags something contested or the writer disagrees with a flag.
+  evidence-to-matches traceability. Its rules_audit is scoped to the judged
+  artifact's step, not step_audit (the gate derives the scope from the
+  report's `artifact` field), so the peer pass re-audits the letter's quote
+  and measure rules with fresh eyes; an empty rules_audit fails the gate.
+  Escalate from Tier 1 early when the Tier 1 judge flags something contested
+  or the writer disagrees with a flag.
 
 Protocol per run:
 
@@ -153,14 +157,16 @@ Protocol per run:
    `review-report.json` from the review-report template: verdict,
    per-dimension scores, every flagged sentence, judge identity, tier,
    scope, and a rules_audit — one entry per quote or measure rule of
-   the step (the `quote` and `measure` rows of that step in
-   `references/rule-digests.md`), each with a verdict: quote entries
-   carry a span copied verbatim from the judged artifact, measure
-   entries state the measurement with its number. An approved report
-   requires every rules_audit verdict pass. Format
-   exemplars: `examples/review-report-gold-approved.json` (gate-clearing)
-   and `examples/review-report-gold-needs-fixes.json` (flag-time state;
-   fails the gate by design).
+   the judged artifact's step (the `quote` and `measure` rows of that
+   step in `references/rule-digests.md`), each with a verdict: quote
+   entries carry a span copied verbatim from the judged artifact,
+   measure entries state the measurement with its number. An approved
+   report requires every rules_audit verdict pass. Format
+   exemplars: `examples/review-report-gold-approved.json`
+   (gate-clearing), `examples/review-report-gold-needs-fixes.json`
+   (flag-time state; fails the gate by design) and
+   `examples/review-report-gold-tier2.json` (the step_audit peer pass;
+   rules scoped to the judged letter).
 2. Fix every flagged item; re-judge; re-judge rounds are capped at 2 per gate.
    Anything still contested escalates to the human checkpoint.
 3. The gate is mechanical: `verify_artifacts.py --artifact review-report`

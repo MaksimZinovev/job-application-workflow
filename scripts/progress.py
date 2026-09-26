@@ -178,7 +178,8 @@ def main() -> None:
                 print(f"gate: {VERIFY_CMD[current].replace('<run>', str(run))} then progress.py --approve {current}")
             rvw = s.get("review") or {}
             if rvw.get("artifact"):
-                if current == "step_4" and not substantive_changes(run):
+                if rvw.get("trigger") == "substantive-changes" \
+                        and not substantive_changes(run):
                     print("judge gate: skipped — substantive_changes: no; "
                           "the delta judge runs only when the run-log marks `yes`")
                 else:

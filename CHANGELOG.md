@@ -4,6 +4,54 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-26 — mechanism fix: dead workflow numbering in rule bodies (peer review, fix 5)
+
+- **Provenance:** major issue 5 of the peer review — four rule bodies
+  still cited the superseded wiki workflow's item numbers (1.3, 1.4,
+  1.5, 1.7, 1.8, step 2.1), unresolvable to today's reader, and
+  build_digests amplified two of them into every step's read
+  (rule-checkpoint-interview-tool has no expect field, so its Rule
+  prose — with the "1.3 promote decision" — became the digest expect
+  at all seven steps).
+- **What changed:** the promote decision cites step_1 (SKILL.md names
+  that checkpoint "promotion gate"); the hidden-question paragraph
+  cites the step_2 key questions in matches.md; the 07 incident
+  narrative keeps its facts and drops the four item numbers (the
+  section names — Keywords Tools, soft-skills mapping, gaps List 3,
+  employer questions — all still exist); structure parity now diffs
+  against the skill's own step template and gold example instead of
+  the wiki example path and the "workflow item list", and the letter
+  diff cites the key-questions mapping in matches.md; word-budget
+  drops its two item numbers and its dead "workflow step 2.1"
+  pointer, replaced by the live truth (budgets live in
+  assets/sources.json word_budgets; verify_artifacts.py enforces
+  them).
+- **Digest:** regenerated — 10 rows changed, exactly the two
+  amplified rules (checkpoint-interview-tool at all seven steps via
+  Rule-prose fallback, structure-parity at steps 1-3 via expect);
+  the other 19 rules' rows byte-identical. No applies_to, evidence
+  kind, or type touched.
+- Checked and deliberately not changed: references/jd-analysis.md's
+  budget pointer (assets/sources.json word_budgets — verified
+  accurate); the needs-fixes exemplar's word-budget entry (the
+  1000-word default is live); the "question-to-section map" phrases
+  in matches-gold and run-log-gold annotations (generic descriptions
+  of content, not dead pointers).
+  After alpha's re-review (pass with notes, same day): the sweep had
+  missed the unnumbered pointer variant — word-budget's expect still
+  said "the budget the workflow states" (digested at steps 1-3,
+  contradicting the rule's own new sources.json sentence one
+  paragraph below it) and its incident line "the 10K budget the
+  workflow sets"; expect now points at assets/sources.json
+  word_budgets and the incident clause dropped. checkpoint-tool's
+  "Applies to every gate" (the list is checkpoints, not gates;
+  amplified at all seven steps) became "Applies at every step".
+  Queued per alpha's minor 2: the gold/template section divergence
+  it surfaced (matches-gold lacks the template's Employer
+  questions, Key notes, key-questions mapping, writing plan, and
+  Mapping List 3 — reconcile in a rule-21 batch or state the
+  template as canon and the gold as a justified instance).
+
 ## 2026-09-26 — mechanism fix: rules/README describes the corpus as it stands (peer review, fix 4)
 
 - **Provenance:** major issue 4 of the peer review — rules/README.md

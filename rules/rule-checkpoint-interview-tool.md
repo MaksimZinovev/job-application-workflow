@@ -25,7 +25,7 @@ is used, with alternatives and a recommendation.
 Decision checkpoints go through the structured question tool:
 options enumerated as choices, each alternative labeled, one
 recommendation with its reasoning, a free-text path always open.
-Applies to every gate: the 1.3 promote decision, per-step
+Applies at every step: the step_1 promote decision, per-step
 checkpoints, and any mid-run fork. Never bury a decision in prose
 and hope the user notices the question mark.
 

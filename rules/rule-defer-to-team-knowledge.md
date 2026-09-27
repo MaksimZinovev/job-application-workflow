@@ -25,8 +25,9 @@ Defer to existing team knowledge first.
 Any passage describing how the user would start must first defer to
 the existing team's knowledge and current practice, then propose
 changes on that foundation. This is the question-3 hidden-question
-paragraph (workflow 1.8), so the expectation applies from the mapping
-in matches.md through the letter draft.
+paragraph, planned at step_2 with the key questions in matches.md,
+so the expectation applies from the mapping through the letter
+draft.
 
 ## Rubric
 - [ ] Deferral present and specific, not a generic nod

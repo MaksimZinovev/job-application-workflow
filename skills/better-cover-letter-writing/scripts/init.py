@@ -3,9 +3,11 @@
 
 Usage: python3 scripts/init.py --letter <path> [--out <path>]
 
-Creates a table with every pattern from this skill, verdict and notes
-empty. Fill every row with a verdict quoting the letter; an empty row
-means the pass is not done.
+Creates a table with every pattern from this skill, Score, Coverage,
+and Evidence empty. For each pattern, read its rule one at a time,
+fix the letter, score quality and coverage against the two rubrics
+in references/, and record evidence in the row. Then run
+scripts/check_patterns.py and make it exit 0.
 """
 import argparse
 import sys
@@ -47,8 +49,10 @@ def main():
             .replace("{{DATE}}", date.today().isoformat()))
     out.write_text(text)
     print(f"stubbed: {out}")
-    print("next: populate every verdict with a quoted line from the letter; "
-          "empty rows mean the pass is not done.")
+    print("next: for each pattern, read its rule, fix the letter, score "
+          "quality and coverage against the rubrics in references/, record "
+          "evidence in each row, then run scripts/check_patterns.py until "
+          "it exits 0.")
 
 
 if __name__ == "__main__":

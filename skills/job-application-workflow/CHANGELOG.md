@@ -4,6 +4,23 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-28 — the repo becomes a skills container; the writing skill moves in
+
+- **Provenance:** user-directed restructure. The repo root now holds
+  only `skills/`. The workflow skill is complete and unchanged inside
+  `skills/job-application-workflow/`: SKILL.md, rules, references,
+  assets, scripts, examples, agents, and plans all moved as one tree,
+  so every relative path inside the skill still resolves. Scripts
+  anchor on their own file location, which the move preserved.
+- **better-cover-letter-writing** moved from
+  `~/repos/wiki/.pi/skills/` to `skills/better-cover-letter-writing/`
+  (SKILL.md, assets/patterns.md, scripts/init.py; no .DS_Store). The
+  workflow's sources.json now points its `better_cover_letters` key
+  here, the README's symlink instructions and the wiki's
+  project-local `job-application` symlink target the new nested
+  path, and the wiki's superseded pointer names the new path. The
+  wiki copy is removed.
+
 ## 2026-09-26 — queue item: root README caught up; wiki draft marked superseded
 
 - **Provenance:** queued staleness. The README still named a SKILL.md

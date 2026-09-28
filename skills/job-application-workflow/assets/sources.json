@@ -44,7 +44,7 @@
         "function": "human-voice rewriting pass; degraded mode = banned-terms scan only"
       },
       "better_cover_letters": {
-        "path": "~/repos/wiki/.pi/skills/better-cover-letter-writing/SKILL.md",
+        "path": "~/repos/job-application-workflow/skills/better-cover-letter-writing/SKILL.md",
         "function": "credibility rewrite pass; degraded mode = banned-terms scan only"
       }
     }

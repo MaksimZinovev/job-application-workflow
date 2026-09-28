@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Per-rule check loop. The script is the state machine; the agent is the
-per-rule executor. EVERY rule of EVERY step gets its own check file — one
+per-rule executor. EVERY rule of EVERY step gets its own check file. One
 isolated attention window per rule, closed before the step checkpoint.
 
 WHERE IT IS INVOKED
@@ -22,13 +22,14 @@ declares its kind in its frontmatter `evidence:` field)
   substance, not truth: fabrication is a separate problem.
   measure: the check file must state the measurement in `note`, with
   its number (budget and size rules). A pasted sentence proves
-  nothing; the gate requires a digit in the note. A quote is
-  optional here; at steps with an artifact, the gate verifies any
-  quote it finds verbatim.
+  nothing: the gate recomputes the artifact and requires the true
+  number (a pass over budget records the user's growth approval).
+  A quote is optional here; at steps with an artifact, the gate
+  verifies any quote it finds verbatim.
 
---gate re-validates every check file — evidence guards, verdict/score
-consistency, fix-required-on-fail, sibling attestation, score threshold
-(rule_check.min_score in sources.json) — and aggregates scores into
+--gate re-validates every check file (evidence guards, verdict/score
+consistency, fix-required-on-fail, sibling attestation, score
+threshold: rule_check.min_score in sources.json) and aggregates scores into
 <run>/rule-checks.json for the retro. Exit 0 on --gate is part of the
 step checkpoint; a failed gate is a finding, not an obstacle: apply the
 named fixes and re-check with --rule <id>.
@@ -42,7 +43,7 @@ Check file format (checks/<step>/<rule-id>.md, one line per field):
   confirmation: <how this rule is honored>              (evidence: confirm)
   note: <required for measure rules: the measurement with its number;
          optional otherwise: what you scanned>
-  fix: <required when verdict: fail — the concrete rewrite>
+  fix: <required when verdict: fail, the concrete rewrite>
   siblings-checked: yes
 """
 
@@ -104,6 +105,7 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
     config = read_config(config_path
                          or rm.SKILL_ROOT / "assets" / "sources.json")
     min_score = int(config.get("min_score", 2))
+    budgets = config.get("word_budgets", {})
     rules, steps = rm.load_rules(), rm.load_steps()
     empty = {"rows": [], "problems": [], "loop": [], "artifact": None,
              "min_score": min_score}
@@ -117,12 +119,12 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
     cdir = run / "checks" / step
     empty["loop"] = loop
     if artifact is not None and not artifact.is_file():
-        empty["problems"] = [f"artifact not found: {artifact} — run the "
+        empty["problems"] = [f"artifact not found: {artifact}. Run the "
                              "loop after verify_artifacts passes on the "
                              "artifact"]
         return empty
     if not cdir.is_dir():
-        empty["problems"] = [f"no check files for {step} ({cdir} missing) — "
+        empty["problems"] = [f"no check files for {step} ({cdir} missing). "
                              "run --next and check each rule first"]
         return empty
     art_text = collapse(artifact.read_text()) if artifact is not None else ""
@@ -154,13 +156,13 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
                               f"{f['verdict']!r} (pass→2-3, fail→0-1)")
         if not meta.get("evidence_raw"):
             problems.append(tag + "rule file declares no `evidence:` "
-                          "field — declare quote, confirm or measure "
+                          "field: declare quote, confirm or measure "
                           "(build_digests enforces this too)")
         kind = rm.evidence_kind(meta, step)
         q = f.get("quote", "")
         if kind == "quote":
             if not q:
-                problems.append(tag + "quote missing — a quote-rule check "
+                problems.append(tag + "quote missing. A quote-rule check "
                               "without a verbatim span proves nothing")
             elif collapse(q) not in art_text:
                 where = (f"in {rm.STEP_ARTIFACTS[step]}"
@@ -171,17 +173,36 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
         elif kind == "confirm":
             c = f.get("confirmation", "")
             if not c:
-                problems.append(tag + "confirmation missing — state how "
+                problems.append(tag + "confirmation missing. State how "
                               "this rule is honored (what you did or will do)")
-        else:  # measure: proof is the number, not a pasted sentence
+        else:  # measure: the gate redoes the math, not the writer's word
             n = f.get("note", "")
             if not n:
-                problems.append(tag + "note missing — measure rules state "
+                problems.append(tag + "note missing. Measure rules state "
                               "the measurement (its number) in the note")
             elif not re.search(r"\d", n):
-                problems.append(tag + "note carries no number — a "
+                problems.append(tag + "note carries no number. A "
                               "measurement needs a digit, e.g. '4,912 chars "
                               "against the 5,000 cap'")
+            m = rm.measure_artifact(artifact, budgets)
+            if m and n:
+                unit, val, budget = m
+                if str(val) not in n and f"{val:,}" not in n:
+                    problems.append(tag + "measurement does not recompute. "
+                                  f"The artifact measures {val} {unit} "
+                                  "against its budget; state that number "
+                                  "(the gate redid the math)")
+                approved = "user" in n.lower() and "approv" in n.lower()
+                if f.get("verdict") == "pass" and val > budget \
+                        and not approved:
+                    problems.append(tag + "pass on an over-budget artifact "
+                                  f"({val} {unit} against {budget}). Growth "
+                                  "past the budget needs the user's "
+                                  "approval, recorded in the note")
+                if f.get("verdict") == "fail" and val <= budget:
+                    problems.append(tag + "fail on an under-budget artifact "
+                                  f"({val} {unit} against {budget}). The "
+                                  "measurement contradicts the verdict")
         if q and kind != "quote" and artifact is not None \
                 and collapse(q) not in art_text:
             problems.append(tag + f"quote not found in "
@@ -191,7 +212,7 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
         if f.get("verdict") == "fail" and not f.get("fix", "").strip():
             problems.append(tag + "verdict fail but no fix field")
         if f.get("siblings-checked", "") != "yes":
-            problems.append(tag + "siblings-checked must be 'yes' — scan the "
+            problems.append(tag + "siblings-checked must be 'yes'. Scan the "
                           "artifact for siblings of any issue found")
         for fld in ("quote", "confirmation", "note", "fix"):
             if f.get(fld) and any(x in f[fld].lower() for x in FILLER):
@@ -202,12 +223,12 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
                      "score": score if score is not None else -1})
     for stray in sorted(p.name for p in cdir.glob("*.md")):
         if stray[:-3] not in {rm.display(m["id"]) for m in loop}:
-            problems.append(f"stray check file {stray} — not a rule of "
+            problems.append(f"stray check file {stray}, not a rule of "
                             f"{step}")
     for r in rows:
         if r["score"] >= 0 and r["score"] < min_score:
             problems.append(f"{r['id']}: score {r['score']} below threshold "
-                            f"{min_score} — apply the fix and re-check "
+                            f"{min_score}. Apply the fix and re-check "
                             f"with --rule {r['id']}")
     return {"rows": rows, "problems": problems, "loop": loop,
             "artifact": artifact, "min_score": min_score}
@@ -254,13 +275,13 @@ def main() -> None:
                      hints=f"rules: {', '.join(rm.display(m['id']) for m in loop)}")
             meta = todo[0]
             pos = [m["id"] for m in loop].index(key) + 1
-            done = "already checked — this is a re-check" if \
+            done = "already checked, this is a re-check" if \
                 (cdir / f"{rm.display(key)}.md").is_file() else "unchecked"
         else:
             todo = [m for m in loop
                     if not (cdir / f"{rm.display(m['id'])}.md").is_file()]
             if not todo:
-                print(f"all {len(loop)} rules checked — run --gate to close "
+                print(f"all {len(loop)} rules checked. Run --gate to close "
                       f"{a.step}")
                 return
             meta = todo[0]
@@ -277,22 +298,24 @@ def main() -> None:
             print(f"Check ONLY this rule against {artifact}.")
         elif kind == "measure":
             print(f"Measure ONLY this rule against {artifact}: state the "
-                  "measurement and its number in the note field — the "
-                  "gate requires a digit there; a quote is optional and, "
-                  "if added, must be verbatim from the artifact.")
+                  "measurement and its true number in the note field. The "
+                  "gate recomputes the artifact: the number must match, "
+                  "and a pass over budget must record the user's growth "
+                  "approval. A quote is optional and, if added, must be "
+                  "verbatim from the artifact.")
         else:
             print("Check ONLY this rule. It governs how you work, not the "
-                  "artifact text: confirm in writing how it is honored — "
-                  "what you did, or what you will do at the checkpoint.")
+                  "artifact text: confirm in writing how it is honored, "
+                  "what you did or what you will do at the checkpoint.")
         print(f"Then write {cpath} (one line per field):")
         print()
-        print(f"  # rule-check — {rm.display(meta['id'])}")
+        print(f"  # rule-check: {rm.display(meta['id'])}")
         print(f"  rule: {rm.display(meta['id'])}")
         print("  verdict: pass            # pass | fail")
         print("  score: 3                  # 3 clean pass | 2 borderline, "
               "acceptable | 1 violation, fix proposed | 0 violation, not fixed")
         if kind == "quote":
-            print('  quote: "<span copied verbatim from the artifact — the '
+            print('  quote: "<span copied verbatim from the artifact. The '
                   'gate rejects paraphrase>"')
         elif kind == "measure":
             print("  note: <required: the measurement with its number "
@@ -344,7 +367,7 @@ def main() -> None:
     agg_path.write_text(json.dumps(agg, indent=2) + "\n")
 
     avg = sum(r["score"] for r in rows) / len(rows)
-    print(f"ok: {a.step} rule gate — {len(rows)}/{len(loop)} rules, "
+    print(f"ok: {a.step} rule gate: {len(rows)}/{len(loop)} rules, "
           f"min {min(rows and [r['score'] for r in rows])}, "
           f"avg {avg:.1f}, threshold {min_score}")
     print(f"ok: aggregated to {agg_path.name} (retro signal)")

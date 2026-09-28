@@ -219,7 +219,11 @@ Protocol per run:
    `examples/review-report-gold-tier2.json` (the step_audit peer pass;
    rules scoped to the judged letter). The approved step_3 shape is
    deliberately not a separate exemplar: it is the needs-fixes file
-   flipped, verdict approved with every flag resolved.
+   flipped, verdict approved with every flag resolved. The word-budget
+   measure entry flips with the honest outcome, not a rubber stamp: the
+   Tyro v1 shipped at 1,187 words with the user's growth approval, so
+   the flipped entry passes with that number and the approval recorded
+   (the gate recomputes the artifact and checks both).
    Reports accumulate: every gate keeps its own file, the tier-2 peer
    consumes the earlier ones, and each stays independently verifiable
    against its own artifact at the audit. Each gate reads only its own

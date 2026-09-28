@@ -4,6 +4,45 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-26 — queue item: the gate redoes the math on measure rules
+
+- **Provenance:** queued after the fix series, in three parts. A
+  measure rule's proof was a number typed by hand, and the gate
+  only checked that a digit exists. The only exemplar showing the
+  measure kind fails on purpose, so nothing anywhere showed a
+  passing measure entry. And the digest printed today's date on
+  every rebuild, so a rebuild that changed nothing still showed a
+  diff (it reached a commit once).
+- **Recompute:** scripts/rules_meta.py gains measure_artifact(),
+  the single place that measures an artifact against its budget
+  (letter words Dear-to-signoff, the Scoring Results section's
+  chars, matches.md content chars). Both gates call it and check
+  three things: the stated number must match the computed value
+  (plain or comma format), a pass over budget must record the
+  user's growth approval in the evidence, and a fail on an
+  under-budget artifact is refused. verify_artifacts checks judge
+  reports; check_rules checks the writer's check files. All four
+  refusal paths tested live, plus the pass path.
+- **The flip teaching is now true end to end:** the honest passing
+  measure entry exists. The Tyro v1 shipped at 1,187 words with
+  the user's growth approval, so the flipped needs-fixes file
+  passes the step_3 gate with verdict pass and that number
+  recorded (proven live: the flipped file verifies clean). The
+  flip teaching in the exemplar note and operating-principles now
+  says this: the word-budget entry flips with the honest outcome,
+  not a rubber stamp. The needs-fixes file keeps its fail entry;
+  it is the state at flag time, and it recomputes consistently.
+- **Digest no-op:** build_digests now compares the rebuilt content
+  against the file on disk, ignoring only the header line. A
+  rebuild that changes nothing prints "ok: digest unchanged" and
+  writes nothing (proven: two rebuilds, one write).
+- **Unslop completion:** the earlier sweep missed check_rules.py,
+  rules_meta.py, and build_digests.py, which were not in the
+  grep. Every em dash in lines written this session in those
+  files is now a period or a comma, including the generated
+  digest's header comment and step headers. The empty-value dash
+  markers never fire (checked) and stay.
+
 ## 2026-09-26 — follow-up: the template decides, the gold's omissions named (alpha fix-5)
 
 - **Provenance:** alpha's fix-5 minor 2, queued: the structure-parity

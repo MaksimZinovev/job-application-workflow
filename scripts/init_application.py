@@ -81,7 +81,7 @@ def build_progress(folder: Path, created: str, judge_capability: str | None = No
     steps = {}
     for sid, stype, deps, arts, ref, review in STEPS:
         # the report file is derived from the gate id, the same rule
-        # progress.py applies — spelled here zero times as a literal.
+        # progress.py applies. Spelled here zero times as a literal.
         # Conditional judges (a trigger key) never expect a report
         # artifact: the file exists only when the trigger fired.
         if review and "trigger" not in review:

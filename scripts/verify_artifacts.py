@@ -210,7 +210,8 @@ def check_letter(p: Path, matches: Path | None, max_words: int) -> None:
     )
 
 
-def check_report(p: Path, art: Path | None = None) -> None:
+def check_report(p: Path, art: Path | None = None,
+                 budgets: dict | None = None) -> None:
     try:
         rep = json.loads(p.read_text())
     except json.JSONDecodeError as e:
@@ -333,13 +334,42 @@ def check_report(p: Path, art: Path | None = None) -> None:
                 )
             q = (e.get("quote") or "").strip()
             if kinds.get(rid) == "measure":
-                # measurement rules: the proof is the number in evidence
-                if not re.search(r"\d", e.get("evidence") or ""):
+                # measurement rules: the gate redoes the math. The number
+                # in evidence must match what the artifact actually
+                # measures, and the verdict must match the budget state
+                # (pass over budget needs the user's growth approval).
+                ev = (e.get("evidence") or "").strip()
+                if not re.search(r"\d", ev):
                     problems.append(
                         f"rules_audit {rid}: evidence states no measurement. "
                         "A measure entry needs its number, e.g. 'body "
                         "1,187 words against the 1,000-word budget'"
                     )
+                m = rm.measure_artifact(art, budgets)
+                if m:
+                    unit, val, budget = m
+                    if str(val) not in ev and f"{val:,}" not in ev:
+                        problems.append(
+                            f"rules_audit {rid}: measurement does not "
+                            f"recompute. The artifact measures {val} {unit} "
+                            "against its budget; state that number "
+                            "(the gate redid the math)"
+                        )
+                    approved = "user" in ev.lower() and "approv" in ev.lower()
+                    if e.get("verdict") == "pass" and val > budget \
+                            and not approved:
+                        problems.append(
+                            f"rules_audit {rid}: pass on an over-budget "
+                            f"artifact ({val} {unit} against {budget}). "
+                            "Growth past the budget needs the user's "
+                            "approval, recorded in the evidence"
+                        )
+                    if e.get("verdict") == "fail" and val <= budget:
+                        problems.append(
+                            f"rules_audit {rid}: fail on an under-budget "
+                            f"artifact ({val} {unit} against {budget}). "
+                            "The measurement contradicts the verdict"
+                        )
                 if q and art is not None and art_text is not None \
                         and re.sub(r"\s+", " ", q) not in art_text:
                     problems.append(
@@ -473,7 +503,8 @@ def main() -> None:
             p, m, a.max_words or budgets["cover_letter_default"]
         ),
         "review-report": lambda: check_report(
-            p, Path(a.artifact_path).expanduser() if a.artifact_path else None
+            p, Path(a.artifact_path).expanduser() if a.artifact_path else None,
+            budgets
         ),
     }
     runs[a.artifact]()

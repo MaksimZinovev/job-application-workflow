@@ -38,6 +38,45 @@ STEP_ARTIFACTS = {
     "step_4": "cover-letter-draft-v2.md",
 }
 
+# Word budgets for measure_artifact: the same defaults verify_artifacts
+# applies, overridable via sources.json word_budgets.
+BUDGET_DEFAULTS = {
+    "cover_letter_default": 1000,
+    "scoring_results_max_chars": 5000,
+    "matches_max_chars": 10000,
+}
+_LETTER_BODY_RE = re.compile(
+    r"(?ims)^dear\b(.*?)(?=^\s*(?:sincerely|kind regards|regards"
+    r"|best regards)[,.!]?\s*$)")
+
+
+def measure_artifact(art, budgets: dict | None = None):
+    """Recompute a measure rule's number from the artifact itself.
+    Returns (unit, value, budget), or None when the file is missing
+    or is not a measurable artifact. The gate no longer trusts the
+    number the writer typed: it redoes the math (the queued
+    follow-up this implements)."""
+    if art is None:
+        return None
+    art = Path(art)
+    if not art.is_file():
+        return None
+    bud = dict(BUDGET_DEFAULTS)
+    bud.update(budgets or {})
+    text = art.read_text()
+    if art.name.startswith("cover-letter"):
+        body = _LETTER_BODY_RE.search(text)
+        words = len(re.findall(r"\S+", body.group(1) if body else text))
+        return ("words", words, int(bud["cover_letter_default"]))
+    if art.name == "scoring.md":
+        head = re.search(r"(?im)^#+\s*.*Scoring Results.*$", text)
+        sec = text[head.end():].split("\n#", 1)[0] if head else ""
+        return ("chars", len(sec), int(bud["scoring_results_max_chars"]))
+    if art.name == "matches.md":
+        content = re.sub(r"(?s)<!--.*?-->", "", text)
+        return ("chars", len(content), int(bud["matches_max_chars"]))
+    return None
+
 # Inverse: artifact name -> the step whose artifact it is. A judge
 # report's rules_audit is scoped to the judged artifact's step, not the
 # step where the report runs: a tier-2 report runs at step_audit but
@@ -68,7 +107,7 @@ def _scalar(fm: str, key: str) -> str:
 
 
 def _prose_expect(text: str) -> str:
-    """Full ## Rule prose, whitespace-collapsed — fallback when frontmatter
+    """Full ## Rule prose, whitespace-collapsed. Fallback when frontmatter
     lacks `expect` (13 of 21 files keep it in prose only). Accuracy over
     brevity: the digest is agent-facing raw text, not rendered markdown."""
     m = re.search(r"^##\s+Rule\s*\n(.+?)\n##\s", text, re.M | re.S)
@@ -136,7 +175,7 @@ def load_steps() -> list[dict]:
 
 def loop_rules(step_id: str, rules: dict[str, dict] | None = None,
                steps: list[dict] | None = None) -> list[dict]:
-    """ALL rules of a step, in SKILL.md list order — every one gets a
+    """ALL rules of a step, in SKILL.md list order. Every one gets a
     check file in the writer's loop."""
     rules = rules or load_rules()
     steps = steps or load_steps()

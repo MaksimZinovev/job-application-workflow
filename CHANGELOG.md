@@ -4,6 +4,25 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-26 — queue item: root README caught up; wiki draft marked superseded
+
+- **Provenance:** queued staleness. The README still named a SKILL.md
+  line count and a rules count that had both moved, its folder tree
+  missed cover-letter-template.md and the tier-2 judge exemplar,
+  matches-gold was described as curated though it is verbatim, and the
+  wiki's first workflow draft carried no sign that it is superseded.
+- **What changed:** the tree lists every file (checked mechanically
+  against the directories; nothing missing, nothing phantom); the
+  rot-prone counts are gone from the tree (the digest and
+  rules/README are the live sources for rule counts);
+  matches-gold and the examples paragraph say verbatim; the
+  how-it-works item 1 now records the judge-capability preflight;
+  and the wiki's master-templates/workflow.md opens with a
+  superseded note pointing at this skill.
+- Checked and deliberately not changed: the "like the unslop skill"
+  example in Setup (unslop_skill is a real optional source key);
+  the Usage dialog lines and other pre-session wording.
+
 ## 2026-09-26 — queue item: the gate redoes the math on measure rules
 
 - **Provenance:** queued after the fix series, in three parts. A

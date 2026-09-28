@@ -6,7 +6,7 @@ Score the job, plan the evidence, draft the letter, rewrite it until it sounds l
 
 Scripts do the grunt work. Preflight, run setup, gates, and checks are deterministic Python and cost no tokens. The LLM reads facts and writes prose. Every step ends at a checkpoint you control.
 
-1. Preflight resolves your sources from `assets/sources.json`. A missing mandatory file blocks the run until you fix the path or waive it on record.
+1. Preflight resolves your sources from `assets/sources.json`. A missing mandatory file blocks the run until you fix the path or waive it on record. It also records what kind of judge this harness can run, so the tier-1 gate knows its default.
 2. Score the job against your rubric, grounded by web search. You decide: promote this job to application, or stop.
 3. Build matches.md: keywords against your experience records, lists capped, gaps named honestly. Plan each paragraph from a hidden question the ad implies. The rubric validates the plan before any drafting.
 4. Draft v1. Mechanical checks run first: em dashes, clichés, keyword coverage, word budget. An independent judge then scores it against the six-dimension paragraph rubric and writes `review-report-step_3.json`.
@@ -35,7 +35,7 @@ Actions: progress --status, references loaded, matches.md built and verified, ch
 
 ```text
 job-application-workflow/
-├── SKILL.md                    # operational spec, 137 lines, orchestration only
+├── SKILL.md                    # operational spec, orchestration only
 ├── scripts/                    # tiny CLIs, deterministic, no tokens
 │   ├── preflight.py            # resolve sources; block on missing mandatory
 │   ├── init_application.py     # create the run folder, stubs, gate state
@@ -61,26 +61,29 @@ job-application-workflow/
 │   ├── banned-terms.json         # cliche catalog, fail + review severities
 │   ├── scoring-template.md       # scoring.md skeleton
 │   ├── matches-template.md       # matches.md skeleton
+│   ├── cover-letter-template.md # letter skeleton, stubbed at init
 │   ├── review-report-template.json # judge report schema
 │   ├── progress-template.md      # human checklist
 │   └── run-log-template.md       # raw-signal log skeleton
-├── rules/                      # 19 active rules + README, learned from real runs
-├── examples/                   # curated gold artifacts from real runs (provenance in each file header)
+├── rules/                      # active rules + README, learned from real runs
+├── examples/                   # bundled format precedents from real runs (provenance in each file header)
 │   ├── cover-letter-gold.md    # approved v2 letter, verbatim + known-seam annotations
-│   ├── matches-gold.md         # curated to budget; record-id citations, honest gaps
+│   ├── matches-gold.md         # verbatim; record-id citations, honest gaps
 │   ├── scoring-gold.md         # rubric-keyed scoring with research grounding
 │   ├── review-report-gold-approved.json     # judge exemplar: the step_4 delta gate's approved shape
 │   ├── review-report-gold-needs-fixes.json  # judge exemplar: flag-time state (fails gate by design)
+│   ├── review-report-gold-tier2.json        # judge exemplar: the step_audit peer pass
 │   └── run-log-gold.md         # raw-signal format, reconstructed from session records
 ├── CHANGELOG.md                # rule governance log, one entry per retro batch
 └── plans/                      # build-plan archive, not skill payload
 ```
 
 The `examples/` directory is the skill's bundled format precedent set:
-artifacts from real, user-approved runs, curated with provenance headers
-and known-seam annotations. They are one user's records (names, links,
-metrics); the structure and discipline transfer to any candidate — a new
-user's own runs + retro nominate their own gold examples over time.
+artifacts from real, user-approved runs, verbatim, with provenance
+headers and known-seam annotations. They are one user's records
+(names, links, metrics). The structure and discipline transfer to
+any candidate; a new user's own runs + retro nominate their own
+gold examples over time.
 
 ## Output
 

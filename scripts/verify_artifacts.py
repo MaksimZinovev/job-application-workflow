@@ -224,8 +224,30 @@ def check_report(p: Path, art: Path | None = None) -> None:
         candidate = p.parent / str(rep.get("artifact", ""))
         if candidate.is_file():
             art = candidate
-    if (rep.get("judge") or {}).get("identity", "") in ("", None):
+    j = rep.get("judge") or {}
+    ident = str(j.get("identity") or "")
+    if not ident:
         problems.append("judge identity not recorded")
+    elif re.search(r"<[^>]*>", ident):
+        problems.append(
+            "judge identity is a template placeholder: name the "
+            "model or agent that judged (instantiation recipe in "
+            "operating-principles.md)"
+        )
+    if j.get("kind") not in ("subagent", "different-model",
+                             "peer-agent", "self-review"):
+        problems.append(
+            f"judge kind {j.get('kind')!r} not in ('subagent', "
+            "'different-model', 'peer-agent', 'self-review')"
+        )
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(j.get("date", ""))):
+        problems.append("judge date not recorded (YYYY-MM-DD)")
+    if ident == "constructed exemplar, no real judge (see _exemplar)" \
+            and "_exemplar" not in rep:
+        problems.append(
+            "judge identity names the constructed exemplar without its "
+            "_exemplar key: a real report names the model or agent that judged"
+        )
     for field, allowed in (
         ("verdict", ("approved", "needs-fixes")),
         ("tier", (1, 2)),
@@ -313,7 +335,7 @@ def check_report(p: Path, art: Path | None = None) -> None:
                         "— a measure entry needs its number, e.g. 'body "
                         "1,187 words against the 1,000-word budget'"
                     )
-                if q and art_text is not None \
+                if q and art is not None and art_text is not None \
                         and re.sub(r"\s+", " ", q) not in art_text:
                     problems.append(
                         f"rules_audit {rid}: quote not found verbatim in "
@@ -324,7 +346,7 @@ def check_report(p: Path, art: Path | None = None) -> None:
                     problems.append(
                         f"rules_audit {rid}: quote empty — cite a span from the artifact"
                     )
-                elif art_text is not None and re.sub(r"\s+", " ", q) not in art_text:
+                elif art is not None and art_text is not None and re.sub(r"\s+", " ", q) not in art_text:
                     problems.append(
                         f"rules_audit {rid}: quote not found verbatim in "
                         f"{art.name}: {q[:60]!r}…"

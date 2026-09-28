@@ -77,7 +77,7 @@ def next_run_folder(apps_root: Path, slug: str) -> Path:
     return folder
 
 
-def build_progress(folder: Path, created: str) -> dict:
+def build_progress(folder: Path, created: str, judge_capability: str | None = None) -> dict:
     steps = {}
     for sid, stype, deps, arts, ref, review in STEPS:
         # the report file is derived from the gate id, the same rule
@@ -91,7 +91,8 @@ def build_progress(folder: Path, created: str) -> dict:
             "expect_artifacts": arts, "reference": ref,
             **({"review": review} if review else {}),
         }
-    return {"schema": SCHEMA, "run": folder.name, "created": created, "steps": steps}
+    return {"schema": SCHEMA, "run": folder.name, "created": created,
+            "judge_capability": judge_capability, "steps": steps}
 
 
 def main() -> None:
@@ -138,7 +139,7 @@ def main() -> None:
         src = (ASSETS / tpl).read_text()
         write(target, src.replace("<NN_slug>", folder.name), label)
     write("progress.json",
-          json.dumps(build_progress(folder, created), indent=2) + "\n",
+          json.dumps(build_progress(folder, created, cfg.get("judge_capability")), indent=2) + "\n",
           "machine state (all steps pending)")
 
     print(f"created run folder: {folder}")

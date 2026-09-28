@@ -1,5 +1,5 @@
 {
-  "_exemplar": "GOLD EXAMPLE, review-report (needs-fixes verdict). Constructed teaching exemplar: flags reconstruct the REAL v1 defects the user caught across the Tyro run's seven review rounds (all quotes verbatim from cover-letter-draft.md v1; fixes are the actual v2 rewrites). F1 is the exact sentence the writing guide now quotes in its per-paragraph rules (claim-only sentences get cut). This file teaches what needs-fixes looks like: it FAILS verify_artifacts --artifact review-report by design; the gate only accepts verdict approved with all flags resolved. Fix every flag, re-judge (capped at 2 rounds), then flip this same file to approved (verdict approved, every flag resolved: true): that flipped shape is what the step_3 gate accepts. rule-word-budget demonstrates the measure evidence kind: its proof is the measurement in the evidence field, with its number (the gate requires the digit); a quote is optional and, if added, must be verbatim. Remove this _exemplar key when copying the schema.",
+  "_exemplar": "GOLD EXAMPLE, review-report (needs-fixes verdict). Constructed teaching exemplar: flags reconstruct the REAL v1 defects the user caught across the Tyro run's seven review rounds (all quotes verbatim from cover-letter-draft.md v1; fixes are the actual v2 rewrites). F1 is the exact sentence the writing guide now quotes in its per-paragraph rules (claim-only sentences get cut). This file teaches what needs-fixes looks like: it FAILS verify_artifacts --artifact review-report by design; the gate only accepts verdict approved with all flags resolved. Fix every flag, re-judge (capped at 2 rounds), then flip this same file to approved (verdict approved, every flag resolved: true): that flipped shape is what the step_3 gate accepts. rule-word-budget demonstrates the measure evidence kind: its proof is the measurement in the evidence field, with its number (the gate requires the digit); a quote is optional and, if added, must be verbatim. A real report's judge.identity names the model or agent that actually judged; the gate refuses template placeholders, so this constructed exemplar marks itself instead. Remove this _exemplar key when copying the schema.",
   "schema": "job-application/review-report@3",
   "run": "10_quality-engineer-ai-12-months-contract-tyro",
   "step": "step_3",
@@ -7,8 +7,8 @@
   "tier": 1,
   "scope": "full",
   "judge": {
-    "identity": "<model or agent name>",
-    "kind": "fresh-context-self",
+    "identity": "constructed exemplar, no real judge (see _exemplar)",
+    "kind": "subagent",
     "date": "2026-09-10"
   },
   "verdict": "needs-fixes",

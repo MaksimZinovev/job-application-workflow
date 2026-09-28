@@ -1,5 +1,5 @@
 {
-  "_exemplar": "GOLD EXAMPLE, review-report (tier 2, approved). Constructed teaching exemplar: the Tyro run predates the tiered judge protocol, so no real tier-2 report exists. This reconstructs the final peer pass a second judge would have run at step_audit after the seven review rounds, judging the same approved v2 the tier-1 exemplar covers. Quotes are verbatim from examples/cover-letter-gold.md. The teaching point: this report runs at step_audit, but its rules_audit is scoped to the judged artifact's step (step_4, which the gate derives from artifact: cover-letter-draft-v2.md), not to step_audit. That is the fix for the vacuous tier-2 audit: an empty rules_audit at step_audit fails the gate; the peer judge re-audits the letter's quote and measure rules with quotes verified against v2. Zero flagged items is the normal shape for a clean final pass. Remove this _exemplar key when copying the schema.",
+  "_exemplar": "GOLD EXAMPLE, review-report (tier 2, approved). Constructed teaching exemplar: the Tyro run predates the tiered judge protocol, so no real tier-2 report exists. This reconstructs the final peer pass a second judge would have run at step_audit after the seven review rounds, judging the same approved v2 the tier-1 exemplar covers. Quotes are verbatim from examples/cover-letter-gold.md. The teaching point: this report runs at step_audit, but its rules_audit is scoped to the judged artifact's step (step_4, which the gate derives from artifact: cover-letter-draft-v2.md), not to step_audit. That is the fix for the vacuous tier-2 audit: an empty rules_audit at step_audit fails the gate; the peer judge re-audits the letter's quote and measure rules with quotes verified against v2. Zero flagged items is the normal shape for a clean final pass. A real report's judge.identity names the model or agent that actually judged; the gate refuses template placeholders, so this constructed exemplar marks itself instead. Remove this _exemplar key when copying the schema.",
   "schema": "job-application/review-report@3",
   "run": "10_quality-engineer-ai-12-months-contract-tyro",
   "step": "step_audit",
@@ -7,7 +7,7 @@
   "tier": 2,
   "scope": "delta",
   "judge": {
-    "identity": "<model or agent name>",
+    "identity": "constructed exemplar, no real judge (see _exemplar)",
     "kind": "peer-agent",
     "date": "2026-09-10"
   },

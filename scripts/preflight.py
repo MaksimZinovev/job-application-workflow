@@ -113,6 +113,9 @@ def main() -> None:
     ap.add_argument("--waive", metavar="KEY",
                     help="record an explicit, dated user waiver for a missing mandatory source")
     ap.add_argument("--note", default="", help="reason for --waive (required; recorded in sources.json)")
+    ap.add_argument("--judge-capability", choices=("subagent", "peer-agent", "none"),
+                    help="record what this harness can run as an independent judge "
+                         "(tier-1 default; none = self-review fallback, user-approved)")
     a = ap.parse_args()
 
     cfg_path, cfg = load_config(a.config)
@@ -170,6 +173,11 @@ def main() -> None:
         cfg_path.write_text(json.dumps(cfg, indent=2) + "\n")
         print(f"waived {key} (dated {cfg['waived'][key]['date']}): {a.note.strip()}")
 
+    if a.judge_capability:
+        cfg["judge_capability"] = a.judge_capability
+        cfg_path.write_text(json.dumps(cfg, indent=2) + "\n")
+        print(f"set judge_capability -> {a.judge_capability}")
+
     rows, missing = check(cfg)
     for name in check_bundled():
         print(f"WARNING bundled skill asset missing: assets/{name}", file=sys.stderr)
@@ -191,6 +199,21 @@ def main() -> None:
             print(f"WARNING optional source missing: {r['key']} — flag it at the interview "
                   f"tool; affected steps adapt (degraded mode where the reference says so)",
                   file=sys.stderr)
+    cap = cfg.get("judge_capability")
+    if cap in ("subagent", "peer-agent"):
+        print(f"judge capability: {cap} — tier 1 runs an independent judge")
+    elif cap == "none":
+        print("judge capability: none — tier 1 falls back to a self-review, "
+              "recorded as such and approved explicitly by the user at the checkpoint")
+    else:
+        print(
+            "judge capability: not recorded — for the agent to answer at step_0:\n"
+            "  can this harness run an independent judge (spawn a subagent, open a\n"
+            "  separate agent session, or reach a peer agent)? Record it with\n"
+            "  preflight.py --judge-capability <subagent|peer-agent|none>.\n"
+            "  Independent judge is the tier-1 default; without one the fallback\n"
+            "  is a self-review, recorded as such and approved explicitly by the\n"
+            "  user at the checkpoint. Tell the user which case this harness is in.")
     print("preflight: OK — all mandatory sources resolved")
 
 

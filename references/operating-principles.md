@@ -121,12 +121,17 @@ judgment. The judge runs in tiers so token cost stays proportional to risk.
   `verify_artifacts.py` runs before any judge. The judge never sees text that
   fails mechanical checks, and no tokens are spent re-discovering what a
   regex catches.
-- **Tier 1 — fresh-context judge after the first full draft (step_3).** The
-  first full draft is where issues live. The judge gets the locked criteria
-  (the paragraph rubric, the writing don'ts, the evidence rules), the full
-  draft, and matches.md — no run context. Fresh context is most of the
-  independence value: a fresh-context self-judge or a different cheap model
-  both qualify; a different model is a bonus, not a requirement. Scope: full.
+- **Tier 1 — independent judge after the first full draft (step_3).**
+  The first full draft is where issues live. The judge gets the locked
+  criteria (the paragraph rubric, the writing don'ts, the evidence rules),
+  the full draft, and matches.md — no run context. By default it runs
+  independently: a subagent or separate agent session the harness spawns,
+  or a peer agent when one is reachable — whichever the preflight
+  capability check recorded (a different model is a bonus, not a
+  requirement). When no independent mechanism exists, the fallback is a
+  self-review by the drafting agent: weaker (it cannot un-know the
+  drafting), recorded as kind self-review, and approved explicitly by
+  the user at the checkpoint. Scope: full.
 - **Letter-review criteria source.** Any judge reviewing cover-letter text
   also gets the skill configured at `better_cover_letters`, in full, as
   review criteria: its patterns, evidence rule, ownership rule, and final
@@ -152,6 +157,48 @@ judgment. The judge runs in tiers so token cost stays proportional to risk.
   and measure rules with fresh eyes; an empty rules_audit fails the gate.
   Escalate from Tier 1 early when the Tier 1 judge flags something contested
   or the writer disagrees with a flag.
+
+### Instantiating the judge
+
+The tiers say when and what; this says how a judge comes to exist.
+The judge block's kinds are instantiated, not declared:
+
+- **subagent (tier 1 default).** The harness spawns a second agent
+  session that shares nothing with the drafting conversation: the
+  judge starts from the artifact, not from memory of writing it.
+  Hand it the review inputs only: the judged artifact, matches.md,
+  the locked criteria (paragraph rubric, writing don'ts, evidence
+  rules), the resolved better_cover_letters skill, the
+  review-report template, and the digest rows for the judged step
+  (its quote and measure rules are the rules_audit scope). It
+  returns the completed report. Identity names the judging model or
+  agent; kind subagent.
+- **different-model.** The same recipe with a different model
+  behind the subagent. Identity names that model; kind
+  different-model.
+- **peer-agent (tier 2, or tier 1 when one is reachable).** An
+  independent peer: a second agent on the same machine or hub,
+  never a session that watched the drafting. Hand it the accumulated
+  gate reports plus the delta inputs the tier describes. Identity
+  names the peer; kind peer-agent.
+- **self-review (the fallback).** The drafting agent judges its own
+  letter against the locked criteria, in the same conversation. It
+  cannot un-know the drafting, so it is the weakest kind; it runs
+  only when the preflight check found no independent mechanism.
+  Record it honestly (kind self-review) and get explicit user
+  approval at the checkpoint.
+- The independent judge never receives the drafting conversation,
+  the writer's intentions, or the run's chat history. A judge that
+  saw the drafting is a self-review; that is exactly why
+  independence is the default and the fallback is named.
+- Which kinds exist here is a preflight fact, not a per-run guess:
+  at step_0, preflight.py asks and records judge_capability
+  (subagent | peer-agent | none) in sources.json; init stamps it
+  into the run's progress.json and --status shows it. When it is
+  none, tier 1 runs the self-review fallback with explicit user
+  approval (rule 16 presents the choice). Never invent an identity.
+  The gate refuses template placeholders, and a faked judge poisons
+  every report built on it.
 
 Protocol per run:
 

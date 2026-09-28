@@ -73,7 +73,8 @@ def substantive_changes(run: Path) -> bool:
     return bool(m and m.group(1) == "yes")
 
 
-def review_problems(run: Path, sid: str, meta: dict) -> list[str]:
+def review_problems(run: Path, sid: str, meta: dict,
+                    judge_capability: str | None = None) -> list[str]:
     """Gate the judge report: each gate reads its own file,
     review-report-<step>.json (step_3 tier1/full, step_4 delta only
     when substantive, step_audit tier2/delta), and the report must
@@ -95,8 +96,23 @@ def review_problems(run: Path, sid: str, meta: dict) -> list[str]:
     except json.JSONDecodeError as e:
         return [f"{sid}: review-report-{sid}.json is not valid JSON ({e})"]
     problems = []
-    if (rep.get("judge") or {}).get("identity", "") in ("", None):
+    ident = str((rep.get("judge") or {}).get("identity") or "")
+    if not ident:
         problems.append(f"{sid}: judge identity not recorded in review-report-{sid}.json")
+    elif re.search(r"<[^>]*>", ident):
+        problems.append(
+            f"{sid}: judge identity is a template placeholder in "
+            f"review-report-{sid}.json (name the model or agent that judged)"
+        )
+    if ident == "constructed exemplar, no real judge (see _exemplar)" \
+            and "_exemplar" not in rep:
+        problems.append(f"{sid}: judge identity names the constructed exemplar "
+                        "without its _exemplar key: a real report names the "
+                        "model or agent that judged")
+    if (rep.get("judge") or {}).get("kind") not in ("subagent", "different-model",
+                                                   "peer-agent", "self-review"):
+        problems.append(f"{sid}: judge kind not in ('subagent', 'different-model', "
+                        f"'peer-agent', 'self-review') in review-report-{sid}.json")
     if rep.get("verdict") != "approved":
         problems.append(f"{sid}: review-report-{sid}.json verdict is {rep.get('verdict')!r}, expected 'approved'")
     unresolved = [f.get("id", "?") for f in rep.get("flagged_items", []) if not f.get("resolved")]
@@ -113,6 +129,18 @@ def review_problems(run: Path, sid: str, meta: dict) -> list[str]:
     if want.get("tier") is not None and not want.get("artifact"):
         print(f"progress: note: {sid} run state predates the artifact pin "
               f"(re-init the run, or add \"artifact\" to its review req to enable it)",
+              file=sys.stderr)
+    kind = (rep.get("judge") or {}).get("kind")
+    if judge_capability == "none" and kind in ("subagent", "different-model",
+                                               "peer-agent"):
+        print(f"progress: note: {sid} report's judge kind is {kind!r} but "
+              "judge_capability is none — re-record (preflight.py "
+              "--judge-capability) or explain at the checkpoint", file=sys.stderr)
+    elif kind == "self-review" and judge_capability in ("subagent",
+                                                        "peer-agent"):
+        print(f"progress: note: {sid} report is a self-review but "
+              f"judge_capability is {judge_capability!r} — an independent "
+              "judge is available; explain at the checkpoint or re-judge",
               file=sys.stderr)
     if rep.get("step") != sid:
         problems.append(f"{sid}: report step is {rep.get('step')!r}, expected {sid!r}")
@@ -134,7 +162,8 @@ def gate(sid: str, state: dict, run: Path) -> list[str]:
         f = run / art
         if not f.is_file() or f.stat().st_size == 0:
             problems.append(f"{sid}: expected artifact missing or empty: {art}")
-    problems += review_problems(run, sid, steps[sid])
+    problems += review_problems(run, sid, steps[sid],
+                                 state.get("judge_capability"))
     return problems
 
 
@@ -174,6 +203,12 @@ def main() -> None:
                 print("blockers: none")
             print(f"next: {NEXT_ACTION.get(current, 'consult references/')}")
             print(f"read now: {s['reference']}   (JIT pointer for {current})")
+            cap = state.get("judge_capability")
+            if cap in ("subagent", "peer-agent", "none"):
+                print(f"judge capability: {cap}")
+            else:
+                print("judge capability: not recorded "
+                      "(preflight.py --judge-capability <subagent|peer-agent|none>)")
             if current in VERIFY_CMD:
                 print(f"gate: {VERIFY_CMD[current].replace('<run>', str(run))} then progress.py --approve {current}")
             rvw = s.get("review") or {}

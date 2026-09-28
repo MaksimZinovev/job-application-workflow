@@ -59,7 +59,7 @@ python3 scripts/verify_artifacts.py --artifact rule-check --path ~/apps/12_senio
 Purpose: sources resolved, run folder initialized.
 
 1. Read `references/operating-principles.md` and `references/rule-digests.md` (the step-rule facts; steps never read rule files directly).
-2. Run `scripts/preflight.py`; every missing mandatory source goes to the user (fix via `--set`, or explicit dated `--waive`).
+2. Run `scripts/preflight.py`; every missing mandatory source goes to the user (fix via `--set`, or explicit dated `--waive`). Answer the judge-capability question it prints: record what this harness can run (`--judge-capability <subagent|peer-agent|none>`). Independent judge is the tier-1 default; without one, tier 1 falls back to a self-review, recorded as such and approved explicitly by the user at the checkpoint.
 3. Run `scripts/init_application.py --name "<slug>" --jd <file>`; note the manifest's next action.
 4. Run the per-rule loop: `scripts/check_rules.py <run> --step step_0 --next` presents one rule at a time; check only that rule and confirm it in writing, repeat until `--gate` exits 0.
 

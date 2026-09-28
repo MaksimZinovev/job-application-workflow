@@ -4,6 +4,51 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-26 — mechanism fix: judge instantiation defined, placeholders refused (peer review, fix 6)
+
+- **Provenance:** major issue 6 of the peer review — no defined way
+  to instantiate the fresh-context or tier-2 judge, and the
+  gate-clearing exemplar passed with a placeholder identity
+  (verify only checked non-emptiness).
+- **What changed:** operating-principles.md gains "Instantiating
+  the judge": per-kind recipes (subagent opens a second agent
+  session sharing nothing with the drafting conversation;
+  different-model is the same recipe with a different model;
+  peer-agent is a second agent on the same machine or hub, never
+  a session that watched the drafting; self-review is the
+  disclosed fallback), the review inputs the judge receives
+  (artifact, matches.md, locked criteria, resolved
+  better_cover_letters, report template, the judged step's digest
+  rows), what the independent judge never receives (the drafting
+  conversation, the writer's intentions, the chat history), and
+  the capability check as a preflight fact. Never an invented
+  identity.
+- **Teeth:** verify_artifacts.py refuses template-shaped identities
+  (angle brackets), judge kinds outside subagent/different-model/
+  peer-agent/self-review, and non-date dates; progress.py mirrors
+  the placeholder refusal at --approve. Both layers tested:
+  placeholder identity, bad kind, placeholder date, and empty
+  identity all refused; real values accepted.
+- **Exemplars:** the three constructed exemplars replace the
+  template placeholder with an honest identity ("constructed
+  exemplar, no real judge") plus a note sentence saying a real
+  report names the model or agent that judged; the template keeps
+  its placeholders (correct there) and its notes now state the
+  requirement and point at the recipe.
+- **After the user's annotation on the fix-6 handover (same day):
+  the "fresh-context self-judge" concept is gone — it was
+  incoherent (a fresh context is a separate agent and session,
+  not a self). Tier 1 is an independent judge by default (subagent,
+  separate agent session, or peer, whichever the harness has);
+  kinds are subagent | different-model | peer-agent | self-review.
+  Preflight now asks and records judge_capability
+  (preflight.py --judge-capability, stored in sources.json,
+  stamped into progress.json at init, shown by --status); when it
+  is none, tier 1 falls back to a self-review, recorded as such
+  and approved explicitly by the user at the checkpoint. SKILL.md
+  step_0 and README's judge phrase updated; the two tier-1
+  exemplars now teach kind subagent.
+
 ## 2026-09-26 — mechanism fix: dead workflow numbering in rule bodies (peer review, fix 5)
 
 - **Provenance:** major issue 5 of the peer review — four rule bodies

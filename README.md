@@ -9,7 +9,7 @@ Scripts do the grunt work. Preflight, run setup, gates, and checks are determini
 1. Preflight resolves your sources from `assets/sources.json`. A missing mandatory file blocks the run until you fix the path or waive it on record.
 2. Score the job against your rubric, grounded by web search. You decide: promote this job to application, or stop.
 3. Build matches.md: keywords against your experience records, lists capped, gaps named honestly. Plan each paragraph from a hidden question the ad implies. The rubric validates the plan before any drafting.
-4. Draft v1. Mechanical checks run first: em dashes, clichés, keyword coverage, word budget. A fresh-context judge then scores it against the six-dimension paragraph rubric and writes `review-report-step_3.json`.
+4. Draft v1. Mechanical checks run first: em dashes, clichés, keyword coverage, word budget. An independent judge then scores it against the six-dimension paragraph rubric and writes `review-report-step_3.json`.
 5. Rewrite to v2: unslop pass for human voice, credibility pass for honest verbs. v1 stays on disk forever. Substantive changes trigger a delta judge; small fixes skip it.
 6. Final audit: full verify matrix plus a peer judge, delta-based. The retro distills the run log into proposed rules for the next application.
 

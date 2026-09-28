@@ -13,7 +13,10 @@ every source key (`experience_records`, `cv_master`) via the preflight table
 resolved file only when the procedure below calls for it. A key may hold
 several files (a list); List 1 draws on every `experience_records` file.
 The bundled filled-in precedent is `examples/matches-gold.md` — read it
-when the template comments are not enough. Extract from the job description:
+when the template comments are not enough (the gold run happened before
+the template existed, so it shows what filled sections look like, not
+which ones you need; when the two disagree, follow the template, and
+the gold's header lists what it omits). Extract from the job description:
 
 - **Target roles** — what roles the ad is really hiring for
 - **Keywords Skills** and **Keywords Tools** — the ad's own vocabulary,

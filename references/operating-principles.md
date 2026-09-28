@@ -124,9 +124,9 @@ judgment. The judge runs in tiers so token cost stays proportional to risk.
 - **Tier 1 — independent judge after the first full draft (step_3).**
   The first full draft is where issues live. The judge gets the locked
   criteria (the paragraph rubric, the writing don'ts, the evidence rules),
-  the full draft, and matches.md — no run context. By default it runs
+  the full draft, and matches.md, with no run context. By default it runs
   independently: a subagent or separate agent session the harness spawns,
-  or a peer agent when one is reachable — whichever the preflight
+  or a peer agent when one is reachable, whichever the preflight
   capability check recorded (a different model is a bonus, not a
   requirement). When no independent mechanism exists, the fallback is a
   self-review by the drafting agent: weaker (it cannot un-know the

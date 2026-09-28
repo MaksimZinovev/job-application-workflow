@@ -4,7 +4,7 @@ inventory: 1
 type: check
 evidence: quote
 applies_to: [step_1, step_2, step_3]
-expect: "every canonical section from the step template and the example file is present in the delivered artifact"
+expect: "every section of the step template is present in the delivered artifact, or the deviation is named and justified"
 on_fail:
   action: "add the missing sections, re-run the parity diff before delivery"
 provenance:
@@ -26,13 +26,17 @@ until user review.
 ## Rule
 Before delivering matches.md, diff its structure against the step
 template (assets/matches-template.md) and the example file
-(examples/matches-gold.md). Before delivering a letter draft, diff
-its sections against the key-questions mapping in matches.md.
-Missing sections are fixed before the checkpoint, not after the
-user finds them.
+(examples/matches-gold.md). When the two disagree, the template
+wins: every run starts from its stub, so its section list is what
+your matches.md must have. The gold example is a real run's file
+from before the template existed. Read it to see what filled
+sections look like, not which sections you need; its header lists
+what it omits. Before delivering a letter draft, diff its sections
+against the key-questions mapping in matches.md. Missing sections
+are fixed before the checkpoint, not after the user finds them.
 
 ## Rubric
-- [ ] Section set matches the example file and the step template, or the deviation is named and justified
+- [ ] Section set matches the step template, or the deviation is named and justified
 - [ ] Every structural keyword has a home: skills and tools, soft skills, role type and context
 - [ ] List 1, List 2, and the gaps List 3 all present, within their caps
 - [ ] Employer questions are real anticipated questions with answers

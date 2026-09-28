@@ -88,7 +88,7 @@ def review_problems(run: Path, sid: str, meta: dict,
         return []  # conditional judge: the run-log says not substantive
     rr = run / f"review-report-{sid}.json"
     if not rr.is_file():
-        return [f"{sid}: review-report-{sid}.json missing — an approved judge report is required "
+        return [f"{sid}: review-report-{sid}.json missing. An approved judge report is required "
                 f"(references/operating-principles.md, reflection protocol; a run started "
                 f"before 2026-09-26: rename review-report.json to review-report-{sid}.json)"]
     try:
@@ -134,12 +134,12 @@ def review_problems(run: Path, sid: str, meta: dict,
     if judge_capability == "none" and kind in ("subagent", "different-model",
                                                "peer-agent"):
         print(f"progress: note: {sid} report's judge kind is {kind!r} but "
-              "judge_capability is none — re-record (preflight.py "
-              "--judge-capability) or explain at the checkpoint", file=sys.stderr)
+              "judge_capability is none. Re-record with preflight.py "
+              "--judge-capability, or explain at the checkpoint", file=sys.stderr)
     elif kind == "self-review" and judge_capability in ("subagent",
                                                         "peer-agent"):
         print(f"progress: note: {sid} report is a self-review but "
-              f"judge_capability is {judge_capability!r} — an independent "
+              f"judge_capability is {judge_capability!r}. An independent "
               "judge is available; explain at the checkpoint or re-judge",
               file=sys.stderr)
     if rep.get("step") != sid:
@@ -215,7 +215,7 @@ def main() -> None:
             if rvw.get("artifact"):
                 if rvw.get("trigger") == "substantive-changes" \
                         and not substantive_changes(run):
-                    print("judge gate: skipped — substantive_changes: no; "
+                    print("judge gate: skipped. substantive_changes: no; "
                           "the delta judge runs only when the run-log marks `yes`")
                 else:
                     print(f"judge gate: verify_artifacts.py --artifact review-report --path {run}/review-report-{current}.json "

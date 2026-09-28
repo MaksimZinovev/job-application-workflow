@@ -4,9 +4,47 @@ Rule governance log for the `job-application` skill. One entry per retro
 batch: activation date, provenance, the rule list with the learning each
 one encodes, and notes on reconstructed files.
 
+## 2026-09-26 — follow-up: the template decides, the gold's omissions named (alpha fix-5)
+
+- **Provenance:** alpha's fix-5 minor 2, queued: the structure-parity
+  check diffs against two files that disagree. matches-gold has 6 of
+  the template's 12 sections, and a reader diffing both hit the gap
+  with no explanation.
+- **Resolution:** the template wins, and the gold is a real run's
+  file. The Tyro run predates the template (delivered 2026-09-11,
+  the template was written 2026-09-17), and the gold's body is
+  verbatim by the gold rules, so the missing sections are history,
+  not error. rule-structure-parity now says: when the two files
+  disagree, the template wins, because every run starts from its
+  stub; the gold shows what filled sections look like, and its
+  header lists what it omits. matches-and-plan.md's precedent
+  pointer says the same in one sentence.
+- **Teaching error fixed while in the header:** the gold's "Read
+  for" list claimed the question-to-section map and the wireframe
+  plan, which the file does not contain (a header error from the
+  session that built the examples). Both dropped, the honest-gap
+  framing added (the file's strongest teachable feature), and the
+  map and wireframe named as step_2 checkpoint output in the
+  header note.
+- **Gate bug found and fixed while writing the header:**
+  check_matches counted the whole file, comments included, so the
+  new note pushed the gold to 10,226 chars against its 10,000
+  budget and the gate failed it. The letter check counts only the
+  salutation-to-signoff body and the scoring check only the
+  Scoring Results section; matches now measures content after
+  HTML comments, like its siblings. Proven both ways: a
+  5,000-char comment with under-budget content passes, and a tiny
+  comment with over-budget content fails on content (10,991 chars
+  reported). Real runs carry no comments, so nothing changes for
+  them. The gold passes at 8,991/10,000 content chars.
+- Digest regenerated: the 3 structure-parity rows (steps 1-3).
+  The gold's body is still verbatim against the wiki file
+  (checked mechanically); the exemplar battery and the letter
+  check are unchanged.
+
 ## 2026-09-26 — mechanism fix: judge instantiation defined, placeholders refused (peer review, fix 6)
 
-- **Provenance:** major issue 6 of the peer review — no defined way
+- **Provenance:** major issue 6 of the peer review. No defined way
   to instantiate the fresh-context or tier-2 judge, and the
   gate-clearing exemplar passed with a placeholder identity
   (verify only checked non-emptiness).
@@ -36,9 +74,9 @@ one encodes, and notes on reconstructed files.
   its placeholders (correct there) and its notes now state the
   requirement and point at the recipe.
 - **After the user's annotation on the fix-6 handover (same day):
-  the "fresh-context self-judge" concept is gone — it was
-  incoherent (a fresh context is a separate agent and session,
-  not a self). Tier 1 is an independent judge by default (subagent,
+  the "fresh-context self-judge" concept is gone. It was
+  incoherent: a fresh context is a separate agent and session,
+  not a self. Tier 1 is an independent judge by default (subagent,
   separate agent session, or peer, whichever the harness has);
   kinds are subagent | different-model | peer-agent | self-review.
   Preflight now asks and records judge_capability
@@ -51,19 +89,19 @@ one encodes, and notes on reconstructed files.
 
 ## 2026-09-26 — mechanism fix: dead workflow numbering in rule bodies (peer review, fix 5)
 
-- **Provenance:** major issue 5 of the peer review — four rule bodies
+- **Provenance:** major issue 5 of the peer review. Four rule bodies
   still cited the superseded wiki workflow's item numbers (1.3, 1.4,
   1.5, 1.7, 1.8, step 2.1), unresolvable to today's reader, and
   build_digests amplified two of them into every step's read
   (rule-checkpoint-interview-tool has no expect field, so its Rule
-  prose — with the "1.3 promote decision" — became the digest expect
+  prose, with the "1.3 promote decision", became the digest expect
   at all seven steps).
 - **What changed:** the promote decision cites step_1 (SKILL.md names
   that checkpoint "promotion gate"); the hidden-question paragraph
   cites the step_2 key questions in matches.md; the 07 incident
   narrative keeps its facts and drops the four item numbers (the
-  section names — Keywords Tools, soft-skills mapping, gaps List 3,
-  employer questions — all still exist); structure parity now diffs
+  named sections, Keywords Tools, soft-skills mapping, gaps List 3,
+  and employer questions, all still exist); structure parity now diffs
   against the skill's own step template and gold example instead of
   the wiki example path and the "workflow item list", and the letter
   diff cites the key-questions mapping in matches.md; word-budget
@@ -71,19 +109,19 @@ one encodes, and notes on reconstructed files.
   pointer, replaced by the live truth (budgets live in
   assets/sources.json word_budgets; verify_artifacts.py enforces
   them).
-- **Digest:** regenerated — 10 rows changed, exactly the two
+- **Digest:** regenerated. 10 rows changed, exactly the two
   amplified rules (checkpoint-interview-tool at all seven steps via
   Rule-prose fallback, structure-parity at steps 1-3 via expect);
   the other 19 rules' rows byte-identical. No applies_to, evidence
   kind, or type touched.
 - Checked and deliberately not changed: references/jd-analysis.md's
-  budget pointer (assets/sources.json word_budgets — verified
+  budget pointer (assets/sources.json word_budgets, verified
   accurate); the needs-fixes exemplar's word-budget entry (the
   1000-word default is live); the "question-to-section map" phrases
   in matches-gold and run-log-gold annotations (generic descriptions
   of content, not dead pointers).
   After alpha's re-review (pass with notes, same day): the sweep had
-  missed the unnumbered pointer variant — word-budget's expect still
+  missed the unnumbered pointer variant. word-budget's expect still
   said "the budget the workflow states" (digested at steps 1-3,
   contradicting the rule's own new sources.json sentence one
   paragraph below it) and its incident line "the 10K budget the
@@ -94,12 +132,12 @@ one encodes, and notes on reconstructed files.
   Queued per alpha's minor 2: the gold/template section divergence
   it surfaced (matches-gold lacks the template's Employer
   questions, Key notes, key-questions mapping, writing plan, and
-  Mapping List 3 — reconcile in a rule-21 batch or state the
-  template as canon and the gold as a justified instance).
+  Mapping List 3. Reconcile in a later batch, or state that the
+  template decides and the gold's header lists its omissions.)
 
 ## 2026-09-26 — mechanism fix: rules/README describes the corpus as it stands (peer review, fix 4)
 
-- **Provenance:** major issue 4 of the peer review — rules/README.md
+- **Provenance:** major issue 4 of the peer review. rules/README.md
   still described the active corpus as a one-time review draft: the
   header said "draft for review", the inventory table carried the
   pre-remap step wiring (contradicting the frontmatter, digest, and
@@ -181,7 +219,7 @@ one encodes, and notes on reconstructed files.
 - **Provenance:** the peer review of the 2026-09-24 session
   (agents/peer-review-alpha-2026-09-24.md, major issue 2): step_audit
   carries no quote or measure rules, so a tier-2 report's rules_audit
-  had to be empty — the independent final judgment was mechanically
+  had to be empty, so the independent final judgment was mechanically
   verified for nothing, and a conscientious judge writing letter
   entries failed the gate. Fixed after user review.
 - **Action:** the rules_audit scope now derives from the report's

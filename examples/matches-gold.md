@@ -6,7 +6,21 @@ Source: run 10_quality-engineer-ai-12-months-contract-tyro, matches.md
 (sections, list counts 7/6/4, under the 10,000-char budget) exactly as
 the run wrote it. Read for: the two-list source split (experience_records
 vs cv_master), JD-verbatim quotes in mapping items, record-id citations,
-the question-to-section map, and the wireframe plan with alternatives.
+and the honest-gap framing.
+
+Why this file has fewer sections than the template: the run happened
+before the template existed. The run's matches.md was delivered
+2026-09-11; the template was written 2026-09-17. The template decides
+what sections a new matches.md needs, because every run starts from
+its stub. This file has 6 of its 12: Target role, Keywords Skills,
+Keywords Tools, Mapping Lists 1-2, and Remaining gaps (the ⚠️ in its
+heading is the run's own touch; it is the same section as the
+template's). It does not have Employer questions, Key notes, Mapping
+List 3, the key-questions mapping, or the writing plan. The run's
+question map and wireframe went to the step_2 checkpoint instead of
+matches.md, and the run-log records that. When this file and the
+template disagree, follow the template. Keep every template section
+unless you name and justify the cut at the checkpoint.
 -->
 
 # Keyword Matches — Tyro Quality Engineer - AI (12-month contract, Sydney)

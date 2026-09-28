@@ -107,23 +107,28 @@ def check_scoring(p: Path, max_chars: int) -> None:
 
 def check_matches(p: Path, max_chars: int) -> None:
     text, problems = p.read_text(), []
-    if len(text) > max_chars:
-        problems.append(f"{len(text)} chars, expected < {max_chars} (rule_word_budget)")
+    # measure the artifact's content, not its annotations: HTML
+    # comments (a gold file's provenance header) are excluded, the
+    # same way the letter check counts only the salutation-to-signoff
+    # body and the scoring check only the Scoring Results section.
+    content = re.sub(r"(?s)<!--.*?-->", "", text)
+    if len(content) > max_chars:
+        problems.append(f"{len(content)} chars, expected < {max_chars} (rule_word_budget)")
     missing = [
         h
         for h in ("Target role", "Keywords Skills", "Keywords Tools")
-        if not re.search(rf"(?im)^#+\s*.*{re.escape(h)}", text)
+        if not re.search(rf"(?im)^#+\s*.*{re.escape(h)}", content)
     ]
     if missing:
         problems.append(f"required sections missing: {', '.join(missing)}")
-    if not re.search(r"(?im)^\s*[-*]?\s*role type:\s*\S", text):
+    if not re.search(r"(?im)^\s*[-*]?\s*role type:\s*\S", content):
         problems.append("'Role type:' line missing from Target role")
     for name, lo, hi in (
         ("Mapping List 1", 5, 7),
         ("Mapping List 2", 5, 7),
         ("Remaining gaps", 3, 5),
     ):
-        n = len(list_items(text, re.escape(name)))
+        n = len(list_items(content, re.escape(name)))
         (
             print(f"ok: matches — {name}: {n} items")
             if lo <= n <= hi
@@ -131,7 +136,7 @@ def check_matches(p: Path, max_chars: int) -> None:
         )
     if problems:
         bail(problems, p)
-    print(f"ok: matches — sections + role type present, {len(text)}/{max_chars} chars")
+    print(f"ok: matches — sections + role type present, {len(content)}/{max_chars} chars")
 
 
 def check_letter(p: Path, matches: Path | None, max_words: int) -> None:
@@ -272,26 +277,26 @@ def check_report(p: Path, art: Path | None = None) -> None:
     scope = rm.step_for_artifact(rep.get("artifact", "")) or step
     art_name = str(rep.get("artifact", ""))
     if art_name and rm.step_for_artifact(art_name) == "":
-        problems.append(f"artifact {art_name!r} matches no step artifact — "
+        problems.append(f"artifact {art_name!r} matches no step artifact: "
                         "name the bare file: scoring.md, matches.md, "
                         "cover-letter-draft.md or cover-letter-draft-v2.md")
     loop = rm.audit_rules(scope) if scope else []
     audit = rep.get("rules_audit")
     if not step:
-        problems.append("step field missing — say which step produced "
+        problems.append("step field missing: say which step produced "
                         "this report")
     if not scope:
-        problems.append("rules_audit scope unresolvable — the report "
+        problems.append("rules_audit scope unresolvable: the report "
                         "names no known step artifact and no step")
     elif not loop:
         problems.append(f"rules_audit scope {scope!r} carries no quote "
-                        "or measure rules — a review report must judge "
+                        "or measure rules: a review report must judge "
                         "a step artifact (scoring.md, matches.md or a "
                         "letter draft); a report judging only its own "
                         "step audits nothing")
     if not isinstance(audit, list):
         problems.append(
-            "rules_audit missing or not a list — schema @3 requires one "
+            "rules_audit missing or not a list: schema @3 requires one "
             "entry per quote-or-measure rule of the judged artifact's "
             "step (see review-report-template.json)"
         )
@@ -324,15 +329,15 @@ def check_report(p: Path, art: Path | None = None) -> None:
                 )
             if not (e.get("evidence") or "").strip():
                 problems.append(
-                    f"rules_audit {rid}: evidence empty — say what you checked"
+                    f"rules_audit {rid}: evidence empty. Say what you checked"
                 )
             q = (e.get("quote") or "").strip()
             if kinds.get(rid) == "measure":
                 # measurement rules: the proof is the number in evidence
                 if not re.search(r"\d", e.get("evidence") or ""):
                     problems.append(
-                        f"rules_audit {rid}: evidence states no measurement "
-                        "— a measure entry needs its number, e.g. 'body "
+                        f"rules_audit {rid}: evidence states no measurement. "
+                        "A measure entry needs its number, e.g. 'body "
                         "1,187 words against the 1,000-word budget'"
                     )
                 if q and art is not None and art_text is not None \
@@ -344,7 +349,7 @@ def check_report(p: Path, art: Path | None = None) -> None:
             else:
                 if not q:
                     problems.append(
-                        f"rules_audit {rid}: quote empty — cite a span from the artifact"
+                        f"rules_audit {rid}: quote empty. Cite a span from the artifact"
                     )
                 elif art is not None and art_text is not None and re.sub(r"\s+", " ", q) not in art_text:
                     problems.append(
@@ -360,7 +365,7 @@ def check_report(p: Path, art: Path | None = None) -> None:
     unres = [f.get("id", "?") for f in flags if not f.get("resolved")]
     if rep.get("verdict") != "approved":
         problems.append(
-            f"verdict {rep.get('verdict')!r} — the gate requires 'approved'"
+            f"verdict {rep.get('verdict')!r}. The gate requires 'approved'"
         )
     if unres:
         problems.append(f"flagged items unresolved: {', '.join(unres)}")
@@ -374,7 +379,7 @@ def check_report(p: Path, art: Path | None = None) -> None:
     )
     if art is None:
         print(
-            "note: rules_audit quotes NOT verbatim-checked — pass "
+            "note: rules_audit quotes NOT verbatim-checked. Pass "
             "--artifact-path <judged file>, or place the report next to "
             "the artifact it names, to enable the guard"
         )

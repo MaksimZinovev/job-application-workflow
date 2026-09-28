@@ -91,7 +91,7 @@ mirrors it.
 
 Retro is the only path. A run's step_retro distills the run-log and
 rule-checks.json signals into at most 5 proposed rule files per
-sweep, each `status: proposed` — out of the digest and every gate
+sweep, each `status: proposed` and out of the digest and every gate
 until approval. The user approves or rejects the batch at the
 checkpoint; approval flips `status` to active, sets `last_validated`
 to the approval date, and lands a CHANGELOG entry. Never activate a
@@ -102,14 +102,14 @@ a summary, not a second definition.
 
 ## Elsewhere in this repo
 
-- SKILL.md — the workflow itself: steps step_0..step_4, step_audit,
+- SKILL.md: the workflow itself. Steps step_0..step_4, step_audit,
   step_retro with YAML headers; steps 5-7 reserved for the companion
   skill.
-- CHANGELOG.md — batch history, opened at retro #1 activation.
-- references/retro-and-run-log.md — the retro loop's definition:
-  how a run's log is kept, how proposals are batched and activated.
-- references/rule-digests.md — the generated digest (rebuild with
-  scripts/build_digests.py after any batch); scripts/check_rules.py
+- CHANGELOG.md: batch history, opened at retro #1 activation.
+- references/retro-and-run-log.md: the retro loop's definition.
+  How a run's log is kept, how proposals are batched and activated.
+- references/rule-digests.md: the generated digest. Rebuild with
+  scripts/build_digests.py after any batch. scripts/check_rules.py
   runs the per-rule check loop.
 - The corpus previously lived local-only under `.pi/`; the skill now
   ships it in this folder.

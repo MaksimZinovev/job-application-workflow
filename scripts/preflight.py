@@ -201,13 +201,13 @@ def main() -> None:
                   file=sys.stderr)
     cap = cfg.get("judge_capability")
     if cap in ("subagent", "peer-agent"):
-        print(f"judge capability: {cap} — tier 1 runs an independent judge")
+        print(f"judge capability: {cap}. Tier 1 runs an independent judge")
     elif cap == "none":
-        print("judge capability: none — tier 1 falls back to a self-review, "
+        print("judge capability: none. Tier 1 falls back to a self-review, "
               "recorded as such and approved explicitly by the user at the checkpoint")
     else:
         print(
-            "judge capability: not recorded — for the agent to answer at step_0:\n"
+            "judge capability: not recorded. For the agent to answer at step_0:\n"
             "  can this harness run an independent judge (spawn a subagent, open a\n"
             "  separate agent session, or reach a peer agent)? Record it with\n"
             "  preflight.py --judge-capability <subagent|peer-agent|none>.\n"

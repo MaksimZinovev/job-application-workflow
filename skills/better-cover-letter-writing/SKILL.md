@@ -1,17 +1,33 @@
 ---
 name: better-cover-letter-writing
-description: Rewrite professional writing to sound natural, specific, and credible. Remove AI clichés, inflated claims, forced lists, and vague praise while preserving the author's actual meaning and evidence.
+description: Use when rewriting professional text such as cover letters, CVs, and LinkedIn profiles so it sounds natural, specific, and credible. Removes AI clichés, inflated claims, forced lists, and vague praise while preserving the author's actual meaning and evidence. Don't use for casual or creative writing, general documentation, or code.
 ---
 # Better cover letter writing
 
-Rewrite text so it sounds like something a thoughtful person actually
-wrote. The goal is **specific, restrained, natural, and credible**,
-not casual and not deliberately imperfect.
+Rewrite professional text so it sounds like something a thoughtful
+person actually wrote. Not casual, not deliberately imperfect.
 
-## Patterns to fix
+## Ground rules
 
-Each pattern is a just-in-time rule: read its rule file only when you
-work that pattern on the letter.
+These govern every step below.
+
+- Do not humanize by adding slang, unnecessary contractions, jokes,
+  deliberate mistakes, casual tone, or opinions the author did not
+  express. Natural does not mean informal.
+- Never strengthen a claim beyond the available evidence. If the
+  source says "I helped automate regression testing," do not rewrite
+  it as "I led the automation of the company's regression testing."
+  If a stronger claim might be true but is not supported, keep the
+  weaker version.
+- Use "led" or "owned" only when the text provides evidence of that
+  level of responsibility. The ladder, weakest to strongest: observed,
+  contributed to, helped with, worked on, owned, led.
+- **Never remove content silently. Never fabricate. Ask when unsure.**
+
+## Patterns
+
+Each pattern is a just-in-time rule. Read its rule file only when
+working that pattern on the letter.
 
 | No | Pattern | Rule file |
 |----|---------|-----------|
@@ -32,52 +48,48 @@ work that pattern on the letter.
 | 15 | Editorial subheading → plain functional label | rules/rule-pattern-15-editorial-subheading.md |
 | 16 | Intro paragraph (exec summary) | rules/rule-pattern-16-intro-paragraph.md |
 
-## Preserve the author's voice
+## Procedures
 
-Do not humanize by adding slang, unnecessary contractions, jokes,
-deliberate mistakes, casual tone, or opinions the author did not
-express. Natural does not mean informal.
-
-## Evidence and ownership
-
-Never strengthen a claim beyond the available evidence. If the source
-says "I helped automate regression testing," do not rewrite it as
-"I led the automation of the company's regression testing." If a
-stronger claim might be true but is not supported, keep the weaker
-version.
-
-Use "led" or "owned" only when the text provides evidence of that
-level of responsibility. The ladder, weakest to strongest: observed,
-contributed to, helped with, worked on, owned, led.
-
-**Never remove content silently. Never fabricate. Ask when unsure.**
-
-## Grounded audit
-
+**Step 1: Stub the audit table.**
 1. Run `python3 scripts/init.py --letter <path>` from the skill
-   directory. It stubs the pattern-audit table next to the letter;
-   the table's own header carries the loop.
-2. The pass is claimed only when
-   `python3 scripts/check_patterns.py --letter <path>` exits 0.
+   directory. It stubs the pattern-audit table next to the letter.
+   The table's own header carries the loop. The stubbed table is
+   the map. The rule files are the territory.
 
-The stubbed table is the map. The rule files are the territory.
-
-## Rewrite process
-
+**Step 2: Rewrite the letter.**
 1. Identify the author's actual claim.
 2. Separate facts from promotional language.
 3. Replace vague or inflated phrases with concrete actions or
    outcomes. Break forced lists and repetitive structures. Cut
    filler words.
-4. Read it once as if it appeared on a real CV or LinkedIn profile:
-   could a real person plausibly have written this without trying to
-   sound impressive?
+4. Read the draft once as if it appeared on a real CV or LinkedIn
+   profile. Could a real person plausibly have written it without
+   trying to sound impressive? If not, simplify.
 
-## Final self-check
+**Step 3: Close every pattern row.**
+1. Work the table one row at a time. Read that pattern's rule file
+   from the Patterns table, fix the letter, score the row against
+   the rule's rubrics, and record evidence.
 
-Close the audit table's final self-check line before returning: read
-the result once more as its author would. If a sentence sounds
-polished for the sake of sounding polished, simplify it.
+**Step 4: Run the gate.**
+1. Run `python3 scripts/check_patterns.py --letter <path>`.
+2. Exit 0 claims the pass. On any other exit, read the check and
+   fix lines on stderr, fix the letter or the row, and rerun.
+   Error handling lists the failure states.
 
-Return the rewritten text directly unless the user asks for an
-explanation.
+**Step 5: Return.**
+1. Close the table's final self-check line. Read the result once
+   more as its author would. Simplify any sentence polished just
+   to sound polished.
+2. Return the rewritten text directly unless asked for an
+   explanation.
+
+## Error handling
+
+- Checker exit 2: every line names the row and the fix. Fix and
+  rerun. Exit 0 is the only passing exit.
+- "no rule file for pattern N": restore rules/rule-pattern-NN-*.md.
+  The gate refuses to run without it.
+- "audit file not found": run scripts/init.py first, or pass
+  --audit <path>.
+- Python exits on "import yaml" failure: install pyyaml and rerun.

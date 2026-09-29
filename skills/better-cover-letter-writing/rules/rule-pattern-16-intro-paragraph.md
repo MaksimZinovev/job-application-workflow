@@ -28,7 +28,15 @@ The intro should **not compete with the table and later sections**. Its job is t
 
 ## Before → After
 
-The section defines no before and after pair.
+Before:
+"I have 7 years in test automation, built 3 frameworks, cut
+regression time by 60%, and mentor junior engineers in CI/CD and
+code review."
+
+After:
+"I come from automation-heavy environments where I owned frameworks
+end to end. The numbers and specifics sit in the table and later
+sections."
 
 ## Rubric
 

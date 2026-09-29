@@ -25,7 +25,8 @@ evidence. One rule at a time.
 
 ## Rule
 
-Do not force every sentence into a neat three-part structure.
+Let sentence structure follow what actually happened. A forced third
+part is invented rhythm.
 
 ## Before → After
 

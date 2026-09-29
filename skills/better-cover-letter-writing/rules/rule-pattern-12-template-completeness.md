@@ -8,7 +8,7 @@ rubric: quality
 minimum: acceptable
 coverage: completeness
 coverage_minimum: all
-triggers: ["[company]", "[insert", "todo", "tbd"]
+triggers: ["[company]", "[insert", "[todo", "todo:", "tbd"]
 expect: "no template slot is filled with filler; an honest empty slot is information"
 on_fail:
   action: "rewrite per the rule, rescore, re-sweep"
@@ -29,7 +29,15 @@ Filling every planned section even when the honest answer is "nothing real to sa
 
 ## Before → After
 
-The section defines no before and after pair.
+Before:
+"Why this company: I am passionate about your products and confident
+I can make a significant impact."
+
+After:
+Drop the section, or write the one real reason if there is one.
+
+The before fills a slot with a sentence that commits to nothing. The
+empty slot tells the reader more.
 
 ## Rubric
 
@@ -41,7 +49,11 @@ Coverage: references/completeness-rubric.md, minimum all.
 Sweep every planned section of the letter. A section filled with nothing real is the violation: an empty slot is information.
 
 The checker recounts these phrases in the letter:
-"[company]", "[insert", "todo", "tbd". Coverage all requires zero remaining.
+"[company]", "[insert", "[todo", "todo:", "tbd". Coverage all requires zero
+remaining. The "[insert" and "[todo" triggers are unclosed openers on
+purpose: a filled placeholder always starts with them. "todo:" catches
+the inline TODO marker; the bare word todo alone, describing a tool
+(as in a linter finding TODOs), is not a placeholder.
 
 ## Ask
 

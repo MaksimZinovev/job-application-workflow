@@ -13,16 +13,15 @@ import sys
 import tempfile
 from pathlib import Path
 
+import yaml
+
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 QUALITY = ["poor", "acceptable", "good", "excellent"]
 COMPLETENESS = ["none", "partial", "most", "all"]
 ARROW = chr(0x2192)
 AUDIT_DASH = chr(0x2014)
-
-try:
-    import yaml
-except ImportError:
-    yaml = None
+LQUOTE = chr(0x201C)
+RQUOTE = chr(0x201D)
 
 
 def die(msg, fix):
@@ -38,24 +37,8 @@ def parse_frontmatter(text):
     end = next((i for i in range(1, len(lines)) if lines[i].strip() == "---"), None)
     if end is None:
         return {}
-    if yaml is not None:
-        try:
-            data = yaml.safe_load("\n".join(lines[1:end]))
-            return data if isinstance(data, dict) else {}
-        except Exception:
-            pass
-    out = {}
-    for line in lines[1:end]:
-        if line.startswith((" ", "#")) or ":" not in line:
-            continue
-        key, _, val = line.partition(":")
-        val = val.strip()
-        if val.startswith("[") and val.endswith("]"):
-            out[key.strip()] = [s.strip().strip("\"'")
-                                for s in val[1:-1].split(",") if s.strip()]
-        else:
-            out[key.strip()] = val.strip("\"'")
-    return out
+    data = yaml.safe_load("\n".join(lines[1:end]))
+    return data if isinstance(data, dict) else {}
 
 
 def rule_for(n):
@@ -64,6 +47,7 @@ def rule_for(n):
 
 
 def norm(s):
+    s = s.replace(LQUOTE, '"').replace(RQUOTE, '"')
     return re.sub(r"\s+", " ", s).strip()
 
 
@@ -83,6 +67,7 @@ def parse_rows(text):
 
 
 def evidence_refusal(evidence, letter_norm):
+    evidence = evidence.replace(LQUOTE, '"').replace(RQUOTE, '"')
     spans = re.findall(r'"([^"]+)"', evidence)
     if spans:
         cut = evidence.rfind(ARROW)
@@ -92,6 +77,10 @@ def evidence_refusal(evidence, letter_norm):
             return ("the quoted evidence is not in the letter",
                     "quote a line that appears word for word in the letter, "
                     "or fix the letter so it does")
+    elif not evidence.lower().startswith("confirm"):
+        return ("the evidence is neither a quote nor a confirmation",
+                "quote a line from the letter verbatim, or start the note "
+                "with confirm:")
     if evidence.lower().startswith("confirm"):
         body = evidence.split(":", 1)[1].strip() if ":" in evidence else ""
         if len(body) < 20 or "todo" in body.lower():
@@ -137,14 +126,16 @@ def run_checks(letter, audit):
             "rebuild the table with scripts/init.py and fill every row")
     open_rows = [n for n in range(1, 17)
                  if not all(rows[n][i].strip() for i in (1, 2, 3))]
-    passed, refusals, struct_only = [], [], []
+    passed, refusals = [], []
     for n in range(1, 17):
         if n in open_rows:
             continue
         cells = rows[n]
         rule = rule_for(n)
         if rule is None:
-            struct_only.append(n)
+            die(f"no rule file for pattern {n}",
+                f"restore rules/rule-pattern-{n:02d}-*.md; the gate "
+                "will not run without it")
         found = [r for r in (
             level_refusal("score", cells[1], QUALITY, rule, "minimum", "poor"),
             level_refusal("coverage", cells[2], COMPLETENESS, rule,
@@ -158,8 +149,7 @@ def run_checks(letter, audit):
             refusals.append((n, msg, fix))
         if not found:
             passed.append((n, cells[1], cells[2]))
-    return {"open": open_rows, "passed": passed, "refusals": refusals,
-            "struct_only": struct_only}
+    return {"open": open_rows, "passed": passed, "refusals": refusals}
 
 
 def selftest():
@@ -167,7 +157,7 @@ def selftest():
         head = f"# Pattern audit {AUDIT_DASH} {letter}\n"
         head += "| No | Pattern | Score | Coverage | Evidence |\n"
         head += "|----|---------|-------|----------|----------|\n"
-        rest = "\n".join(f"| {n} | p{n} | acceptable | all | swept every paragraph. |"
+        rest = "\n".join(f"| {n} | p{n} | acceptable | all | confirm: swept every paragraph and found nothing to fix. |"
                          for n in range(2, 17))
         return head + row1 + "\n" + rest + "\n"
 
@@ -188,6 +178,14 @@ def selftest():
         bad = ('| 1 | Grand claims | acceptable | all | '
                '"I rewrote every claim by hand." |')
         assert case("badquote", base, bad)["refusals"], "bad quote passed"
+        thin = '| 1 | Grand claims | good | all | swept it all away. |'
+        assert case("thin", base, thin)["refusals"], \
+            "content-free evidence passed"
+        curly = ('| 1 | Grand claims | good | all | Did the sweep: '
+                 '\u201cI helped test the suite and shipped the fix on '
+                 'time.\u201d |')
+        assert not case("curly", base, curly)["refusals"], \
+            "curly quotes broke the span match"
         low = '| 1 | Grand claims | poor | all | "I helped test the suite." |'
         assert case("lowscore", base, low)["refusals"], "low score passed"
         res = case("trigger", "I was pivotal in the launch.\n",
@@ -229,8 +227,6 @@ def main():
             "pass --letter with the path named in the audit header, or "
             "rebuild the audit with scripts/init.py")
     res = run_checks(letter, audit)
-    for n in res["struct_only"]:
-        print(f"pattern {n}: no rule file yet, structural checks only")
     for n, score, coverage in res["passed"]:
         print(f"pattern {n}: PASS score={score} coverage={coverage}")
     for n, msg, fix in res["refusals"]:

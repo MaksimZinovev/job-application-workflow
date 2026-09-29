@@ -26,7 +26,7 @@ evidence. One rule at a time.
 
 ## Rule
 
-Do not turn participation into ownership.
+Choose the strongest verb the evidence supports, no stronger.
 
 ## Before → After
 
@@ -47,7 +47,7 @@ After:
 Quality: references/quality-rubric.md, minimum acceptable.
 Coverage: references/completeness-rubric.md, minimum all.
 
-## Coverage triggers
+## Coverage
 
 The checker recounts these phrases in the letter:
 "spearheaded", "orchestrated", "championed",

@@ -50,7 +50,7 @@ Coverage: references/completeness-rubric.md, minimum all.
 
 ## Coverage
 
-Sweep for the marketing vocabulary (the section's list). Keep a word
+Sweep for the marketing vocabulary listed above. Keep a word
 only where the surrounding evidence makes the claim precise.
 
 ## Ask

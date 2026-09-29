@@ -29,7 +29,11 @@ Read this rule, fix the letter, score the applied level, record evidence. One ru
 
 ## Before → After
 
-The section defines no before and after pair.
+Before:
+"I am comfortable with hybrid work."
+
+After:
+"I am based in Sydney."
 
 ## Rubric
 

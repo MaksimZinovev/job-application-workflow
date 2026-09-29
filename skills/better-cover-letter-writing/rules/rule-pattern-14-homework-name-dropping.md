@@ -28,7 +28,14 @@ Telling the company what it already knows (office address, awards, founding year
 
 ## Before → After
 
-The section defines no before and after pair.
+Before:
+"Hybrid work from your Market Street office."
+
+After:
+"Hybrid work in Sydney."
+
+The office address is homework on display. The city is the fact that
+does the work.
 
 ## Rubric
 

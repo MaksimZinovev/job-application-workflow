@@ -29,6 +29,19 @@ Restating the company's own pitch (mission, awards, culture) as
 motivation. If their marketing team could write the sentence, cut it.
 Motivation = specifics tied to your own work.
 
+## Before → After
+
+Before:
+"I am inspired by your mission to redefine quality engineering and
+drawn to your award-winning, innovation-first culture."
+
+After:
+"I test the exact kind of platform you run: devices reporting through
+a cloud ingestion layer into customer-facing applications."
+
+The before sentence could appear in anyone's letter to any company.
+The after sentence names the applicant's own work.
+
 ## Rubric
 
 Quality: references/quality-rubric.md, minimum acceptable.

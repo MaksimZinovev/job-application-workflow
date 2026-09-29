@@ -68,9 +68,9 @@ minimums, the coverage triggers, and the ask and do-not notes.
 ### 8. Self-description → evidence
 This pattern is packaged as a just-in-time rule. Read
 rules/rule-pattern-08-self-description-evidence.md before working it.
-The rule file has the rule, the before and after example, the human
-review note, the rubric minimums, the coverage triggers, and the ask
-and do-not notes.
+The rule file has the rule, the before and after example, the rubric
+minimums, the coverage triggers, and the ask and do-not notes, which
+carry the human review requirement.
 
 ### 9. Marketing language → plain description
 This pattern is packaged as a just-in-time rule. Read
@@ -84,11 +84,11 @@ rules/rule-pattern-10-ai-style-symmetry.md before working it. The
 rule file has the rule, the before and after example, the rubric
 minimums, the coverage sweep, and the ask and do-not notes.
 
-### 11.  Marketing echo→ cut it
+### 11. Marketing echo → cut it
 This pattern is packaged as a just-in-time rule. Read
 rules/rule-pattern-11-marketing-echo.md before working it. The rule
-file has the rule, the rubric minimums, the coverage sweep, and the
-ask and do-not notes.
+file has the rule, the before and after example, the rubric minimums,
+the coverage sweep, and the ask and do-not notes.
 
 ### 12. Template completeness → empty slot
 This pattern is packaged as a just-in-time rule. Read
@@ -114,7 +114,7 @@ rules/rule-pattern-15-editorial-subheading.md before working it. The
 rule file has the rule, the before and after examples, the rubric
 minimums, the coverage sweep, and the ask and do-not notes.
 
-## 16 Intro paragraph
+### 16. Intro paragraph (exec summary)
 This pattern is packaged as a just-in-time rule. Read
 rules/rule-pattern-16-intro-paragraph.md before working it. The rule
 file has the rule, the rubric minimums, the coverage sweep, and the

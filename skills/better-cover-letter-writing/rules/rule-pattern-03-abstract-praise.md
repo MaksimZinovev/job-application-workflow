@@ -25,6 +25,7 @@ evidence. One rule at a time.
 
 ## Rule
 
+Describe what the thing actually is or does instead of praising it.
 Ask: "What does this claim actually mean?"
 
 Then describe that instead.
@@ -50,8 +51,7 @@ be replaced by a concrete description.
 
 ## Ask
 
-- "What does this claim actually mean?"
-- Then describe that instead.
+- What does this claim actually mean?
 
 ## Do not
 

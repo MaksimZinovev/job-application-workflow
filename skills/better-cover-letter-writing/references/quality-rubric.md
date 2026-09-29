@@ -15,7 +15,6 @@ Scoring notes:
 
 - Score the application of this one rule, not the letter overall.
 - A bare minimum close is acceptable. Do not inflate; the checker
-  compares your score against the rule's minimum and refuses
-  contradictions.
+  refuses a score below the rule's minimum.
 - If you cannot honestly reach the minimum, say so in the evidence
   and leave the row open. An honest open row beats a false close.

@@ -36,9 +36,6 @@ After:
 "**How I make quality visible.**"
 "**The quality ladder.**"
 
-Why:
-A bolded inline subheading should name what the paragraph contains, not craft a slogan or essay title. Prefer plain noun phrases ("The AI work.") or first-person phrases ("How I would start.", "What I have not used yet."). If it reads like a campaign line, rename it.
-
 ## Rubric
 
 Quality: references/quality-rubric.md, minimum acceptable.

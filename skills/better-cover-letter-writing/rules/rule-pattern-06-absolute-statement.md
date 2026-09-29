@@ -56,7 +56,7 @@ After:
 Quality: references/quality-rubric.md, minimum acceptable.
 Coverage: references/completeness-rubric.md, minimum all.
 
-## Coverage triggers
+## Coverage
 
 The checker recounts these phrases in the letter:
 "guaranteed", "eliminates", "solves", "ensures", "100%".

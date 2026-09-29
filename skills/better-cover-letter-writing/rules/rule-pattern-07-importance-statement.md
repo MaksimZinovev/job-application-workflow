@@ -26,8 +26,8 @@ evidence. One rule at a time.
 
 ## Rule
 
-Do not tell the reader that something was important. Explain what
-changed.
+Replace every importance declaration with the outcome it produced.
+Say what changed, not that it mattered.
 
 ## Before → After
 

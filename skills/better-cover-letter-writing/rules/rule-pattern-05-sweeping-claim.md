@@ -42,7 +42,7 @@ After:
 Quality: references/quality-rubric.md, minimum acceptable.
 Coverage: references/completeness-rubric.md, minimum all.
 
-## Coverage triggers
+## Coverage
 
 The checker recounts these phrases in the letter:
 "exactly", "comprehensively". Coverage all requires zero remaining.

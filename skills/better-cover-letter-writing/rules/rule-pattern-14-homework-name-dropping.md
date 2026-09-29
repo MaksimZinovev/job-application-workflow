@@ -24,7 +24,7 @@ Read this rule, fix the letter, score the applied level, record evidence. One ru
 
 ## Rule
 
-Telling the company what it already knows (office address, awards, founding year) to signal "I researched you". Keep researched details only where they do work: a product decision, a real question, a link to your own work. "Hybrid work from your Market Street office" becomes "hybrid work in Sydney".
+Telling the company what it already knows (office address, awards, founding year) to signal  "I read your ad" or "I researched you". Keep obvious details only where they do work: a product decision, a real question, a link to your own work, table "Your requirement / my evidence" where intentionally, each row maps a requirement to concrete records and shows candidate-job match.  
 
 ## Before → After
 

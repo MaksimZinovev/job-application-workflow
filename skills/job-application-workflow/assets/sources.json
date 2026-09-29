@@ -1,56 +1,57 @@
 {
-  "applications_root": "~/repos/wiki/notes/2026-applications",
-  "word_budgets": {
-    "cover_letter_default": 1000,
-    "scoring_results_max_chars": 5000,
-    "matches_max_chars": 10000
-  },
-  "sources": {
-    "mandatory": {
-      "cv_master": {
-        "path": "~/repos/wiki/notes/2026-applications/master-templates/2026-09-Maksim-Zinovev-Automation-Tester-CV-master.md",
-        "function": "CV source of truth: tense, facts, achievements; List 2 evidence"
-      },
-      "experience_records": [
-        {
-          "path": "~/repos/jobkit/experience-pieces.json",
-          "function": "recent-role evidence pieces: responsibilities, tools, soft skills, achievements, role context"
-        },
-        {
-          "path": "~/repos/wiki/notes/job-search/how-to-answer-behavioral-interview-questions-with-samples.md",
-          "function": "prepared STAR stories: achievement narratives for extra evidence"
-        }
-      ],
-      "rubric_full_time": {
-        "path": "assets/scoring-rubric-full-time.md",
-        "function": "scoring rubric for full-time roles (bundled default)"
-      },
-      "rubric_part_time_gig": {
-        "path": "assets/scoring-rubric-part-time-gig.md",
-        "function": "scoring rubric for gig/part-time roles (bundled default)"
-      }
+ "applications_root": "~/repos/wiki/notes/2026-applications",
+ "word_budgets": {
+  "cover_letter_default": 1100,
+  "scoring_results_max_chars": 5000,
+  "matches_max_chars": 11000
+ },
+ "sources": {
+  "mandatory": {
+   "cv_master": {
+    "path": "~/repos/wiki/notes/2026-applications/master-templates/2026-09-Maksim-Zinovev-Automation-Tester-CV-master.md",
+    "function": "CV source of truth: tense, facts, achievements; List 2 evidence"
+   },
+   "experience_records": [
+    {
+     "path": "~/repos/jobkit/experience-pieces.json",
+     "function": "recent-role evidence pieces: responsibilities, tools, soft skills, achievements, role context"
     },
-    "optional": {
-      "job_search_context": {
-        "path": "~/repos/wiki/notes/job-search/job-search-2026.md",
-        "function": "search context and constraints"
-      },
-      "ideal_job": {
-        "path": "assets/ideal-job-2026.md",
-        "function": "ideal-role profile (bundled default)"
-      },
-      "unslop_skill": {
-        "path": "~/repos/unslop/SKILL.md",
-        "function": "human-voice rewriting pass; degraded mode = banned-terms scan only"
-      },
-      "better_cover_letters": {
-        "path": "~/repos/job-application-workflow/skills/better-cover-letter-writing/SKILL.md",
-        "function": "credibility rewrite pass; degraded mode = banned-terms scan only"
-      }
+    {
+     "path": "~/repos/wiki/notes/job-search/how-to-answer-behavioral-interview-questions-with-samples.md",
+     "function": "prepared STAR stories: achievement narratives for extra evidence"
     }
+   ],
+   "rubric_full_time": {
+    "path": "assets/scoring-rubric-full-time.md",
+    "function": "scoring rubric for full-time roles (bundled default)"
+   },
+   "rubric_part_time_gig": {
+    "path": "assets/scoring-rubric-part-time-gig.md",
+    "function": "scoring rubric for gig/part-time roles (bundled default)"
+   }
   },
-  "waived": {},
-  "rule_check": {
-    "min_score": 2
+  "optional": {
+   "job_search_context": {
+    "path": "~/repos/wiki/notes/job-search/job-search-2026.md",
+    "function": "search context and constraints"
+   },
+   "ideal_job": {
+    "path": "assets/ideal-job-2026.md",
+    "function": "ideal-role profile (bundled default)"
+   },
+   "unslop_skill": {
+    "path": "~/repos/unslop/SKILL.md",
+    "function": "human-voice rewriting pass; degraded mode = banned-terms scan only"
+   },
+   "better_cover_letters": {
+    "path": "~/repos/job-application-workflow/skills/better-cover-letter-writing/SKILL.md",
+    "function": "credibility rewrite pass; degraded mode = banned-terms scan only"
+   }
   }
+ },
+ "waived": {},
+ "rule_check": {
+  "min_score": 2
+ },
+ "judge_capability": "subagent"
 }

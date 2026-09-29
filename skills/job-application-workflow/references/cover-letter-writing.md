@@ -83,6 +83,11 @@ ask what the employer most wants to know up front about this attribute,
 how the candidate would work toward their goals with it, and which past
 experience proves it — the answer names the paragraph.
 
+IMPORTANT: 
+Anti-pattern: 
+Terminology is presented as a catalogue of concepts rather than being tied directly to what you built. Keep the terminology that matches the role, but anchor it in the implementation.
+
+
 For each hidden-question paragraph:
 
 - Answer this hidden employer question: [QUESTION], derived from the ad's

@@ -27,6 +27,7 @@ Evidence means the pass is not done.
 | 14 | Homework name-dropping → detail that does work | | | |
 | 15 | Editorial subheading → plain functional label | | | |
 | 16 | Intro paragraph (exec summary) | | | |
+| 17 | technical terminology → evidence of experience, anchored in concrete work | | | |
 
 Final self-check (fill after all rows close): meaning preserved, nothing
 invented, ownership not exaggerated, ordinary language, credible rather

@@ -1,5 +1,5 @@
 ---
-name: job-application
+name: job-application-workflow
 description: Orchestrates an evidence-based job application run from job description analysis to an approved cover letter -  preflight resource checks, rubric scoring with a promotion gate, keyword-to-evidence matching, rubric-validated paragraph planning, cover letter drafting, unslop rewriting passes, independent LLM review, and deterministic artifact verification. Use when scoring a job description or preparing a cover letter application run against configured source-of-truth records. Enforces checkpointed user approval at every step; paths are configurable for portable setups. Don't use for resume tailoring, interview prep, or standalone writing edits - resume and prep belong to a companion skill.
 ---
 

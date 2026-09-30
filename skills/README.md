@@ -20,6 +20,9 @@ credible. The job-application skill runs it in full at the rewrite
 step, configured under the `better_cover_letters` key in the
 workflow's `assets/sources.json`.
 
+To add a rule to it, follow
+[better-cover-letter-writing/agents/playbook-add-a-rule.md](better-cover-letter-writing/agents/playbook-add-a-rule.md).
+
 ## Provenance
 
 better-cover-letter-writing moved here from

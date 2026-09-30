@@ -5,7 +5,7 @@ Usage: python3 scripts/check_patterns.py --letter <path> [--audit <path>]
        python3 scripts/check_patterns.py --selftest
 
 Empty score, coverage, or evidence means the row is open. Exit 0 only when
-all 16 rows are closed and no refusal was raised.
+every pattern row is closed and no refusal was raised.
 """
 import argparse
 import re
@@ -18,6 +18,7 @@ import yaml
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 QUALITY = ["poor", "acceptable", "good", "excellent"]
 COMPLETENESS = ["none", "partial", "most", "all"]
+PATTERN_COUNT = 17  # ponytail: single count source; assumes contiguous rows 1..N
 ARROW = chr(0x2192)
 AUDIT_DASH = chr(0x2014)
 LQUOTE = chr(0x201C)
@@ -61,7 +62,7 @@ def parse_rows(text):
         if len(cells) < 5 or not cells[0].isdigit():
             continue
         no = int(cells[0])
-        if 1 <= no <= 16:
+        if 1 <= no <= PATTERN_COUNT:
             rows[no] = cells[1:5]
     return rows
 
@@ -120,14 +121,15 @@ def trigger_refusal(coverage, rule, letter_text):
 def run_checks(letter, audit):
     letter_text = letter.read_text()
     rows = parse_rows(audit.read_text())
-    missing = [n for n in range(1, 18) if n not in rows]
+    missing = [n for n in range(1, PATTERN_COUNT + 1) if n not in rows]
     if missing:
-        die(f"audit table has {len(rows)} of the 16 expected rows",
+        die(f"audit table has {len(rows)} of the {PATTERN_COUNT} "
+            f"expected rows",
             "rebuild the table with scripts/init.py and fill every row")
-    open_rows = [n for n in range(1, 18)
+    open_rows = [n for n in range(1, PATTERN_COUNT + 1)
                  if not all(rows[n][i].strip() for i in (1, 2, 3))]
     passed, refusals = [], []
-    for n in range(1, 18):
+    for n in range(1, PATTERN_COUNT + 1):
         if n in open_rows:
             continue
         cells = rows[n]
@@ -158,7 +160,7 @@ def selftest():
         head += "| No | Pattern | Score | Coverage | Evidence |\n"
         head += "|----|---------|-------|----------|----------|\n"
         rest = "\n".join(f"| {n} | p{n} | acceptable | all | confirm: swept every paragraph and found nothing to fix. |"
-                         for n in range(2, 18))
+                         for n in range(2, PATTERN_COUNT + 1))
         return head + row1 + "\n" + rest + "\n"
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -233,7 +235,8 @@ def main():
         print(f"check: pattern {n}: {msg}", file=sys.stderr)
         print(f"fix: {fix}", file=sys.stderr)
     open_count = len(res["open"])
-    print(f"{17 - open_count}/17 rows closed; {open_count} open")
+    print(f"{PATTERN_COUNT - open_count}/{PATTERN_COUNT} rows closed; "
+          f"{open_count} open")
     if open_count or res["refusals"]:
         sys.exit(2)
 

@@ -47,6 +47,7 @@ working that pattern on the letter.
 | 14 | Homework name-dropping → detail that does work | rules/rule-pattern-14-homework-name-dropping.md |
 | 15 | Editorial subheading → plain functional label | rules/rule-pattern-15-editorial-subheading.md |
 | 16 | Intro paragraph (exec summary) | rules/rule-pattern-16-intro-paragraph.md |
+| 17 | technical terminology → evidence of experience, anchored in concrete work | rules/rule-pattern-17-technical-keywords-as-evidence.md |
 
 ## Procedures
 

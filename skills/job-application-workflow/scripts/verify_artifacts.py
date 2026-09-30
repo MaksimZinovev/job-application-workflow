@@ -116,7 +116,10 @@ def check_matches(p: Path, max_chars: int) -> None:
         problems.append(f"{len(content)} chars, expected < {max_chars} (rule_word_budget)")
     missing = [
         h
-        for h in ("Target role", "Keywords Skills", "Keywords Tools")
+        for h in (
+            "Target role", "Keywords Skills", "Keywords Tools",
+            "Key questions", "Writing plan",
+        )
         if not re.search(rf"(?im)^#+\s*.*{re.escape(h)}", content)
     ]
     if missing:
@@ -134,9 +137,67 @@ def check_matches(p: Path, max_chars: int) -> None:
             if lo <= n <= hi
             else problems.append(f"{name} has {n} items, expected {lo}-{hi}")
         )
+    # The key-questions table must carry literal questions: the run-14
+    # failure wrote labels into the Question cell instead.
+    kq = re.search(r"(?im)^#+\s*.*Key questions.*$", content)
+    kq_sec = content[kq.end() :].split("\n#", 1)[0] if kq else ""
+    kq_rows = [ln for ln in kq_sec.splitlines() if ln.strip().startswith("|")]
+    kq_data = [
+        ln for ln in kq_rows[1:]  # skip the header line
+        if not re.match(r"^\s*\|[\s:|-]+\|\s*$", ln)
+    ]
+    if not kq_data:
+        problems.append(
+            "key-questions table has no data rows; build the "
+            "8-row table from the template"
+        )
+    for n, ln in enumerate(kq_data, start=1):
+        cells = ln.strip().strip("|").split("|")
+        if len(cells) < 3:
+            problems.append(f"key-questions table row {n} is malformed")
+            continue
+        qcell = cells[1]
+        if "outro" in qcell.lower():
+            continue  # the Outro row is exempt by design
+        if "?" not in qcell:
+            problems.append(
+                f'key-questions table row {n}: "{qcell.strip()[:40]}" has no '
+                "question; write the literal question the human behind the "
+                "ad asks, not a label or note"
+            )
+    # The plan items for P1-P3 must restate their hidden questions, with
+    # no placeholder tokens left over.
+    wp = re.search(r"(?im)^#+\s*.*Writing plan.*$", content)
+    wp_sec = content[wp.end() :].split("\n#", 1)[0] if wp else ""
+    for tag in ("P1", "P2", "P3"):
+        m = re.search(rf"\*\*{tag}\.", wp_sec)
+        if not m:
+            problems.append(f"writing plan is missing the {tag} item")
+            continue
+        nxt = re.search(
+            r"\*\*(?:Intro|Table|P[1-4]|Outro)\.", wp_sec[m.end() :]
+        )
+        block = (
+            wp_sec[m.end() :]
+            if not nxt
+            else wp_sec[m.end() : m.end() + nxt.start()]
+        )
+        if "?" not in block:
+            problems.append(
+                f"writing plan {tag} block carries no question; restate "
+                "the hidden question from the mapping table in the plan "
+                "item"
+            )
+    ph = re.search(r"\{[a-z_0-9]+\}", wp_sec)
+    if ph:
+        problems.append(
+            f"writing plan still contains '{ph.group(0)}' placeholder; "
+            "replace it with the derived question text"
+        )
     if problems:
         bail(problems, p)
     print(f"ok: matches — sections + role type present, {len(content)}/{max_chars} chars")
+    print("ok: matches — key-questions rows + plan P1-P3 carry questions")
 
 
 def check_letter(p: Path, matches: Path | None, max_words: int) -> None:

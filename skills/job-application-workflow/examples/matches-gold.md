@@ -15,8 +15,10 @@ what sections a new matches.md needs, because every run starts from
 its stub. This file has 6 of its 12: Target role, Keywords Skills,
 Keywords Tools, Mapping Lists 1-2, and Remaining gaps (the ⚠️ in its
 heading is the run's own touch; it is the same section as the
-template's). It does not have Employer questions, Key notes, Mapping
-List 3, the key-questions mapping, or the writing plan. The run's
+template's). It does not have Employer questions, Key notes, or Mapping
+List 3. The key-questions mapping and the writing plan were
+added later (fix item 5), adapted from the run's step_1
+checkpoint and kept terse to fit the char budget. The run's
 question map and wireframe went to the step_2 checkpoint instead of
 matches.md, and the run-log records that. When this file and the
 template disagree, follow the template. Keep every template section
@@ -81,3 +83,26 @@ Keywords from [job-description.md](./job-description.md) (scored 2026-09-10: **(
 2. **Payments domain** — no record anywhere. Honest framing: smart metering is also a regulated, data-integrity-critical platform (40+ retailers, 99.5% reliable delivery); domain ramp-up is expected of any hire; the JD lists payments as "nice to have".
 3. **Formal AI/ML credential** — Agentic AI course (20% done) + ISTQB-GenAI (in progress). Honest framing: the JD accepts "demonstrated self-directed learning in AI" — 8 sessions, 15+ skills, public AI repos are exactly that; in-progress certs name the habit.
 4. **Non-functional depth + pen-test support** — performance = genuine growth area (adjacent: env monitoring, report scoring rules); accessibility/security = WYWM exposure; in-house pen-testing evaluation support = no record. Honest framing: name performance as a growth area with adjacent evidence; security/pen-test exposure honestly limited.
+
+## Key questions → cover letter mapping
+
+| No | Question | Mapped to cover letter | Description |
+| --- | --- | --- | --- |
+| 1 | Who is the ideal candidate? | Intro | Real agentic-AI record; mid-pivot; growth seat. |
+| 2 | What are the key requirements? | Table | The 7 List 1 rows: company, stack, achievement. |
+| 3 | "Has this person actually DONE agentic AI in quality work — or just used ChatGPT?" | P1 | Copilot Skills, PR-review agent, agentic workflow; JD bullets 1:1. |
+| 4 | "Can they carry the hands-on QE side — suites, coverage, test data — while the AI story shines?" | P2 | Three frameworks, BDD in CI, Jenkins. |
+| 5 | "Will the knowledge base stay alive — and will the team actually follow?" | P3 | Agents.md, AutomationHub; 8 sessions, others presenting. |
+| 6 | What are the gaps between the ideal candidate and my profile? | P4 | Rovo: platform ramp-up; payments analog; certs in progress. |
+| 7 | Are there employer questions to answer? | P5 | None in the posting; "Why Tyro" fills it. |
+| 8 | Outro | Outro | CTA, citizenship, availability, fixed term. |
+
+## Writing plan (wireframe + alternatives)
+
+- **Intro.** A) Years, environments, scale. B) "I run the loop Tyro is building." **Recommend B-lite.**
+- **Table.** 7 rows, one per List 1 item. **Recommend 7**; non-functional as bonus.
+- **P1.** "Has this person actually DONE agentic AI in quality work — or just used ChatGPT?" A) Each JD AI bullet answered by an artifact. B) The loop story. **Recommend A.**
+- **P2.** "Can they carry the hands-on QE side — suites, coverage, test data — while the AI story shines?" A) Breadth: frameworks, BDD, Jenkins. B) Reliability arc. **Recommend A, B close.**
+- **P3.** "Will the knowledge base stay alive — and will the team actually follow?" A) Stewardship artifacts. B) Adoption: 8 sessions, others presenting. **Recommend A, B close.**
+- **P4.** Two gaps max: Rovo ramp-up; payments. **Recommend A.**
+- **Outro.** CTA, citizenship, Sydney, availability. **Recommend A.**

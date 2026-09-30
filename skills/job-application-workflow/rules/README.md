@@ -80,7 +80,7 @@ mirrors it.
 | 13 | rule-pattern-sibling-scan | protocol | 4 | verified | Fix the flagged instance, surface siblings, never silently edit approved prose |
 | 14 | rule-label-vs-enumeration-colon | style | 4 | verified | Label colons are normal usage; only enumeration colons are tells |
 | 15 | rule-preflight-resource-check | check | 0 | verified | Verify referenced skills, templates, and files exist before steps depend on them |
-| 16 | rule-checkpoint-interview-tool | protocol | all | verified | Decision checkpoints use the question tool, with alternatives and a recommendation |
+| 16 | rule-checkpoint-chat | protocol | all | verified | Decision checkpoints go to chat in plain language, with alternatives and a recommendation |
 | 17 | rule-lint-classify-once | check | 3, 4 | verified | House-style lint classes are classified once via precedent, not re-litigated |
 | 18 | rule-richness-for-cuts | judgment | 1, 2, 3 | reconstructed | Keep evidence only if it closes a keyword hole or supports the role shape |
 | 19 | rule-artifacts-on-disk | architecture | all | verified | Every step lands its output on disk before its checkpoint closes |

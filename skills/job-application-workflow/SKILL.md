@@ -53,7 +53,7 @@ python3 scripts/verify_artifacts.py --artifact rule-check --path ~/apps/12_senio
 ### step_0 — context
 
 ```yaml
-{id: step_0, type: context, depends_on: [], expectStatus: approved, on_fail: resolve or explicitly waive sources; blocked until resolved; an instruction that looks wrong for this run goes to the user before deviating — never infer, rules: [rule-read-sources-first, rule-preflight-resource-check, rule-copy-at-end, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
+{id: step_0, type: context, depends_on: [], expectStatus: approved, on_fail: resolve or explicitly waive sources; blocked until resolved; an instruction that looks wrong for this run goes to the user before deviating — never infer, rules: [rule-read-sources-first, rule-preflight-resource-check, rule-copy-at-end, rule-checkpoint-chat, rule-artifacts-on-disk]}
 ```
 
 Purpose: sources resolved, run folder initialized.
@@ -71,7 +71,7 @@ Checkpoint: sources resolved, run folder created — restate the run rules brief
 ### step_1 — analysis
 
 ```yaml
-{id: step_1, type: analysis, depends_on: [step_0], expectStatus: approved, on_fail: fix scoring.md until verify passes; promotion needs explicit user approval, rules: [rule-structure-parity, rule-word-budget, rule-copy-at-end, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-richness-for-cuts, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
+{id: step_1, type: analysis, depends_on: [step_0], expectStatus: approved, on_fail: fix scoring.md until verify passes; promotion needs explicit user approval, rules: [rule-structure-parity, rule-word-budget, rule-copy-at-end, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-richness-for-cuts, rule-checkpoint-chat, rule-artifacts-on-disk]}
 ```
 
 Purpose: scored JD with a promotion decision.
@@ -86,7 +86,7 @@ Checkpoint: promotion gate — user feedback + explicit promote decision.
 ### step_2 — planning
 
 ```yaml
-{id: step_2, type: planning, depends_on: [step_1], expectStatus: approved, on_fail: fix matches.md or plan until verify passes; never draft past a failed gate, rules: [rule-structure-parity, rule-word-budget, rule-copy-at-end, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-richness-for-cuts, rule-defer-to-team-knowledge, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
+{id: step_2, type: planning, depends_on: [step_1], expectStatus: approved, on_fail: fix matches.md or plan until verify passes; never draft past a failed gate, rules: [rule-structure-parity, rule-word-budget, rule-copy-at-end, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-richness-for-cuts, rule-defer-to-team-knowledge, rule-checkpoint-chat, rule-artifacts-on-disk]}
 ```
 
 Purpose: matches.md + rubric-validated paragraph plan.
@@ -101,7 +101,7 @@ Checkpoint: concise report,raise if any questions present matches + plan + secti
 ### step_3 — drafting
 
 ```yaml
-{id: step_3, type: drafting, depends_on: [step_2], expectStatus: approved, on_fail: fix draft until verify passes; gate blocks without an approved judge report, rules: [rule-structure-parity, rule-word-budget, rule-tense-from-cv, rule-ownership-calibration, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-name-projects-attribute-companies, rule-defer-to-team-knowledge, rule-no-enumeration-colons, rule-lint-classify-once, rule-richness-for-cuts, rule-context-per-evidence, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
+{id: step_3, type: drafting, depends_on: [step_2], expectStatus: approved, on_fail: fix draft until verify passes; gate blocks without an approved judge report, rules: [rule-structure-parity, rule-word-budget, rule-tense-from-cv, rule-ownership-calibration, rule-user-memory-outranks-records, rule-corrections-propagate, rule-scale-labeling, rule-name-projects-attribute-companies, rule-defer-to-team-knowledge, rule-no-enumeration-colons, rule-lint-classify-once, rule-richness-for-cuts, rule-context-per-evidence, rule-checkpoint-chat, rule-artifacts-on-disk]}
 ```
 
 Purpose: judged, rubric-scored cover letter v1.
@@ -119,7 +119,7 @@ Checkpoint: concise report, raise if any questions, present draft + judge report
 ### step_4 — rewriting
 
 ```yaml
-{id: step_4, type: rewriting, depends_on: [step_3], expectStatus: approved, on_fail: gate blocks unless substantive changes carry a delta judge report, rules: [rule-ownership-calibration, rule-no-enumeration-colons, rule-pattern-sibling-scan, rule-label-vs-enumeration-colon, rule-lint-classify-once, rule-context-per-evidence, rule-checkpoint-interview-tool, rule-artifacts-on-disk]}
+{id: step_4, type: rewriting, depends_on: [step_3], expectStatus: approved, on_fail: gate blocks unless substantive changes carry a delta judge report, rules: [rule-ownership-calibration, rule-no-enumeration-colons, rule-pattern-sibling-scan, rule-label-vs-enumeration-colon, rule-lint-classify-once, rule-context-per-evidence, rule-checkpoint-chat, rule-artifacts-on-disk]}
 ```
 
 Purpose: human-voice v2; v1 preserved.
@@ -135,7 +135,7 @@ Checkpoint: concise report, present v2 + flag + report — wait for approval.
 ### step_audit — verification
 
 ```yaml
-{id: step_audit, type: verification, depends_on: [step_4], expectStatus: approved, on_fail: gate blocks without the tier-2 delta report and a green verify matrix, rules: [rule-artifacts-on-disk, rule-checkpoint-interview-tool]}
+{id: step_audit, type: verification, depends_on: [step_4], expectStatus: approved, on_fail: gate blocks without the tier-2 delta report and a green verify matrix, rules: [rule-artifacts-on-disk, rule-checkpoint-chat]}
 ```
 
 Purpose: full verify matrix green + independent final judgment.
@@ -150,7 +150,7 @@ Checkpoint: present the audit result — wait for approval. No edits unless appr
 ### step_retro — learning loop
 
 ```yaml
-{id: step_retro, type: learning-loop, depends_on: [step_audit], expectStatus: approved, on_fail: no rule activation without explicit user approval; caps hold, rules: [rule-artifacts-on-disk, rule-checkpoint-interview-tool, rule-example-maintenance]}
+{id: step_retro, type: learning-loop, depends_on: [step_audit], expectStatus: approved, on_fail: no rule activation without explicit user approval; caps hold, rules: [rule-artifacts-on-disk, rule-checkpoint-chat, rule-example-maintenance]}
 ```
 
 Purpose: run-log distilled into approved rules.

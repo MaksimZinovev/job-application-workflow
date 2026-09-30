@@ -82,10 +82,10 @@ the sibling list is where the discrimination shows.
 - The run folder is the working scope for a step. Do not wander into other
   application folders except to consult an approved precedent the user names.
 
-## Interview-tool decision points
+## Checkpoint decision points
 
-Use the interview/question tool with concrete alternatives and a
-recommendation at these points:
+Ask the user at these points, in chat, plain language, with
+alternatives and a recommendation (rule-checkpoint-chat):
 
 1. **Missing mandatory source** (preflight exits 1): ask the user to fix the
    path (then `preflight.py --set <key> <path>`) or to explicitly waive the

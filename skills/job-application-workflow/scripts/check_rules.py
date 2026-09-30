@@ -133,7 +133,8 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
         rid = rm.display(meta["id"])
         cpath = cdir / f"{rid}.md"
         if not cpath.is_file():
-            problems.append(f"{rid}: no check file ({cpath.name})")
+            problems.append(f"{rid}: no check file at checks/{step}/"
+                            f"{rid}.md: run --next and write the check file")
             continue
         f = parse_check(cpath)
         tag = f"{rid}: "
@@ -147,7 +148,10 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
             score = int(f.get("score", ""))
             assert 0 <= score <= 3
         except (ValueError, AssertionError):
-            problems.append(tag + f"score {f.get('score')!r} not in 0-3")
+            problems.append(tag + f"score {f.get('score')!r} not in 0-3 "
+                          f"in checks/{step}/{rid}.md: write 0-3 "
+                          "(3 clean pass, 2 acceptable, 1 violation fix "
+                          "proposed, 0 not fixed)")
             score = None
         if score is not None and f.get("verdict") in ("pass", "fail"):
             want = {2, 3} if f["verdict"] == "pass" else {0, 1}
@@ -212,11 +216,21 @@ def validate(run: Path, step: str, config_path: Path | None = None) -> dict:
         if f.get("verdict") == "fail" and not f.get("fix", "").strip():
             problems.append(tag + "verdict fail but no fix field")
         if f.get("siblings-checked", "") != "yes":
-            problems.append(tag + "siblings-checked must be 'yes'. Scan the "
-                          "artifact for siblings of any issue found")
+            problems.append(tag + f"siblings-checked must be 'yes' in "
+                          f"checks/{step}/{rid}.md. Scan the artifact for "
+                          "siblings of any issue found and set it")
         for fld in ("quote", "confirmation", "note", "fix"):
-            if f.get(fld) and any(x in f[fld].lower() for x in FILLER):
-                problems.append(tag + f"banned filler in {fld}")
+            val = f.get(fld, "")
+            hit = next((x for x in FILLER if x in val.lower()), "")
+            if val and hit:
+                remedy = ('on a pass verdict write "fix: none required '
+                          '(verdict pass, no violation to repair)"; on a '
+                          'fail verdict state the repair action'
+                          if fld == "fix" else
+                          f'replace "{hit}" with the real {fld} content')
+                problems.append(tag + f'banned filler "{hit}" in {fld}\n'
+                                f"  file: checks/{step}/{rid}.md\n"
+                                f"  fix: {remedy}")
         if f.get("_duplicates"):
             problems.append(tag + f"duplicate fields:{f['_duplicates']}")
         rows.append({"id": rid, "verdict": f.get("verdict"),

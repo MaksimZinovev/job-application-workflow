@@ -4,7 +4,9 @@ Atomic learned rules for the job-application workflow encoded in
 SKILL.md. The corpus is active: every rule here is wired into the
 workflow's steps through the generated digest
 (references/rule-digests.md) and closed out by the per-rule check
-loop (scripts/check_rules.py).
+loop (scripts/check_rules.py). On a pass verdict the check file's fix
+line reads `fix: none required (verdict pass, no violation to repair)`;
+on a fail verdict it states the repair action.
 
 The first 19 rules are retro #1: extracted from the 07 Reo Group and
 08 Peoplebank runs plus the user's standing directives, activated

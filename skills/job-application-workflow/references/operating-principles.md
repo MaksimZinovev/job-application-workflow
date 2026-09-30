@@ -28,6 +28,8 @@ by key from `assets/sources.json`; the preflight script resolves the paths.
   locate rather than improvising around it.
 - Every step lands its output on disk before its checkpoint closes. Unsaved
   work is lost work.
+- End every file written in the run folder with a newline; the wiki linter
+  rewrites files without one and forces a re-read.
 - Every step closes its rule loop before its checkpoint:
   `scripts/check_rules.py <run> --step <step> --gate` exits 0 — every rule
   of the step confirmed in its own attention window: quote rules with a

@@ -49,10 +49,9 @@ def main():
             .replace("{{DATE}}", date.today().isoformat()))
     out.write_text(text)
     print(f"stubbed: {out}")
-    print("next: for each pattern, read its rule, fix the letter, score "
-          "quality and coverage against the rubrics in references/, record "
-          "evidence in each row, then run scripts/check_patterns.py until "
-          "it exits 0.")
+    print("next: run scripts/check_patterns.py --letter <the letter> "
+          "--next to work one open pattern at a time; it ends with "
+          '"all rows closed; run --gate", and the gate must exit 0.')
 
 
 if __name__ == "__main__":

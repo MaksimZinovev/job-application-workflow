@@ -7,6 +7,9 @@ buildable, so drafting is execution, not rework. Fill the
 `cover-letter-draft.md` stub created at init in the run folder. The
 paragraph rubric (loaded at planning) is reused here as the assessment
 rubric for every body paragraph, alongside the don'ts below.
+The patterns in the skill configured at the `better_cover_letters` key of
+sources.json are quality bars while drafting, not cleanup for later: read
+that skill end to end before writing.
 
 ## Required structure
 

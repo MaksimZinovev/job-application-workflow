@@ -106,13 +106,14 @@ Checkpoint: concise report,raise if any questions present matches + plan + secti
 
 Purpose: judged, rubric-scored cover letter v1.
 
-1. Read `references/cover-letter-writing.md`; keep `references/paragraph-rubric.md` loaded for assessment.
+1. Read `references/cover-letter-writing.md`; keep `references/paragraph-rubric.md` loaded for assessment; also read end to end the skill configured at the `better_cover_letters` key of sources.json, before drafting.
 2. Draft `cover-letter-draft.md`: required structure, body word budget, evidence only from matches.md and configured sources.
 3. Run `scripts/verify_artifacts.py --artifact cover-letter --path <run>/cover-letter-draft.md --matches <run>/matches.md`.
-4. Review our own work using 
+4. Run the 17-pattern audit from the `better_cover_letters` skill: `python3 <that skill's dir>/scripts/init.py --letter <run>/cover-letter-draft.md --out <run>/patterns-audit-step_3.md` stubs, then `python3 <that skill's dir>/scripts/check_patterns.py --letter <run>/cover-letter-draft.md --audit <run>/patterns-audit-step_3.md --next` presents one pattern at a time; work only that pattern, fix the letter when it is violated, fill the row, repeat until "all rows closed", and `--gate` must exit 0 before the per-rule loop.
+5. Review our own work using 
   `references/cover-letter-writing.md`;  `references/paragraph-rubric.md` 
-5. Run the per-rule loop against cover-letter-draft.md: `scripts/check_rules.py <run> --step step_3 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
-6. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report-step_3.json` with a full rules_audit; fix flagged items, re-judge ≤2 rounds. Then verify the report: `scripts/verify_artifacts.py --artifact review-report --path <run>/review-report-step_3.json --artifact-path <run>/cover-letter-draft.md` (quotes checked against v1).
+6. Run the per-rule loop against cover-letter-draft.md: `scripts/check_rules.py <run> --step step_3 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
+7. Run the Tier 1 judge (judge protocol in operating-principles.md) into `review-report-step_3.json` with a full rules_audit; fix flagged items, re-judge ≤2 rounds. Then verify the report: `scripts/verify_artifacts.py --artifact review-report --path <run>/review-report-step_3.json --artifact-path <run>/cover-letter-draft.md` (quotes checked against v1).
 
 Checkpoint: concise report, raise if any questions, present draft + judge report — wait for approval.
 
@@ -126,9 +127,10 @@ Purpose: human-voice v2; v1 preserved.
 
 1. Read `references/writing-passes.md`.
 2. Apply unslop, targeted user-feedback rewrites, credibility pass; write `cover-letter-draft-v2.md`, keep v1 untouched.
-3. Set `substantive_changes: yes|no` in run-log.md; verify v2.
-4. Run the per-rule loop against cover-letter-draft-v2.md: `scripts/check_rules.py <run> --step step_4 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
-5. Run the conditional delta judge only when substantive (judge protocol in operating-principles.md; its rules_audit covers the step_4 loop rules) into `review-report-step_4.json`, reading `review-report-step_3.json` as the delta baseline. When it ran, verify the report: `scripts/verify_artifacts.py --artifact review-report --path <run>/review-report-step_4.json --artifact-path <run>/cover-letter-draft-v2.md`.
+3. Run the fresh 17-pattern re-audit from that pass on v2: it lands in `patterns-audit-step_4.md` with `--baseline patterns-audit-step_3.md`; every verdict is re-derived fresh and delta rows are surfaced at the checkpoint.
+4. Set `substantive_changes: yes|no` in run-log.md; verify v2.
+5. Run the per-rule loop against cover-letter-draft-v2.md: `scripts/check_rules.py <run> --step step_4 --next` presents one rule at a time; check only that rule, write its check file, repeat until `--gate` exits 0.
+6. Run the conditional delta judge only when substantive (judge protocol in operating-principles.md; its rules_audit covers the step_4 loop rules) into `review-report-step_4.json`, reading `review-report-step_3.json` as the delta baseline. When it ran, verify the report: `scripts/verify_artifacts.py --artifact review-report --path <run>/review-report-step_4.json --artifact-path <run>/cover-letter-draft-v2.md`.
 
 Checkpoint: concise report, present v2 + flag + report — wait for approval.
 

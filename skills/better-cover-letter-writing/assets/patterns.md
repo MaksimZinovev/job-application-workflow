@@ -1,13 +1,18 @@
 # Pattern audit — {{LETTER}}
 
 Date: {{DATE}}. Skill: better-cover-letter-writing. One row per pattern.
-Before filling a row, read the rule for that pattern (rules/rule-pattern-01-grand-claims.md
-is pattern 1; the other rules are packaged one at a time), fix the letter,
-score quality against references/quality-rubric.md and coverage against
-references/completeness-rubric.md, and use the minimums stated in the rule.
+Do not work the table wholesale. Run
+`python3 scripts/check_patterns.py --letter {{LETTER}} --next`: it names
+the next open pattern and its rule file, and carries that rule's scoring
+scales, minimums and triggers. Score quality against
+references/quality-rubric.md and coverage against
+references/completeness-rubric.md. Work only the row it presents, fix the
+letter if that pattern is violated, fill the row, and run --next again.
 Evidence is a verbatim quote from the letter or a concise written
 confirmation of what was checked or resolved. Empty Score, Coverage, or
-Evidence means the pass is not done.
+Evidence means the pass is not done. When --next prints "all rows
+closed; run --gate", run `python3 scripts/check_patterns.py --letter
+{{LETTER}} --gate`, which must exit 0 before the audit is called done.
 
 | No | Pattern | Score | Coverage | Evidence (verbatim quote or written confirmation) |
 |----|---------|-------|----------|---------------------------------------------------|

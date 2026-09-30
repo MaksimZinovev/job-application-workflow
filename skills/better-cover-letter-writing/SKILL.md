@@ -1,6 +1,6 @@
 ---
 name: better-cover-letter-writing
-description: Use when rewriting professional text such as cover letters, CVs, and LinkedIn profiles so it sounds natural, specific, and credible. Removes AI clichés, inflated claims, forced lists, and vague praise while preserving the author's actual meaning and evidence. Don't use for casual or creative writing, general documentation, or code.
+description: Use when writing or rewriting professional text such as cover letters, CVs, and LinkedIn profiles so it sounds natural, specific, and credible. Removes AI clichés, inflated claims, forced lists, and vague praise while preserving the author's actual meaning and evidence. Don't use for casual or creative writing, general documentation, or code.
 ---
 # Better cover letter writing
 
@@ -26,8 +26,8 @@ These govern every step below.
 
 ## Patterns
 
-Each pattern is a just-in-time rule. Read its rule file only when
-working that pattern on the letter.
+Each pattern is a just-in-time rule: read its rule file only when
+working that pattern.
 
 | No | Pattern | Rule file |
 |----|---------|-----------|
@@ -49,13 +49,16 @@ working that pattern on the letter.
 | 16 | Intro paragraph (exec summary) | rules/rule-pattern-16-intro-paragraph.md |
 | 17 | technical terminology → evidence of experience, anchored in concrete work | rules/rule-pattern-17-technical-keywords-as-evidence.md |
 
+The audit runs twice: at drafting (stub, --next loop, gate), and again
+at review as a fresh re-audit (`--next --baseline`): re-derive every
+verdict fresh, carry nothing over, note disagreement as "delta:".
+
 ## Procedures
 
 **Step 1: Stub the audit table.**
 1. Run `python3 scripts/init.py --letter <path>` from the skill
-   directory. It stubs the pattern-audit table next to the letter.
-   The table's own header carries the loop. The stubbed table is
-   the map. The rule files are the territory.
+   directory. The stubbed table is the map. The rule files are
+   the territory.
 
 **Step 2: Rewrite the letter.**
 1. Identify the author's actual claim.
@@ -68,9 +71,12 @@ working that pattern on the letter.
    trying to sound impressive? If not, simplify.
 
 **Step 3: Close every pattern row.**
-1. Work the table one row at a time. Read that pattern's rule file
-   from the Patterns table, fix the letter, score the row against
-   the rule's rubrics, and record evidence.
+1. Run `python3 scripts/check_patterns.py --letter <path> --next`. It
+   presents exactly one open pattern, its rule file, and the rubric
+   scales, minimums, triggers and evidence contract from that rule.
+2. Work only that row: read the rule file, scan the letter for that
+   one pattern, fix the letter if violated, fill the row, then run
+   `--next` again. Repeat until it prints "all rows closed; run --gate".
 
 **Step 4: Run the gate.**
 1. Run `python3 scripts/check_patterns.py --letter <path>`.
@@ -93,4 +99,6 @@ working that pattern on the letter.
   The gate refuses to run without it.
 - "audit file not found": run scripts/init.py first, or pass
   --audit <path>.
+- A missing or malformed --baseline (--next) dies with a fix line
+  naming the remedy: a baseline must be a completed 17-row audit.
 - Python exits on "import yaml" failure: install pyyaml and rerun.

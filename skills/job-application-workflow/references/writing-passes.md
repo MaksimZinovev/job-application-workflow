@@ -4,8 +4,9 @@ Read when starting step_4. Two passes turn the approved v1 draft into v2.
 Each pass is driven by its source skill, read end to end — the pattern
 catalogs live there, not here. If the optional skills configured at the
 `unslop_skill` / `better_cover_letters` keys are unavailable, run the
-degraded mode: the banned-terms scan via `verify_artifacts.py` only, and
-say so at the checkpoint.
+degraded mode: no skill passes and no pattern audits (no
+patterns-audit-step_3.md / patterns-audit-step_4.md), only the
+banned-terms scan via `verify_artifacts.py`; say so at the checkpoint.
 
 ## Version preservation
 
@@ -23,14 +24,21 @@ measure: banned terms and em dashes.
 
 ## Pass 2 — credibility rewrite
 
-Run the grounded pattern audit first: the skill configured at
-`better_cover_letters` ships `scripts/init.py`; run
-`python3 <that skill's dir>/scripts/init.py --letter <draft>` to stub a
-table (No, pattern, verdict, notes), read the full skill end to end, and
-fill every row with a verdict quoting the letter. An empty row means the
-pass is not done. The skill owns its patterns, the rewrite process, the
-evidence and ownership rules, and the final self-check — apply them from
-there.
+Read the skill configured at `better_cover_letters` end to end. Stub the
+fresh audit: `python3 <that skill's dir>/scripts/init.py --letter
+<run>/cover-letter-draft-v2.md --out <run>/patterns-audit-step_4.md` (the
+explicit `--out` exists because init.py refuses to overwrite
+patterns-audit.md, which may already hold the step_3 audit). Then run its
+JIT loop: `python3 <that skill's dir>/scripts/check_patterns.py --letter
+<run>/cover-letter-draft-v2.md --audit <run>/patterns-audit-step_4.md
+--next --baseline <run>/patterns-audit-step_3.md`. It presents one open
+pattern at a time. Re-derive every verdict fresh against v2: never
+carried from the earlier audit, and a quote that still appears is
+re-confirmed, not inherited. Where the step_3 verdict changes, add a note
+starting "delta:" describing what changed. An empty row means the pass is
+not done; `--gate` exit 0 closes the pass. The skill owns its patterns,
+the rewrite process, the evidence and ownership rules, and the final
+self-check; apply them from there.
 
 ## Targeted rewrites per user feedback
 
